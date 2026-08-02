@@ -2,302 +2,547 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Project Tracker</title>
 <style>
   :root{
-    --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --border:#2a2f3a;
-    --text:#e7e9ee; --muted:#8b93a3; --accent:#4f8ef7;
-    --ok:#3ecf8e; --warn:#f5a623; --block:#e8544c; --done:#6c7683;
+    color-scheme: light;
+    /* neutrals biased slightly toward soldermask green-grey */
+    --ground:#f4f5f2;
+    --surface:#ffffff;
+    --rule:#dcdfd8;
+    --rule-strong:#c3c8bc;
+    --ink:#1c211c;
+    --ink-soft:#5c635a;
+    --ink-faint:#878e84;
+    /* accent: solder copper */
+    --accent:#b45528;
+    /* semantic state */
+    --run:#2f6f8f;   --run-bg:rgba(47,111,143,.12);
+    --test:#8a6a12;  --test-bg:rgba(138,106,18,.13);
+    --block:#a83228; --block-bg:rgba(168,50,40,.12);
+    --done:#3f6b48;  --done-bg:rgba(63,107,72,.12);
+
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,"SFMono-Regular","Cascadia Mono","Consolas","Liberation Mono",monospace;
   }
+  @media (prefers-color-scheme: dark){
+    :root{
+      color-scheme: dark;
+      --ground:#141714; --surface:#1a1e1a; --rule:#2b302b; --rule-strong:#3d443c;
+      --ink:#e6e9e3; --ink-soft:#a3aa9f; --ink-faint:#767d73;
+      --accent:#e0813f;
+      --run:#7ab6d6;   --run-bg:rgba(122,182,214,.14);
+      --test:#d9b04a;  --test-bg:rgba(217,176,74,.14);
+      --block:#e2776b; --block-bg:rgba(226,119,107,.14);
+      --done:#7fbb8c;  --done-bg:rgba(127,187,140,.14);
+    }
+  }
+  :root[data-theme="light"]{
+    color-scheme: light;
+    --ground:#f4f5f2; --surface:#ffffff; --rule:#dcdfd8; --rule-strong:#c3c8bc;
+    --ink:#1c211c; --ink-soft:#5c635a; --ink-faint:#878e84;
+    --accent:#b45528;
+    --run:#2f6f8f;   --run-bg:rgba(47,111,143,.12);
+    --test:#8a6a12;  --test-bg:rgba(138,106,18,.13);
+    --block:#a83228; --block-bg:rgba(168,50,40,.12);
+    --done:#3f6b48;  --done-bg:rgba(63,107,72,.12);
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --ground:#141714; --surface:#1a1e1a; --rule:#2b302b; --rule-strong:#3d443c;
+    --ink:#e6e9e3; --ink-soft:#a3aa9f; --ink-faint:#767d73;
+    --accent:#e0813f;
+    --run:#7ab6d6;   --run-bg:rgba(122,182,214,.14);
+    --test:#d9b04a;  --test-bg:rgba(217,176,74,.14);
+    --block:#e2776b; --block-bg:rgba(226,119,107,.14);
+    --done:#7fbb8c;  --done-bg:rgba(127,187,140,.14);
+  }
+
   *{box-sizing:border-box;}
   body{
-    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    background:var(--bg); color:var(--text); padding:20px;
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
   }
-  h1{font-size:18px; font-weight:600; margin:0 0 4px;}
-  .sub{color:var(--muted); font-size:13px; margin-bottom:20px;}
-  .toolbar{display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;}
+  .wrap{max-width:920px; margin:0 auto; padding:32px 20px 80px;}
+
+  /* ---- masthead ---- */
+  header{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    gap:16px; flex-wrap:wrap;
+    padding-bottom:14px; border-bottom:2px solid var(--ink);
+  }
+  h1{
+    font-size:26px; font-weight:640; letter-spacing:-.02em; margin:0;
+    text-wrap:balance;
+  }
+  .kicker{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--accent); margin:0 0 4px;
+  }
+  .stamp{
+    font-family:var(--mono); font-size:12px; color:var(--ink-faint);
+    font-variant-numeric:tabular-nums; text-align:right;
+  }
+
+  /* ---- summary strip ---- */
+  .summary{
+    display:grid; grid-template-columns:repeat(4,1fr);
+    border-bottom:1px solid var(--rule);
+  }
+  .cell{
+    padding:14px 4px 16px; border-right:1px solid var(--rule);
+    display:flex; flex-direction:column; gap:2px;
+  }
+  .cell:last-child{border-right:0;}
+  .cell .n{
+    font-family:var(--mono); font-size:28px; line-height:1;
+    font-variant-numeric:tabular-nums; letter-spacing:-.02em;
+  }
+  .cell .l{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--ink-faint);
+  }
+  .cell[data-k="blocked"] .n{color:var(--block);}
+  .cell[data-k="progress"] .n{color:var(--run);}
+  .cell[data-k="testing"] .n{color:var(--test);}
+  .cell[data-k="done"] .n{color:var(--done);}
+  @media (max-width:560px){ .summary{grid-template-columns:repeat(2,1fr);} .cell:nth-child(2){border-right:0;} }
+
+  /* ---- toolbar ---- */
+  .toolbar{
+    display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+    padding:16px 0;
+  }
   button{
-    background:var(--panel2); color:var(--text); border:1px solid var(--border);
-    padding:8px 14px; border-radius:6px; font-size:13px; cursor:pointer;
+    font:inherit; font-size:13px; cursor:pointer;
+    background:var(--surface); color:var(--ink);
+    border:1px solid var(--rule-strong); border-radius:2px;
+    padding:7px 13px;
+    transition:border-color .12s, background .12s, color .12s;
   }
-  button:hover{border-color:var(--accent);}
-  button.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
-  .card{
-    background:var(--panel); border:1px solid var(--border); border-radius:8px;
-    padding:14px 16px; margin-bottom:10px;
+  button:hover{border-color:var(--accent); color:var(--accent);}
+  button:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  button.primary{
+    background:var(--accent); border-color:var(--accent); color:#fff;
   }
-  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
-  .card-title{font-size:14px; font-weight:600;}
-  .tag{
-    display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px;
-    margin-left:6px; vertical-align:middle;
+  button.primary:hover{color:#fff; filter:brightness(1.07);}
+  .flash{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--done);
   }
-  .tag-pcb{background:#2a3a5c; color:#8fb3ff;}
-  .tag-fw{background:#3a2a5c; color:#c39bff;}
-  .tag-other{background:#2a3a3a; color:#8fd6c9;}
-  .status{
-    font-size:12px; padding:3px 10px; border-radius:12px; white-space:nowrap;
-  }
-  .status-progress{background:rgba(79,142,247,.15); color:var(--accent);}
-  .status-blocked{background:rgba(232,84,76,.15); color:var(--block);}
-  .status-testing{background:rgba(245,166,35,.15); color:var(--warn);}
-  .status-done{background:rgba(62,207,142,.15); color:var(--ok);}
-  .meta{color:var(--muted); font-size:12px; margin-top:6px; line-height:1.5;}
-  .meta b{color:var(--text); font-weight:500;}
-  .bar-wrap{background:var(--panel2); border-radius:4px; height:6px; margin-top:10px; overflow:hidden;}
-  .bar{height:100%; background:var(--accent);}
-  .card-actions{display:flex; gap:6px; margin-top:10px;}
-  .card-actions button{padding:4px 10px; font-size:12px;}
-  .empty{color:var(--muted); text-align:center; padding:30px 0; font-size:13px;}
-  .modal-bg{
-    display:none; position:fixed; inset:0; background:rgba(0,0,0,.6);
-    align-items:center; justify-content:center; z-index:10;
-  }
-  .modal{
-    background:var(--panel); border:1px solid var(--border); border-radius:10px;
-    padding:20px; width:420px; max-width:90vw;
-  }
-  .modal h2{font-size:15px; margin:0 0 14px;}
-  .field{margin-bottom:10px;}
-  .field label{display:block; font-size:12px; color:var(--muted); margin-bottom:4px;}
-  .field input, .field select, .field textarea{
-    width:100%; background:var(--panel2); border:1px solid var(--border); color:var(--text);
-    padding:8px; border-radius:6px; font-size:13px; font-family:inherit;
-  }
-  .field textarea{resize:vertical; min-height:50px;}
-  .modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:16px;}
+
+  /* ---- report ---- */
   #reportBox{
-    background:var(--panel2); border:1px solid var(--border); border-radius:8px;
-    padding:14px; font-size:13px; white-space:pre-wrap; line-height:1.6; margin-top:10px;
-    display:none;
+    display:none; background:var(--surface);
+    border:1px solid var(--rule); border-left:3px solid var(--accent);
+    padding:16px 18px; margin:0 0 22px;
+    font-family:var(--mono); font-size:12.5px; line-height:1.75;
+    white-space:pre-wrap; overflow-x:auto; color:var(--ink-soft);
   }
-  .copied{color:var(--ok); font-size:12px; margin-left:8px;}
+
+  /* ---- log rows ---- */
+  .log{border-top:1px solid var(--ink);}
+  .row{
+    background:var(--surface);
+    border-bottom:1px solid var(--rule);
+    padding:16px 18px;
+    display:grid; gap:10px;
+  }
+  .row-head{
+    display:flex; align-items:baseline; justify-content:space-between;
+    gap:12px; flex-wrap:wrap;
+  }
+  .name{font-size:16px; font-weight:600; letter-spacing:-.01em;}
+  .cat{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--ink-faint);
+    border:1px solid var(--rule-strong); border-radius:2px;
+    padding:1px 6px; margin-left:8px; vertical-align:2px; white-space:nowrap;
+  }
+  .state{
+    font-family:var(--mono); font-size:11px; letter-spacing:.1em;
+    text-transform:uppercase; padding:3px 9px; border-radius:2px; white-space:nowrap;
+  }
+  .state-progress{background:var(--run-bg); color:var(--run);}
+  .state-testing{background:var(--test-bg); color:var(--test);}
+  .state-blocked{background:var(--block-bg); color:var(--block);}
+  .state-done{background:var(--done-bg); color:var(--done);}
+
+  .facts{display:grid; gap:4px; font-size:14px; color:var(--ink-soft);}
+  .facts .k{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--ink-faint); margin-right:8px;
+  }
+  .facts .blocked-line{color:var(--block);}
+
+  .meter{
+    display:flex; align-items:center; gap:12px;
+    font-family:var(--mono); font-size:12px; font-variant-numeric:tabular-nums;
+    color:var(--ink-faint);
+  }
+  .track{
+    position:relative; flex:1; height:8px; background:var(--ground);
+    border:1px solid var(--rule); overflow:hidden;
+  }
+  .track::after{ /* quarter ticks */
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(to right,
+      transparent 0 calc(25% - 1px), var(--rule) calc(25% - 1px), var(--rule) 25%);
+  }
+  .fill{height:100%; background:var(--accent);}
+  .row[data-s="done"] .fill{background:var(--done);}
+  .row[data-s="blocked"] .fill{background:var(--block);}
+
+  .row-actions{display:flex; gap:6px;}
+  .row-actions button{padding:4px 10px; font-size:12px;}
+
+  .empty{
+    background:var(--surface); border-bottom:1px solid var(--rule);
+    padding:44px 20px; text-align:center; color:var(--ink-faint); font-size:14px;
+  }
+
+  /* ---- dialog ---- */
+  dialog{
+    border:1px solid var(--rule-strong); border-top:3px solid var(--accent);
+    border-radius:3px; background:var(--surface); color:var(--ink);
+    padding:0; width:440px; max-width:calc(100vw - 32px);
+  }
+  dialog::backdrop{background:rgba(10,14,10,.55);}
+  .dlg-body{padding:20px 22px 22px; display:grid; gap:14px;}
+  .dlg-body h2{
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--accent); margin:0; font-weight:600;
+  }
+  .field{display:grid; gap:5px;}
+  .field label{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--ink-faint);
+  }
+  input,select,textarea{
+    font:inherit; font-size:14px; width:100%;
+    background:var(--ground); color:var(--ink);
+    border:1px solid var(--rule-strong); border-radius:2px; padding:8px 9px;
+  }
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--accent); outline-offset:-1px; border-color:var(--accent);}
+  textarea{resize:vertical; min-height:58px;}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .dlg-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:2px;}
+  .err{color:var(--block); font-size:13px; margin:0;}
+
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important;} }
 </style>
 </head>
 <body>
 
-<h1>Project tracker</h1>
-<div class="sub">PCB design, firmware debugging and other in-progress work — updates daily to build your manager report.</div>
+<div class="wrap">
+  <header>
+    <div>
+      <p class="kicker">Hardware &amp; firmware bench log</p>
+      <h1>Project tracker</h1>
+    </div>
+    <div class="stamp" id="stamp"></div>
+  </header>
 
-<div class="toolbar">
-  <button class="primary" onclick="openModal()">+ Add project</button>
-  <button onclick="generateReport()">Generate daily update</button>
-  <span id="copyMsg" class="copied"></span>
+  <section class="summary" id="summary"></section>
+
+  <div class="toolbar">
+    <button class="primary" id="btnAdd">Add project</button>
+    <button id="btnReport">Generate daily update</button>
+    <button id="btnExport">Export JSON</button>
+    <span class="flash" id="flash"></span>
+  </div>
+
+  <pre id="reportBox"></pre>
+
+  <div class="log" id="log"></div>
 </div>
 
-<div id="reportBox"></div>
-
-<div id="list"></div>
-
-<div class="modal-bg" id="modalBg">
-  <div class="modal">
-    <h2 id="modalTitle">Add project</h2>
-    <input type="hidden" id="editId">
+<dialog id="dlg">
+  <form method="dialog" class="dlg-body" id="form">
+    <h2 id="dlgTitle">Add project</h2>
     <div class="field">
-      <label>Project name</label>
-      <input id="f-name" placeholder="e.g. OVP circuit rev2 PCB">
+      <label for="f-name">Project name</label>
+      <input id="f-name" placeholder="OVP circuit rev2 PCB" autocomplete="off">
+    </div>
+    <div class="two">
+      <div class="field">
+        <label for="f-cat">Category</label>
+        <select id="f-cat">
+          <option value="pcb">PCB design</option>
+          <option value="fw">Firmware</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-status">Status</label>
+        <select id="f-status">
+          <option value="progress">In progress</option>
+          <option value="testing">Testing</option>
+          <option value="blocked">Blocked</option>
+          <option value="done">Done</option>
+        </select>
+      </div>
     </div>
     <div class="field">
-      <label>Category</label>
-      <select id="f-cat">
-        <option value="pcb">PCB design</option>
-        <option value="fw">Firmware</option>
-        <option value="other">Other</option>
-      </select>
+      <label for="f-pct">Percent complete</label>
+      <input id="f-pct" type="number" min="0" max="100" step="5" value="0">
     </div>
     <div class="field">
-      <label>Status</label>
-      <select id="f-status">
-        <option value="progress">In progress</option>
-        <option value="testing">Testing</option>
-        <option value="blocked">Blocked</option>
-        <option value="done">Done</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Percent complete</label>
-      <input id="f-pct" type="number" min="0" max="100" value="0">
-    </div>
-    <div class="field">
-      <label>Next action</label>
+      <label for="f-next">Next action</label>
       <textarea id="f-next" placeholder="What you'll do next on this"></textarea>
     </div>
     <div class="field">
-      <label>Blocker (optional)</label>
+      <label for="f-blocker">Blocker (optional)</label>
       <textarea id="f-blocker" placeholder="Leave blank if nothing is blocking it"></textarea>
     </div>
-    <div class="modal-actions">
-      <button onclick="closeModal()">Cancel</button>
-      <button class="primary" onclick="saveProject()">Save</button>
+    <p class="err" id="err"></p>
+    <div class="dlg-actions">
+      <button type="button" id="btnCancel">Cancel</button>
+      <button type="button" class="primary" id="btnSave">Save</button>
     </div>
-  </div>
-</div>
+  </form>
+</dialog>
 
 <script>
-let projects = [];
-const STORAGE_KEY = 'projects';
+(function(){
+  "use strict";
 
-async function load(){
-  try{
-    const res = await window.storage.get(STORAGE_KEY);
-    projects = res ? JSON.parse(res.value) : [];
-  }catch(e){
-    projects = [];
+  var KEY = "project-tracker.v1";
+  var LEGACY = "projects";
+  var projects = [];
+  var editId = "";
+
+  var CATS = {pcb:"PCB", fw:"Firmware", other:"Other"};
+  var STATES = {progress:"In progress", testing:"Testing", blocked:"Blocked", done:"Done"};
+  var ORDER = ["blocked","progress","testing","done"];
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  function today(){
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
   }
+
+  function load(){
+    var raw = null;
+    try{ raw = localStorage.getItem(KEY) || localStorage.getItem(LEGACY); }
+    catch(e){ raw = null; }
+    if(!raw){ projects = []; return; }
+    try{
+      var parsed = JSON.parse(raw);
+      projects = Array.isArray(parsed) ? parsed.filter(function(p){ return p && p.name; }) : [];
+    }catch(e){ projects = []; }
+  }
+
+  function persist(){
+    try{
+      localStorage.setItem(KEY, JSON.stringify(projects));
+    }catch(e){
+      flash("Couldn't save — browser storage is full or blocked", true);
+    }
+  }
+
+  function flash(msg, bad){
+    var el = $("flash");
+    el.textContent = msg;
+    el.style.color = bad ? "var(--block)" : "var(--done)";
+    clearTimeout(flash._t);
+    flash._t = setTimeout(function(){ el.textContent = ""; }, 3000);
+  }
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function render(){
+    $("stamp").textContent = today();
+
+    var counts = {progress:0, testing:0, blocked:0, done:0};
+    projects.forEach(function(p){ if(counts[p.status] != null) counts[p.status]++; });
+    $("summary").innerHTML = ORDER.map(function(k){
+      return '<div class="cell" data-k="' + k + '">' +
+               '<span class="n">' + counts[k] + '</span>' +
+               '<span class="l">' + esc(STATES[k]) + '</span>' +
+             '</div>';
+    }).join("");
+
+    var log = $("log");
+    if(projects.length === 0){
+      log.innerHTML = '<div class="empty">Nothing tracked yet. Add a project to start the log.</div>';
+      return;
+    }
+
+    var rank = {blocked:0, progress:1, testing:2, done:3};
+    var sorted = projects.slice().sort(function(a,b){
+      return (rank[a.status] - rank[b.status]) || a.name.localeCompare(b.name);
+    });
+
+    log.innerHTML = sorted.map(function(p){
+      var pct = Math.max(0, Math.min(100, Number(p.pct) || 0));
+      return '' +
+      '<article class="row" data-s="' + esc(p.status) + '">' +
+        '<div class="row-head">' +
+          '<div><span class="name">' + esc(p.name) + '</span>' +
+            '<span class="cat">' + esc(CATS[p.cat] || "Other") + '</span></div>' +
+          '<span class="state state-' + esc(p.status) + '">' + esc(STATES[p.status] || p.status) + '</span>' +
+        '</div>' +
+        '<div class="facts">' +
+          '<div><span class="k">Next</span>' + (p.next ? esc(p.next) : "—") + '</div>' +
+          (p.blocker ? '<div class="blocked-line"><span class="k">Blocked by</span>' + esc(p.blocker) + '</div>' : "") +
+          '<div><span class="k">Updated</span>' + esc(p.updated || "—") + '</div>' +
+        '</div>' +
+        '<div class="meter">' +
+          '<div class="track"><div class="fill" style="width:' + pct + '%"></div></div>' +
+          '<span>' + pct + '%</span>' +
+        '</div>' +
+        '<div class="row-actions">' +
+          '<button type="button" data-act="edit" data-id="' + esc(p.id) + '">Edit</button>' +
+          '<button type="button" data-act="del" data-id="' + esc(p.id) + '">Delete</button>' +
+        '</div>' +
+      '</article>';
+    }).join("");
+  }
+
+  function openDialog(id){
+    editId = id || "";
+    $("err").textContent = "";
+    $("dlgTitle").textContent = id ? "Edit project" : "Add project";
+    var p = id ? projects.filter(function(x){ return x.id === id; })[0] : null;
+    $("f-name").value    = p ? p.name : "";
+    $("f-cat").value     = p ? (p.cat || "other") : "pcb";
+    $("f-status").value  = p ? p.status : "progress";
+    $("f-pct").value     = p ? (Number(p.pct) || 0) : 0;
+    $("f-next").value    = p ? (p.next || "") : "";
+    $("f-blocker").value = p ? (p.blocker || "") : "";
+    $("dlg").showModal();
+    $("f-name").focus();
+  }
+
+  function save(){
+    var name = $("f-name").value.trim();
+    if(!name){
+      $("err").textContent = "Give the project a name so it can be identified in the report.";
+      $("f-name").focus();
+      return;
+    }
+    var data = {
+      name: name,
+      cat: $("f-cat").value,
+      status: $("f-status").value,
+      pct: Math.max(0, Math.min(100, Number($("f-pct").value) || 0)),
+      next: $("f-next").value.trim(),
+      blocker: $("f-blocker").value.trim(),
+      updated: today()
+    };
+    if(editId){
+      projects = projects.map(function(p){ return p.id === editId ? Object.assign({}, p, data) : p; });
+    }else{
+      data.id = "p" + Date.now() + Math.random().toString(36).slice(2,6);
+      projects.push(data);
+    }
+    persist();
+    render();
+    $("dlg").close();
+    flash(editId ? "Updated" : "Added");
+  }
+
+  function report(){
+    var box = $("reportBox");
+    box.style.display = "block";
+    if(projects.length === 0){
+      box.textContent = "No projects tracked yet.";
+      return;
+    }
+    var g = {progress:[], testing:[], blocked:[], done:[]};
+    projects.forEach(function(p){ if(g[p.status]) g[p.status].push(p); });
+
+    var out = "Daily update — " + today() + "\n\n";
+    if(g.progress.length){
+      out += "In progress:\n";
+      g.progress.forEach(function(p){ out += "- " + p.name + " (" + (Number(p.pct)||0) + "%) — " + (p.next || "next step tbd") + "\n"; });
+      out += "\n";
+    }
+    if(g.testing.length){
+      out += "In testing:\n";
+      g.testing.forEach(function(p){ out += "- " + p.name + " — " + (p.next || "validating results") + "\n"; });
+      out += "\n";
+    }
+    if(g.blocked.length){
+      out += "Blocked — need input:\n";
+      g.blocked.forEach(function(p){ out += "- " + p.name + " — " + (p.blocker || "blocker not specified") + "\n"; });
+      out += "\n";
+    }
+    if(g.done.length){
+      out += "Completed:\n";
+      g.done.forEach(function(p){ out += "- " + p.name + "\n"; });
+    }
+    out = out.trim();
+    box.textContent = out;
+
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(out).then(function(){
+        flash("Copied to clipboard");
+      }, function(){
+        flash("Report ready — select and copy it");
+      });
+    }else{
+      flash("Report ready — select and copy it");
+    }
+  }
+
+  function exportJson(){
+    var blob = new Blob([JSON.stringify(projects, null, 2)], {type:"application/json"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "project-tracker-" + today() + ".json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    flash("Exported");
+  }
+
+  $("btnAdd").addEventListener("click", function(){ openDialog(); });
+  $("btnReport").addEventListener("click", report);
+  $("btnExport").addEventListener("click", exportJson);
+  $("btnSave").addEventListener("click", save);
+  $("btnCancel").addEventListener("click", function(){ $("dlg").close(); });
+
+  $("form").addEventListener("submit", function(e){ e.preventDefault(); });
+  $("f-name").addEventListener("keydown", function(e){
+    if(e.key === "Enter"){ e.preventDefault(); save(); }
+  });
+
+  $("log").addEventListener("click", function(e){
+    var btn = e.target.closest("button[data-act]");
+    if(!btn) return;
+    var id = btn.getAttribute("data-id");
+    if(btn.getAttribute("data-act") === "edit"){
+      openDialog(id);
+    }else{
+      var p = projects.filter(function(x){ return x.id === id; })[0];
+      if(p && window.confirm('Delete "' + p.name + '"? This cannot be undone.')){
+        projects = projects.filter(function(x){ return x.id !== id; });
+        persist();
+        render();
+        flash("Deleted");
+      }
+    }
+  });
+
+  // keep multiple tabs of the tracker in sync
+  window.addEventListener("storage", function(e){
+    if(e.key === KEY){ load(); render(); }
+  });
+
+  load();
   render();
-}
-
-async function persist(){
-  try{
-    await window.storage.set(STORAGE_KEY, JSON.stringify(projects));
-  }catch(e){
-    console.error('Save failed', e);
-  }
-}
-
-function openModal(id){
-  document.getElementById('editId').value = id || '';
-  document.getElementById('modalTitle').textContent = id ? 'Edit project' : 'Add project';
-  if(id){
-    const p = projects.find(x => x.id === id);
-    document.getElementById('f-name').value = p.name;
-    document.getElementById('f-cat').value = p.cat;
-    document.getElementById('f-status').value = p.status;
-    document.getElementById('f-pct').value = p.pct;
-    document.getElementById('f-next').value = p.next;
-    document.getElementById('f-blocker').value = p.blocker || '';
-  } else {
-    ['f-name','f-next','f-blocker'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('f-pct').value = 0;
-    document.getElementById('f-cat').value = 'pcb';
-    document.getElementById('f-status').value = 'progress';
-  }
-  document.getElementById('modalBg').style.display = 'flex';
-}
-
-function closeModal(){
-  document.getElementById('modalBg').style.display = 'none';
-}
-
-async function saveProject(){
-  const id = document.getElementById('editId').value;
-  const name = document.getElementById('f-name').value.trim();
-  if(!name) return;
-  const data = {
-    name,
-    cat: document.getElementById('f-cat').value,
-    status: document.getElementById('f-status').value,
-    pct: Number(document.getElementById('f-pct').value) || 0,
-    next: document.getElementById('f-next').value.trim(),
-    blocker: document.getElementById('f-blocker').value.trim(),
-    updated: new Date().toISOString().slice(0,10)
-  };
-  if(id){
-    const idx = projects.findIndex(x => x.id === id);
-    projects[idx] = {...projects[idx], ...data};
-  } else {
-    projects.push({id: 'p' + Date.now(), ...data});
-  }
-  await persist();
-  closeModal();
-  render();
-}
-
-async function removeProject(id){
-  projects = projects.filter(x => x.id !== id);
-  await persist();
-  render();
-}
-
-function catLabel(c){
-  return c === 'pcb' ? 'PCB' : c === 'fw' ? 'Firmware' : 'Other';
-}
-function statusLabel(s){
-  return {progress:'In progress', testing:'Testing', blocked:'Blocked', done:'Done'}[s];
-}
-
-function render(){
-  const list = document.getElementById('list');
-  if(projects.length === 0){
-    list.innerHTML = '<div class="empty">No projects yet. Add one to start tracking.</div>';
-    return;
-  }
-  const order = {blocked:0, progress:1, testing:2, done:3};
-  const sorted = [...projects].sort((a,b) => order[a.status]-order[b.status]);
-  list.innerHTML = sorted.map(p => `
-    <div class="card">
-      <div class="card-top">
-        <div>
-          <span class="card-title">${escapeHtml(p.name)}</span>
-          <span class="tag tag-${p.cat}">${catLabel(p.cat)}</span>
-        </div>
-        <span class="status status-${p.status}">${statusLabel(p.status)}</span>
-      </div>
-      <div class="meta">
-        <b>Next:</b> ${escapeHtml(p.next) || '—'}<br>
-        ${p.blocker ? '<b>Blocked by:</b> ' + escapeHtml(p.blocker) + '<br>' : ''}
-        Updated ${p.updated}
-      </div>
-      <div class="bar-wrap"><div class="bar" style="width:${p.pct}%"></div></div>
-      <div class="card-actions">
-        <button onclick="openModal('${p.id}')">Edit</button>
-        <button onclick="removeProject('${p.id}')">Delete</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-function escapeHtml(s){
-  const d = document.createElement('div');
-  d.textContent = s || '';
-  return d.innerHTML;
-}
-
-function generateReport(){
-  const box = document.getElementById('reportBox');
-  if(projects.length === 0){
-    box.style.display = 'block';
-    box.textContent = 'No projects tracked yet.';
-    return;
-  }
-  const groups = {progress:[], testing:[], blocked:[], done:[]};
-  projects.forEach(p => groups[p.status].push(p));
-  const today = new Date().toISOString().slice(0,10);
-  let out = `Daily update — ${today}\n\n`;
-
-  if(groups.progress.length){
-    out += 'In progress:\n';
-    groups.progress.forEach(p => out += `- ${p.name} (${p.pct}%) — ${p.next || 'next step tbd'}\n`);
-    out += '\n';
-  }
-  if(groups.testing.length){
-    out += 'In testing:\n';
-    groups.testing.forEach(p => out += `- ${p.name} — ${p.next || 'validating results'}\n`);
-    out += '\n';
-  }
-  if(groups.blocked.length){
-    out += 'Blocked — need input:\n';
-    groups.blocked.forEach(p => out += `- ${p.name} — ${p.blocker || 'blocker not specified'}\n`);
-    out += '\n';
-  }
-  if(groups.done.length){
-    out += 'Completed:\n';
-    groups.done.forEach(p => out += `- ${p.name}\n`);
-    out += '\n';
-  }
-
-  box.style.display = 'block';
-  box.textContent = out.trim();
-
-  navigator.clipboard.writeText(out.trim()).then(() => {
-    const msg = document.getElementById('copyMsg');
-    msg.textContent = 'Copied to clipboard';
-    setTimeout(() => msg.textContent = '', 2500);
-  }).catch(() => {});
-}
-
-load();
+})();
 </script>
 
 </body>
