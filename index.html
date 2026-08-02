@@ -565,6 +565,13 @@
      run here — a clone re-triggers them on insertion, and html2canvas
      can sample mid-animation (rows still at opacity:0) */
   .shot-stage, .shot-stage *{ animation:none !important; }
+  .shot-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(400px, 1fr));
+    gap:16px;
+    border-top:0;
+  }
+  .shot-grid .row{ border:1px solid var(--rule); }
 
   @keyframes riseIn{ from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:none;} }
   @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.12;} }
@@ -1767,26 +1774,17 @@
     stage.style.left = "-99999px";
     stage.style.top = "0";
     stage.style.background = "var(--ground)";
-    stage.style.paddingBottom = "38px";
-
-    var head = document.createElement("div");
-    head.innerHTML =
-      '<p class="kicker">Hardware &amp; firmware bench log</p>' +
-      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px;">' +
-        '<h1 style="margin:0;">PROJECT<span style="color:var(--accent);">_</span>TRACKER</h1>' +
-        '<span style="font-family:var(--mono);font-size:11px;color:var(--ink-faint);letter-spacing:.08em;">' + esc(today()) + '</span>' +
-      '</div>';
-    stage.appendChild(head);
-    stage.appendChild($("summary").cloneNode(true));
-    stage.appendChild($("dist").cloneNode(true));
+    stage.style.width = "1380px";
+    stage.style.maxWidth = "none";
+    stage.style.padding = "24px";
 
     var label = document.createElement("p");
     label.className = "log-label";
-    label.style.marginTop = "22px";
     label.textContent = "Active log — " + doc.projects.length + (doc.projects.length === 1 ? " project" : " projects");
     stage.appendChild(label);
 
     var logClone = $("log").cloneNode(true);
+    logClone.classList.add("shot-grid");
     Array.prototype.forEach.call(logClone.querySelectorAll(".row-actions, .sm-actions"), function(el){ el.remove(); });
     stage.appendChild(logClone);
 
