@@ -14,7 +14,7 @@
      All monospace. Martian Mono — wide, mechanical — carries the
      display type; JetBrains Mono carries everything you read.
      Every entry is a stacked instrument panel: name plate, status
-     band, progress channel, then the notes.
+     band, progress channel, a specs strip, then free-text notes.
      ============================================================ */
   :root{
     color-scheme: light;
@@ -85,6 +85,18 @@
   }
 
   *{box-sizing:border-box;}
+
+  /* ---------- scrollbars, everywhere ---------- */
+  html{ scrollbar-width:thin; scrollbar-color:var(--rule-strong) var(--ground); }
+  *{ scrollbar-width:thin; scrollbar-color:var(--rule-strong) var(--ground); }
+  *::-webkit-scrollbar{ width:11px; height:11px; }
+  *::-webkit-scrollbar-track{ background:var(--ground); }
+  *::-webkit-scrollbar-thumb{
+    background:var(--rule-strong); border:2px solid var(--ground);
+    background-clip:padding-box; border-radius:0;
+  }
+  *::-webkit-scrollbar-thumb:hover{ background:var(--accent); }
+  *::-webkit-scrollbar-corner{ background:var(--ground); }
 
   body{
     margin:0;
@@ -273,7 +285,9 @@
     border-bottom:1px solid var(--rule);
     animation:riseIn .4s cubic-bezier(.22,.9,.3,1) both;
     animation-delay:calc(var(--i) * 42ms);
+    transition:background .16s, box-shadow .16s;
   }
+  .row:hover{background:var(--surface-2); box-shadow:0 3px 12px -8px rgba(0,0,0,.3); z-index:1;}
   .row::before{
     content:""; position:absolute; left:0; top:0; bottom:0; width:3px;
     background:currentColor;
@@ -337,13 +351,24 @@
   }
   .pct small{font-size:11px; opacity:.6;}
 
-  /* notes */
+  /* specs strip — the short categorical/numeric facts, inline */
+  .row-specs{
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:9px;
+    padding:11px 20px 11px 23px; border-bottom:1px solid var(--rule);
+    font-size:12.5px; color:var(--ink-soft);
+  }
+  .spec{display:inline-flex; align-items:baseline; gap:5px; white-space:nowrap;}
+  .spec-k{font-size:9px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint);}
+  .spec-v{font-variant-numeric:tabular-nums;}
+  .spec-v.overdue{color:var(--block); font-weight:600;}
+  .spec-sep{color:var(--rule-strong);}
+
+  /* notes — the longer free-text facts, stacked */
   .row-facts{padding:15px 20px 6px 23px; display:grid; gap:8px; max-width:78ch;}
   .fact{display:grid; grid-template-columns:82px 1fr; gap:10px; align-items:baseline;}
   .fact .k{font-size:9px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint);}
   .fact .v{font-size:13.5px; color:var(--ink-soft); line-height:1.6; overflow-wrap:anywhere;}
   .fact.blocked-line .v{color:var(--block);}
-  .fact .v.overdue{color:var(--block); font-weight:600;}
   .fact .quiet{color:var(--ink-faint); opacity:.75;}
   .row-actions{display:flex; gap:7px; padding:12px 20px 16px 23px;}
   .row-actions .btn{padding:6px 11px; font-size:9.5px; letter-spacing:.16em;}
@@ -365,20 +390,27 @@
 
   /* ---------- dialogs ---------- */
   dialog{
+    position:relative;
     border:1px solid var(--rule-strong); border-top:2px solid var(--accent);
     border-radius:0; background:var(--surface); color:var(--ink);
-    padding:0; width:520px; max-width:calc(100vw - 26px);
+    padding:0; width:540px; max-width:calc(100vw - 26px);
+    max-height:calc(100vh - 48px); overflow-y:auto;
     box-shadow:0 26px 60px -26px rgba(0,0,0,.55);
   }
   dialog[open]{animation:riseIn .24s cubic-bezier(.22,.9,.3,1) both;}
   dialog::backdrop{background:rgba(6,9,5,.66); backdrop-filter:blur(2px);}
-  .dlg-body{padding:22px 24px 24px; display:grid; gap:15px;}
+  .dlg-body{padding:22px 24px 24px; display:grid; gap:14px;}
   .dlg-title{
     font-family:var(--display); font-size:11px; font-weight:600;
     letter-spacing:-.02em; text-transform:uppercase; color:var(--accent);
     margin:0; display:flex; align-items:center; gap:10px;
   }
   .dlg-title::after{content:""; flex:1; height:1px; background:var(--rule);}
+  .dlg-section{
+    font-size:9px; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--ink-faint); margin:3px 0 -5px; display:flex; align-items:center; gap:8px;
+  }
+  .dlg-section::after{content:""; flex:1; height:1px; background:var(--rule);}
   .field{display:grid; gap:6px; min-width:0;}
   .field[hidden]{display:none;}
   .field label{font-size:9px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint);}
@@ -437,6 +469,19 @@
   .ddown-menu li:hover{background:var(--accent-lift); color:var(--accent);}
   .ddown-menu li[aria-selected="true"]{background:var(--surface-2); color:var(--ink); font-weight:600;}
 
+  .ddown-with-add{display:flex; gap:8px; align-items:stretch;}
+  .ddown-with-add .ddown{flex:1; min-width:0;}
+  .ddown-add{
+    flex:none; width:38px;
+    font-family:var(--mono); font-size:16px; line-height:1;
+    background:var(--surface); color:var(--ink-faint);
+    border:1px solid var(--rule-strong); border-radius:0; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .ddown-add:hover{color:var(--accent); border-color:var(--accent); background:var(--accent-lift);}
+  .ddown-add:focus-visible{outline:2px solid var(--probe); outline-offset:2px;}
+
   /* ---------- settings ---------- */
   .settings-row{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:2px 0;}
   .settings-label{font-size:11px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft);}
@@ -464,7 +509,9 @@
   .row-smart{
     display:flex; align-items:center; gap:8px; flex-wrap:wrap;
     padding:7px 14px 7px 16px; font-size:11.5px;
+    transition:background .16s;
   }
+  .row-smart:hover{background:var(--surface-2);}
   .row-smart .sm-led{width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;}
   .row-smart .sm-name{
     font-family:var(--display); font-weight:600; font-size:12px; letter-spacing:-.03em;
@@ -567,14 +614,16 @@
 </div>
 
 <!-- project editor -->
-<dialog id="dlg">
+<dialog id="dlg" class="ticked">
   <form method="dialog" class="dlg-body" id="form">
     <p class="dlg-title" id="dlgTitle">Add project</p>
+
     <div class="field">
       <label for="f-name">Project name</label>
       <input id="f-name" placeholder="OVP circuit rev2 PCB" autocomplete="off">
     </div>
 
+    <p class="dlg-section">Classification</p>
     <div class="three">
       <div class="field">
         <label>Category</label>
@@ -612,11 +661,19 @@
       </div>
     </div>
 
-    <div class="two">
+    <p class="dlg-section">Specs</p>
+    <div class="three">
       <div class="field">
         <label>Percent complete</label>
         <div class="ddown" id="dd-pct" data-value="10">
           <button type="button" class="ddown-btn" aria-haspopup="listbox" aria-expanded="false">10%</button>
+          <ul class="ddown-menu" role="listbox" hidden></ul>
+        </div>
+      </div>
+      <div class="field">
+        <label>Power</label>
+        <div class="ddown" id="dd-power" data-value="">
+          <button type="button" class="ddown-btn" aria-haspopup="listbox" aria-expanded="false">Not set</button>
           <ul class="ddown-menu" role="listbox" hidden></ul>
         </div>
       </div>
@@ -642,11 +699,21 @@
       <input id="f-deadlineCustom" type="date">
     </div>
 
+    <p class="dlg-section">Ownership</p>
     <div class="field">
-      <label for="f-handler">Handler / owner</label>
-      <input id="f-handler" placeholder="Name or handle" autocomplete="off">
+      <label>Handler / owner</label>
+      <div class="ddown-with-add">
+        <div class="ddown" id="dd-handler" data-value="">
+          <button type="button" class="ddown-btn" aria-haspopup="listbox" aria-expanded="false">Unassigned</button>
+          <ul class="ddown-menu" role="listbox" hidden>
+            <li role="option" data-value="" aria-selected="true">Unassigned</li>
+          </ul>
+        </div>
+        <button type="button" class="ddown-add" id="btnAddHandler" aria-label="Add a handler">+</button>
+      </div>
     </div>
 
+    <p class="dlg-section">Notes</p>
     <div class="field">
       <label for="f-next">Next action</label>
       <textarea id="f-next" placeholder="What you'll do next on this"></textarea>
@@ -663,8 +730,24 @@
   </form>
 </dialog>
 
+<!-- add handler -->
+<dialog id="dlgAddHandler" class="ticked">
+  <form method="dialog" class="dlg-body" id="formAddHandler">
+    <p class="dlg-title">Add handler</p>
+    <div class="field">
+      <label for="newHandlerName">Name</label>
+      <input id="newHandlerName" placeholder="e.g. Ayaan" autocomplete="off">
+    </div>
+    <p class="err" id="addHandlerErr"></p>
+    <div class="dlg-actions">
+      <button type="button" class="btn" id="btnAddHandlerCancel">Cancel</button>
+      <button type="button" class="btn btn-primary" id="btnAddHandlerSave">Add</button>
+    </div>
+  </form>
+</dialog>
+
 <!-- sync settings -->
-<dialog id="dlgSync">
+<dialog id="dlgSync" class="ticked">
   <form method="dialog" class="dlg-body" id="formSync">
     <p class="dlg-title">Sync across devices</p>
     <p class="hint">
@@ -695,7 +778,7 @@
 </dialog>
 
 <!-- settings -->
-<dialog id="dlgSettings">
+<dialog id="dlgSettings" class="ticked">
   <form method="dialog" class="dlg-body" id="formSettings">
     <p class="dlg-title">Settings</p>
     <div class="settings-row">
@@ -731,7 +814,7 @@
   var API = "https://api.github.com";
   var POLL_MS = 10000;
 
-  var doc = {v:1, projects:[], deleted:{}};
+  var doc = {v:1, projects:[], deleted:{}, handlers:[]};
   var editId = "";
   var syncing = false;
   var pushTimer = null;
@@ -900,22 +983,66 @@
     ul.innerHTML = html;
   })();
 
+  // build the 5–150 step-5 power options before wiring the dropdown
+  (function(){
+    var ul = $("dd-power").querySelector(".ddown-menu");
+    var html = '<li role="option" data-value="" aria-selected="true">Not set</li>';
+    for(var w = 5; w <= 150; w += 5){
+      html += '<li role="option" data-value="' + w + '">' + w + 'W</li>';
+    }
+    ul.innerHTML = html;
+  })();
+
   function showCustomDate(v){ $("customDateField").hidden = v !== "custom"; }
 
   var ddCat      = new Dropdown($("dd-cat"));
   var ddStatus   = new Dropdown($("dd-status"));
   var ddPriority = new Dropdown($("dd-priority"));
   var ddPct      = new Dropdown($("dd-pct"));
+  var ddPower    = new Dropdown($("dd-power"));
   var ddDeadline = new Dropdown($("dd-deadline"), showCustomDate);
+  var ddHandler  = new Dropdown($("dd-handler"));
 
   function snapPct(v){ return Math.min(100, Math.max(10, Math.round((Number(v) || 10) / 10) * 10)); }
+
+  function rebuildHandlerMenu(selected){
+    var opts = [""].concat(doc.handlers);
+    ddHandler.menu.innerHTML = opts.map(function(h){
+      return '<li role="option" data-value="' + esc(h) + '">' + esc(h === "" ? "Unassigned" : h) + '</li>';
+    }).join("");
+    ddHandler.setValue(selected || "", false);
+  }
+
+  function openAddHandler(){
+    $("newHandlerName").value = "";
+    $("addHandlerErr").textContent = "";
+    $("dlgAddHandler").showModal();
+    $("newHandlerName").focus();
+  }
+  function addHandler(){
+    var name = $("newHandlerName").value.trim();
+    if(!name){
+      $("addHandlerErr").textContent = "Enter a name first.";
+      return;
+    }
+    var exists = doc.handlers.some(function(h){ return h.toLowerCase() === name.toLowerCase(); });
+    if(!exists){
+      doc.handlers.push(name);
+      doc.handlers.sort(function(a,b){ return a.localeCompare(b); });
+      persist();
+      syncSoon();
+    }
+    rebuildHandlerMenu(name);
+    $("dlgAddHandler").close();
+    flash(exists ? "Handler already exists" : "Handler added");
+  }
 
   /* ================= local storage ================= */
   function newId(){
     return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
   }
   function normalize(raw){
-    var d = {v:1, projects:[], deleted:{}};
+    var d = {v:1, projects:[], deleted:{}, handlers:[]};
     if(!raw) return d;
     var parsed;
     try{ parsed = JSON.parse(raw); }catch(e){ return d; }
@@ -923,12 +1050,21 @@
     else if(parsed && typeof parsed === "object"){
       d.projects = Array.isArray(parsed.projects) ? parsed.projects : [];
       d.deleted = (parsed.deleted && typeof parsed.deleted === "object") ? parsed.deleted : {};
+      d.handlers = Array.isArray(parsed.handlers) ? parsed.handlers.filter(Boolean) : [];
     }
     d.projects = d.projects.filter(function(p){ return p && p.name; }).map(function(p){
       if(!p.id) p.id = newId();
       if(!p.updatedAt) p.updatedAt = Date.parse(p.updated || "") || 1;
       return p;
     });
+    // migrate free-text handler values from older data into the dropdown list
+    var known = {};
+    d.handlers.forEach(function(h){ known[h.toLowerCase()] = true; });
+    d.projects.forEach(function(p){
+      var h = (p.handler || "").trim();
+      if(h && !known[h.toLowerCase()]){ known[h.toLowerCase()] = true; d.handlers.push(h); }
+    });
+    d.handlers.sort(function(a,b){ return a.localeCompare(b); });
     return d;
   }
   function load(){ doc = normalize(ls(KEY) || ls(LEGACY)); }
@@ -938,7 +1074,7 @@
 
   /* ================= merge ================= */
   function merge(a, b){
-    var out = {v:1, projects:[], deleted:{}};
+    var out = {v:1, projects:[], deleted:{}, handlers:[]};
     var byId = {};
     [a, b].forEach(function(d){
       (d.projects || []).forEach(function(p){
@@ -957,6 +1093,14 @@
       if(del) delete out.deleted[id];
       out.projects.push(p);
     });
+    var known = {};
+    [a, b].forEach(function(d){
+      (d.handlers || []).forEach(function(h){
+        var k = h.toLowerCase();
+        if(h && !known[k]){ known[k] = true; out.handlers.push(h); }
+      });
+    });
+    out.handlers.sort(function(x,y){ return x.localeCompare(y); });
     return out;
   }
 
@@ -1001,7 +1145,7 @@
     if(!id) return Promise.resolve(null);
     return gh("/gists/" + id).then(function(g){
       var f = g.files && g.files[GIST_FILE];
-      if(!f) return {v:1, projects:[], deleted:{}};
+      if(!f) return {v:1, projects:[], deleted:{}, handlers:[]};
       if(f.truncated && f.raw_url){
         return fetch(f.raw_url, {cache:"no-store"}).then(function(r){ return r.text(); }).then(normalize);
       }
@@ -1194,11 +1338,17 @@
         '<span class="track"><span class="fill" style="width:' + pct + '%"></span></span>' +
         '<span class="pct">' + pct + '<small>%</small></span>' +
       '</div>' +
+      '<div class="row-specs">' +
+        '<span class="spec"><span class="spec-k">Handler</span><span class="spec-v">' +
+          (p.handler ? esc(p.handler) : '<span class="quiet">unassigned</span>') + '</span></span>' +
+        '<span class="spec-sep">·</span>' +
+        '<span class="spec"><span class="spec-k">Power</span><span class="spec-v">' +
+          (p.power ? esc(p.power) + 'W' : '<span class="quiet">not set</span>') + '</span></span>' +
+        '<span class="spec-sep">·</span>' +
+        '<span class="spec"><span class="spec-k">Deadline</span><span class="spec-v' + (overdue ? " overdue" : "") + '">' +
+          (dl ? esc(dl) + (overdue ? " — overdue" : "") : '<span class="quiet">none</span>') + '</span></span>' +
+      '</div>' +
       '<div class="row-facts">' +
-        '<div class="fact"><span class="k">Handler</span><span class="v">' +
-          (p.handler ? esc(p.handler) : '<span class="quiet">unassigned</span>') + '</span></div>' +
-        '<div class="fact"><span class="k">Deadline</span><span class="v' + (overdue ? " overdue" : "") + '">' +
-          (dl ? esc(dl) + (overdue ? " — overdue" : "") : '<span class="quiet">none</span>') + '</span></div>' +
         '<div class="fact"><span class="k">Next</span><span class="v">' +
           (p.next ? esc(p.next) : '<span class="quiet">not set</span>') + '</span></div>' +
         (p.blocker
@@ -1222,6 +1372,7 @@
       '<span class="sm-track"><span class="sm-fill" style="width:' + pct + '%"></span></span>' +
       '<span class="sm-pct">' + pct + '%</span>' +
       (p.handler ? '<span class="sm-meta">@' + esc(p.handler) + '</span>' : "") +
+      (p.power ? '<span class="sm-meta">⚡' + esc(p.power) + 'W</span>' : "") +
       (dl ? '<span class="sm-meta' + (overdue ? " overdue" : "") + '">' + esc(dl) + '</span>' : "") +
       '<span class="sm-next" title="' + esc(p.blocker ? ("Blocked: " + p.blocker) : (p.next || "")) + '">' +
         esc(p.blocker ? "⚠ " + p.blocker : (p.next || "—")) +
@@ -1244,10 +1395,11 @@
     ddStatus.setValue(p ? p.status : "progress");
     ddPriority.setValue(p ? (p.priority || "medium") : "medium");
     ddPct.setValue(String(p ? snapPct(p.pct) : 10));
+    ddPower.setValue(p ? (p.power || "") : "");
     ddDeadline.setValue(p ? (p.deadline || "") : "");
     showCustomDate(p ? (p.deadline || "") : "");
     $("f-deadlineCustom").value = p && p.deadline === "custom" ? (p.deadlineCustom || "") : "";
-    $("f-handler").value = p ? (p.handler || "") : "";
+    rebuildHandlerMenu(p ? (p.handler || "") : "");
     $("f-next").value    = p ? (p.next || "") : "";
     $("f-blocker").value = p ? (p.blocker || "") : "";
     $("dlg").showModal();
@@ -1268,7 +1420,8 @@
       status: ddStatus.getValue(),
       priority: ddPriority.getValue(),
       pct: clampPct(ddPct.getValue()),
-      handler: $("f-handler").value.trim(),
+      power: ddPower.getValue(),
+      handler: ddHandler.getValue(),
       deadline: deadline,
       deadlineCustom: deadline === "custom" ? $("f-deadlineCustom").value : "",
       next: $("f-next").value.trim(),
@@ -1398,11 +1551,11 @@
     var counts = {progress:0, testing:0, blocked:0, done:0};
     doc.projects.forEach(function(p){ if(counts[p.status] != null) counts[p.status]++; });
 
-    var HEAD = ["Project","Category","Status","Priority","Complete","Progress","Handler","Deadline","Next action","Blocker","Updated"];
+    var HEAD = ["Project","Category","Status","Priority","Power","Complete","Progress","Handler","Deadline","Next action","Blocker","Updated"];
     var LASTC = HEAD.length - 1;
     var HEAD_R = 4;          // zero-based: masthead 0-1, tally 2, spacer 3
     var FIRST_R = HEAD_R + 1;
-    var CENTER_COLS = [3,4,5,7];
+    var CENTER_COLS = [3,4,5,6,8];
 
     var aoa = [
       ["PROJECT_TRACKER"],
@@ -1420,6 +1573,7 @@
         CATS[p.cat] || "Other",
         STATES[p.status] || p.status,
         PRIS[p.priority] || "Medium",
+        p.power ? (p.power + "W") : "—",
         pct / 100,
         new Array(filled + 1).join("█") + new Array(10 - filled + 1).join("░"),
         p.handler || "",
@@ -1509,41 +1663,47 @@
         alignment:{vertical:"center", horizontal:"center"},
         border:xBorder("b")
       });
-      var pctCell = at(r, 4);
-      if(pctCell) pctCell.z = "0%";
       style(r, 4, {
+        font:{name:MONO, sz:9, bold: !!p.power, color:{rgb: p.power ? XC.inkSoft : XC.faint}},
+        fill:xFill(band),
+        alignment:{vertical:"center", horizontal:"center"},
+        border:xBorder("b")
+      });
+      var pctCell = at(r, 5);
+      if(pctCell) pctCell.z = "0%";
+      style(r, 5, {
         font:{name:MONO, sz:11, bold:true, color:{rgb:XC.ink}},
         fill:xFill(band),
         alignment:{vertical:"center", horizontal:"center"},
         border:xBorder("b")
       });
-      style(r, 5, {
+      style(r, 6, {
         font:{name:MONO, sz:10, color:{rgb:sc.fg}},
         fill:xFill(band),
         alignment:{vertical:"center", horizontal:"center"},
         border:xBorder("b")
       });
-      style(r, 6, {
+      style(r, 7, {
         font:{name:MONO, sz:10, color:{rgb:XC.inkSoft}},
         fill:xFill(band),
         alignment:{vertical:"center", horizontal:"left"},
         border:xBorder("b")
       });
-      style(r, 7, {
+      style(r, 8, {
         font:{name:MONO, sz:9, bold: overdue, color:{rgb: overdue ? XSTATE.blocked.fg : XC.faint}},
         fill:xFill(band),
         alignment:{vertical:"center", horizontal:"center"},
         border:xBorder("b")
       });
       if(p.blocker){
-        style(r, 9, {
+        style(r, 10, {
           font:{name:MONO, sz:10, color:{rgb:XSTATE.blocked.fg}},
           fill:xFill(band),
           alignment:{vertical:"center", wrapText:true},
           border:xBorder("b")
         });
       }
-      style(r, 10, {
+      style(r, 11, {
         font:{name:MONO, sz:9, color:{rgb:XC.faint}},
         fill:xFill(band),
         alignment:{vertical:"center", horizontal:"center"},
@@ -1551,7 +1711,7 @@
       });
     });
 
-    ws["!cols"] = [{wch:34},{wch:11},{wch:13},{wch:10},{wch:10},{wch:14},{wch:16},{wch:13},{wch:42},{wch:34},{wch:12}];
+    ws["!cols"] = [{wch:34},{wch:11},{wch:13},{wch:10},{wch:9},{wch:10},{wch:14},{wch:16},{wch:13},{wch:42},{wch:34},{wch:12}];
     ws["!rows"] = [{hpt:30},{hpt:15},{hpt:18},{hpt:7},{hpt:22}];
     list.forEach(function(){ ws["!rows"].push({hpt:32}); });
     ws["!autofilter"] = {ref: XLSX.utils.encode_range({s:{r:HEAD_R,c:0}, e:{r:FIRST_R + list.length - 1, c:LASTC}})};
@@ -1577,12 +1737,20 @@
   $("btnSave").addEventListener("click", save);
   $("btnCancel").addEventListener("click", function(){ $("dlg").close(); });
 
+  $("btnAddHandler").addEventListener("click", openAddHandler);
+  $("btnAddHandlerCancel").addEventListener("click", function(){ $("dlgAddHandler").close(); });
+  $("btnAddHandlerSave").addEventListener("click", addHandler);
+  $("newHandlerName").addEventListener("keydown", function(e){
+    if(e.key === "Enter"){ e.preventDefault(); addHandler(); }
+  });
+
   $("btnSyncSetup").addEventListener("click", openSync);
   $("btnSyncSave").addEventListener("click", saveSync);
   $("btnSyncCancel").addEventListener("click", function(){ $("dlgSync").close(); });
   $("btnForget").addEventListener("click", forgetSync);
 
   $("form").addEventListener("submit", function(e){ e.preventDefault(); });
+  $("formAddHandler").addEventListener("submit", function(e){ e.preventDefault(); });
   $("formSync").addEventListener("submit", function(e){ e.preventDefault(); });
   $("formSettings").addEventListener("submit", function(e){ e.preventDefault(); });
   $("f-name").addEventListener("keydown", function(e){
@@ -1623,6 +1791,7 @@
   initAnimations();
   initUiStyle();
   load();
+  rebuildHandlerMenu("");
   render(true);
   if(configured()){
     setSyncState("busy", "Checking GitHub…");
