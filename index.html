@@ -16,76 +16,73 @@
      Every entry is a stacked instrument panel: name plate, status
      band, progress channel, a specs strip, then free-text notes.
      ============================================================ */
-  /* Two historical drafting-reproduction methods, not just a light/dark
-     invert: dark is a blueprint (white ink on blue paper), light is a
-     blueline/diazo print (blue ink on white paper) — the process that
-     replaced blueprints for exactly this reason. */
   :root{
     color-scheme: light;
 
-    --ground:#eef3f8;
-    --ground-2:#e2eaf3;
-    --surface:#ffffff;
-    --surface-2:#f2f6fb;
-    --rule:#c3d6e8;
-    --rule-strong:#9db8d3;
-    --ink:#0f2c4d;
-    --ink-soft:#345a82;
-    --ink-faint:#6f8caa;
-    --grid:rgba(15,44,77,.05);
-    --ambient-glow:rgba(31,127,168,.16);
+    --ground:#e8eae5;
+    --ground-2:#dee1da;
+    --surface:#f7f8f4;
+    --surface-2:#eef0ea;
+    --rule:#d0d5c9;
+    --rule-strong:#b2b9a9;
+    --ink:#12150f;
+    --ink-soft:#4a5044;
+    --ink-faint:#7e8577;
+    --grid:rgba(18,21,15,.055);
+    --ambient-glow:rgba(168,72,26,.36);
 
-    --accent:#1f7fa8;
-    --accent-lift:rgba(31,127,168,.08);
-    --probe:#c9791a;
+    --accent:#a8481a;
+    --accent-lift:rgba(168,72,26,.08);
+    --probe:#0d6874;
 
-    --run:#1f7fa8;  --run-bg:rgba(31,127,168,.12);
-    --test:#a67310; --test-bg:rgba(166,115,16,.12);
-    --block:#c23a2c; --block-bg:rgba(194,58,44,.12);
-    --done:#2f8a57;  --done-bg:rgba(47,138,87,.12);
+    --run:#215d7a;  --run-bg:rgba(33,93,122,.11);
+    --test:#7a5804; --test-bg:rgba(122,88,4,.13);
+    --block:#a02719; --block-bg:rgba(160,39,25,.11);
+    --done:#31603c;  --done-bg:rgba(49,96,60,.12);
 
     --display:"Martian Mono",ui-monospace,monospace;
     --mono:"JetBrains Mono",ui-monospace,"Cascadia Mono","Consolas",monospace;
   }
+  /* dark mode goes to true black — every pixel off, OLED-friendly */
   @media (prefers-color-scheme: dark){
     :root{
       color-scheme: dark;
-      --ground:#0d2340; --ground-2:#0a1d36; --surface:#123258; --surface-2:#163a66;
-      --rule:#2c5586; --rule-strong:#3f6ea3;
-      --ink:#eef5fc; --ink-soft:#b7cbe0; --ink-faint:#7b93b3;
-      --grid:rgba(255,255,255,.055);
-      --ambient-glow:rgba(109,211,240,.34);
-      --accent:#6dd3f0; --accent-lift:rgba(109,211,240,.10);
-      --probe:#ffb454;
-      --run:#5fb8dd;  --run-bg:rgba(95,184,221,.15);
-      --test:#e8b34a; --test-bg:rgba(232,179,74,.15);
-      --block:#ef6b5a; --block-bg:rgba(239,107,90,.15);
-      --done:#63c98a;  --done-bg:rgba(99,201,138,.15);
+      --ground:#000000; --ground-2:#000000; --surface:#0a0c08; --surface-2:#12150e;
+      --rule:#20241a; --rule-strong:#333a27;
+      --ink:#e8ebe1; --ink-soft:#a2a99a; --ink-faint:#6f776a;
+      --grid:rgba(232,235,225,.045);
+      --ambient-glow:rgba(229,128,56,.42);
+      --accent:#e58038; --accent-lift:rgba(229,128,56,.10);
+      --probe:#59c0cb;
+      --run:#74b2d3;  --run-bg:rgba(116,178,211,.13);
+      --test:#dab24d; --test-bg:rgba(218,178,77,.13);
+      --block:#e5776a; --block-bg:rgba(229,119,106,.13);
+      --done:#7cbe89; --done-bg:rgba(124,190,137,.13);
     }
   }
   :root[data-theme="light"]{
     color-scheme: light;
-    --ground:#eef3f8; --ground-2:#e2eaf3; --surface:#ffffff; --surface-2:#f2f6fb;
-    --rule:#c3d6e8; --rule-strong:#9db8d3;
-    --ink:#0f2c4d; --ink-soft:#345a82; --ink-faint:#6f8caa;
-    --grid:rgba(15,44,77,.05); --ambient-glow:rgba(31,127,168,.16);
-    --accent:#1f7fa8; --accent-lift:rgba(31,127,168,.08); --probe:#c9791a;
-    --run:#1f7fa8;  --run-bg:rgba(31,127,168,.12);
-    --test:#a67310; --test-bg:rgba(166,115,16,.12);
-    --block:#c23a2c; --block-bg:rgba(194,58,44,.12);
-    --done:#2f8a57; --done-bg:rgba(47,138,87,.12);
+    --ground:#e8eae5; --ground-2:#dee1da; --surface:#f7f8f4; --surface-2:#eef0ea;
+    --rule:#d0d5c9; --rule-strong:#b2b9a9;
+    --ink:#12150f; --ink-soft:#4a5044; --ink-faint:#7e8577;
+    --grid:rgba(18,21,15,.055); --ambient-glow:rgba(168,72,26,.36);
+    --accent:#a8481a; --accent-lift:rgba(168,72,26,.08); --probe:#0d6874;
+    --run:#215d7a;  --run-bg:rgba(33,93,122,.11);
+    --test:#7a5804; --test-bg:rgba(122,88,4,.13);
+    --block:#a02719; --block-bg:rgba(160,39,25,.11);
+    --done:#31603c; --done-bg:rgba(49,96,60,.12);
   }
   :root[data-theme="dark"]{
     color-scheme: dark;
-    --ground:#0d2340; --ground-2:#0a1d36; --surface:#123258; --surface-2:#163a66;
-    --rule:#2c5586; --rule-strong:#3f6ea3;
-    --ink:#eef5fc; --ink-soft:#b7cbe0; --ink-faint:#7b93b3;
-    --grid:rgba(255,255,255,.055); --ambient-glow:rgba(109,211,240,.34);
-    --accent:#6dd3f0; --accent-lift:rgba(109,211,240,.10); --probe:#ffb454;
-    --run:#5fb8dd;  --run-bg:rgba(95,184,221,.15);
-    --test:#e8b34a; --test-bg:rgba(232,179,74,.15);
-    --block:#ef6b5a; --block-bg:rgba(239,107,90,.15);
-    --done:#63c98a; --done-bg:rgba(99,201,138,.15);
+    --ground:#000000; --ground-2:#000000; --surface:#0a0c08; --surface-2:#12150e;
+    --rule:#20241a; --rule-strong:#333a27;
+    --ink:#e8ebe1; --ink-soft:#a2a99a; --ink-faint:#6f776a;
+    --grid:rgba(232,235,225,.045); --ambient-glow:rgba(229,128,56,.42);
+    --accent:#e58038; --accent-lift:rgba(229,128,56,.10); --probe:#59c0cb;
+    --run:#74b2d3;  --run-bg:rgba(116,178,211,.13);
+    --test:#dab24d; --test-bg:rgba(218,178,77,.13);
+    --block:#e5776a; --block-bg:rgba(229,119,106,.13);
+    --done:#7cbe89; --done-bg:rgba(124,190,137,.13);
   }
 
   *{box-sizing:border-box;}
@@ -402,7 +399,7 @@
     box-shadow:0 26px 60px -26px rgba(0,0,0,.55);
   }
   dialog[open]{animation:riseIn .24s cubic-bezier(.22,.9,.3,1) both;}
-  dialog::backdrop{background:rgba(4,14,28,.68); backdrop-filter:blur(2px);}
+  dialog::backdrop{background:rgba(6,9,5,.66); backdrop-filter:blur(2px);}
   .dlg-body{padding:22px 24px 24px; display:grid; gap:14px;}
   .dlg-title{
     font-family:var(--display); font-size:11px; font-weight:600;
@@ -1511,20 +1508,20 @@
      Laid out like the site: masthead block, a status tally,
      then the log — mono type, copper accent, status colours. */
   var XC = {
-    ink:"0F2C4D", inkSoft:"345A82", faint:"6F8CAA",
-    rule:"C3D6E8", ruleStrong:"9DB8D3",
-    surface:"FFFFFF", surface2:"F2F6FB", ground:"EEF3F8",
-    accent:"1F7FA8", paper:"F7FAFD"
+    ink:"12150F", inkSoft:"4A5044", faint:"7E8577",
+    rule:"D0D5C9", ruleStrong:"B2B9A9",
+    surface:"FFFFFF", surface2:"F4F6F1", ground:"E8EAE5",
+    accent:"A8481A", paper:"FBFCF9"
   };
   var XSTATE = {
-    progress:{fg:"1F7FA8", bg:"E3EFF5"},
-    testing: {fg:"A67310", bg:"F4EAD6"},
-    blocked: {fg:"C23A2C", bg:"F8E2DF"},
-    done:    {fg:"2F8A57", bg:"E1F1E8"}
+    progress:{fg:"215D7A", bg:"E2EBF0"},
+    testing: {fg:"7A5804", bg:"F3EBD8"},
+    blocked: {fg:"A02719", bg:"F7E4E1"},
+    done:    {fg:"31603C", bg:"E4EDE6"}
   };
   var XPRI = {
-    high:  {fg:"C23A2C", bg:"F8E2DF"},
-    medium:{fg:"A67310", bg:"F4EAD6"},
+    high:  {fg:"A02719", bg:"F7E4E1"},
+    medium:{fg:"7A5804", bg:"F3EBD8"},
     low:   {fg:XC.faint, bg:XC.surface2}
   };
   var MONO = "Consolas";
