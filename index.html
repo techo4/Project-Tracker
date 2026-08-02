@@ -6,79 +6,86 @@
 <title>Project Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Martian+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
   /* ============================================================
-     All monospace. Martian Mono — wide, mechanical — carries the
-     display type; JetBrains Mono carries everything you read.
-     Layout is an instrument panel: ruled channels, corner ticks,
-     a status rail down the left of every entry.
+     Type: Newsreader (editorial serif) + JetBrains Mono (data).
+     No sans anywhere — the serif carries prose, the mono carries
+     every number, label and state.
      ============================================================ */
   :root{
     color-scheme: light;
 
-    --ground:#e8eae5;
-    --ground-2:#dee1da;
-    --surface:#f7f8f4;
-    --surface-2:#eef0ea;
-    --rule:#d0d5c9;
-    --rule-strong:#b2b9a9;
-    --ink:#12150f;
-    --ink-soft:#4a5044;
-    --ink-faint:#7e8577;
-    --grid:rgba(18,21,15,.055);
+    /* neutrals, biased cool-green like a bare soldermask panel */
+    --ground:#eceeea;
+    --ground-2:#e3e6e0;
+    --surface:#fbfcfa;
+    --rule:#d5d9d1;
+    --rule-strong:#bcc2b6;
+    --ink:#161a15;
+    --ink-soft:#4e544a;
+    --ink-faint:#828a7e;
+    --dot:rgba(22,26,21,.10);
 
-    --accent:#a8481a;
-    --accent-lift:rgba(168,72,26,.08);
-    --probe:#0d6874;
+    /* accent: hot solder copper */
+    --accent:#a94a1c;
+    --accent-lift:rgba(169,74,28,.09);
+    /* secondary: probe cyan, used only for measurement + focus */
+    --probe:#0f6d78;
 
-    --run:#215d7a;  --run-bg:rgba(33,93,122,.11);
-    --test:#7a5804; --test-bg:rgba(122,88,4,.13);
-    --block:#a02719; --block-bg:rgba(160,39,25,.11);
-    --done:#31603c;  --done-bg:rgba(49,96,60,.12);
+    /* semantic state */
+    --run:#25627f;  --run-bg:rgba(37,98,127,.11);
+    --test:#7d5c06; --test-bg:rgba(125,92,6,.13);
+    --block:#a32a20; --block-bg:rgba(163,42,32,.11);
+    --done:#356140;  --done-bg:rgba(53,97,64,.12);
 
-    --display:"Martian Mono",ui-monospace,monospace;
+    --serif:"Newsreader",Georgia,"Times New Roman",serif;
     --mono:"JetBrains Mono",ui-monospace,"Cascadia Mono","Consolas",monospace;
+
+    --shadow:0 1px 0 rgba(22,26,21,.03), 0 6px 20px -12px rgba(22,26,21,.28);
   }
   @media (prefers-color-scheme: dark){
     :root{
       color-scheme: dark;
-      --ground:#0d100c; --ground-2:#090b08; --surface:#141810; --surface-2:#191d15;
-      --rule:#252b20; --rule-strong:#39412f;
-      --ink:#e8ebe1; --ink-soft:#a2a99a; --ink-faint:#6f776a;
-      --grid:rgba(232,235,225,.045);
-      --accent:#e58038; --accent-lift:rgba(229,128,56,.10);
-      --probe:#59c0cb;
-      --run:#74b2d3;  --run-bg:rgba(116,178,211,.13);
-      --test:#dab24d; --test-bg:rgba(218,178,77,.13);
-      --block:#e5776a; --block-bg:rgba(229,119,106,.13);
-      --done:#7cbe89; --done-bg:rgba(124,190,137,.13);
+      --ground:#101310; --ground-2:#0b0e0b; --surface:#181c17;
+      --rule:#282e26; --rule-strong:#3b4338;
+      --ink:#e9ece5; --ink-soft:#a6ad9f; --ink-faint:#767e71;
+      --dot:rgba(233,236,229,.07);
+      --accent:#e5843c; --accent-lift:rgba(229,132,60,.11);
+      --probe:#5fc2cc;
+      --run:#78b4d4;  --run-bg:rgba(120,180,212,.13);
+      --test:#dcb352; --test-bg:rgba(220,179,82,.13);
+      --block:#e5786a; --block-bg:rgba(229,120,106,.13);
+      --done:#7fbf8c; --done-bg:rgba(127,191,140,.13);
+      --shadow:0 1px 0 rgba(0,0,0,.3), 0 8px 24px -14px rgba(0,0,0,.8);
     }
   }
   :root[data-theme="light"]{
     color-scheme: light;
-    --ground:#e8eae5; --ground-2:#dee1da; --surface:#f7f8f4; --surface-2:#eef0ea;
-    --rule:#d0d5c9; --rule-strong:#b2b9a9;
-    --ink:#12150f; --ink-soft:#4a5044; --ink-faint:#7e8577;
-    --grid:rgba(18,21,15,.055);
-    --accent:#a8481a; --accent-lift:rgba(168,72,26,.08); --probe:#0d6874;
-    --run:#215d7a;  --run-bg:rgba(33,93,122,.11);
-    --test:#7a5804; --test-bg:rgba(122,88,4,.13);
-    --block:#a02719; --block-bg:rgba(160,39,25,.11);
-    --done:#31603c; --done-bg:rgba(49,96,60,.12);
+    --ground:#eceeea; --ground-2:#e3e6e0; --surface:#fbfcfa;
+    --rule:#d5d9d1; --rule-strong:#bcc2b6;
+    --ink:#161a15; --ink-soft:#4e544a; --ink-faint:#828a7e;
+    --dot:rgba(22,26,21,.10);
+    --accent:#a94a1c; --accent-lift:rgba(169,74,28,.09); --probe:#0f6d78;
+    --run:#25627f;  --run-bg:rgba(37,98,127,.11);
+    --test:#7d5c06; --test-bg:rgba(125,92,6,.13);
+    --block:#a32a20; --block-bg:rgba(163,42,32,.11);
+    --done:#356140; --done-bg:rgba(53,97,64,.12);
+    --shadow:0 1px 0 rgba(22,26,21,.03), 0 6px 20px -12px rgba(22,26,21,.28);
   }
   :root[data-theme="dark"]{
     color-scheme: dark;
-    --ground:#0d100c; --ground-2:#090b08; --surface:#141810; --surface-2:#191d15;
-    --rule:#252b20; --rule-strong:#39412f;
-    --ink:#e8ebe1; --ink-soft:#a2a99a; --ink-faint:#6f776a;
-    --grid:rgba(232,235,225,.045);
-    --accent:#e58038; --accent-lift:rgba(229,128,56,.10); --probe:#59c0cb;
-    --run:#74b2d3;  --run-bg:rgba(116,178,211,.13);
-    --test:#dab24d; --test-bg:rgba(218,178,77,.13);
-    --block:#e5776a; --block-bg:rgba(229,119,106,.13);
-    --done:#7cbe89; --done-bg:rgba(124,190,137,.13);
+    --ground:#101310; --ground-2:#0b0e0b; --surface:#181c17;
+    --rule:#282e26; --rule-strong:#3b4338;
+    --ink:#e9ece5; --ink-soft:#a6ad9f; --ink-faint:#767e71;
+    --dot:rgba(233,236,229,.07);
+    --accent:#e5843c; --accent-lift:rgba(229,132,60,.11); --probe:#5fc2cc;
+    --run:#78b4d4;  --run-bg:rgba(120,180,212,.13);
+    --test:#dcb352; --test-bg:rgba(220,179,82,.13);
+    --block:#e5786a; --block-bg:rgba(229,120,106,.13);
+    --done:#7fbf8c; --done-bg:rgba(127,191,140,.13);
+    --shadow:0 1px 0 rgba(0,0,0,.3), 0 8px 24px -14px rgba(0,0,0,.8);
   }
 
   *{box-sizing:border-box;}
@@ -86,154 +93,155 @@
   body{
     margin:0;
     color:var(--ink);
-    font-family:var(--mono);
-    font-size:14px; font-weight:400; line-height:1.6;
+    font-family:var(--serif);
+    font-size:17px; line-height:1.55;
+    font-optical-sizing:auto;
     -webkit-font-smoothing:antialiased;
     background:
-      linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 100% 28px,
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 28px 100%,
+      radial-gradient(var(--dot) 1px, transparent 1.2px) 0 0 / 22px 22px,
       linear-gradient(var(--ground), var(--ground-2));
     background-attachment:fixed;
     min-height:100vh;
   }
   ::selection{background:var(--accent); color:var(--surface);}
 
-  .wrap{max-width:980px; margin:0 auto; padding:38px 20px 100px;}
-
-  /* corner ticks — crosshair marks on framed panels */
-  .ticked{position:relative;}
-  .ticked::before,.ticked::after{
-    content:""; position:absolute; width:7px; height:7px; pointer-events:none;
-    border-color:var(--accent); opacity:.85;
-  }
-  .ticked::before{top:-1px; left:-1px; border-top:1px solid; border-left:1px solid;}
-  .ticked::after{bottom:-1px; right:-1px; border-bottom:1px solid; border-right:1px solid;}
+  .wrap{max-width:940px; margin:0 auto; padding:44px 22px 96px;}
 
   /* ---------- masthead ---------- */
   .masthead{
     display:flex; align-items:flex-end; justify-content:space-between;
-    gap:22px; flex-wrap:wrap; padding-bottom:16px;
+    gap:20px; flex-wrap:wrap;
+    padding-bottom:18px;
     border-bottom:1px solid var(--ink);
+    position:relative;
+  }
+  .masthead::after{ /* double rule, the thin one offset — a printed-ledger cue */
+    content:""; position:absolute; left:0; right:0; bottom:-4px;
+    border-bottom:1px solid var(--rule-strong);
   }
   .kicker{
-    font-size:10px; font-weight:500; letter-spacing:.26em; text-transform:uppercase;
-    color:var(--accent); margin:0 0 12px;
-    display:flex; align-items:center; gap:10px;
+    font-family:var(--mono); font-size:10.5px; font-weight:500;
+    letter-spacing:.22em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 10px;
+    display:flex; align-items:center; gap:9px;
   }
-  .kicker::before{content:""; width:26px; height:1px; background:var(--accent);}
+  .kicker::before{
+    content:""; width:22px; height:1px; background:var(--accent); flex:none;
+  }
   h1{
-    font-family:var(--display); font-weight:600;
-    font-size:clamp(20px, 3.4vw, 31px); line-height:1.1;
-    letter-spacing:-.055em; margin:0; color:var(--ink);
+    font-family:var(--serif); font-weight:500;
+    font-size:clamp(34px, 6vw, 52px); line-height:.98;
+    letter-spacing:-.025em; margin:0;
     text-wrap:balance;
   }
-  h1 span{color:var(--accent);}
-  .mast-right{display:flex; align-items:stretch; gap:10px;}
-  .readout{
-    border:1px solid var(--rule); background:var(--surface);
-    padding:7px 12px; display:grid; gap:1px; text-align:right;
-    font-variant-numeric:tabular-nums;
+  h1 em{
+    font-style:italic; font-weight:400; color:var(--accent);
   }
-  .readout .lbl{font-size:8.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-faint);}
-  .readout .val{font-size:13px; font-weight:500; letter-spacing:.02em;}
+  .mast-right{
+    display:flex; align-items:center; gap:14px;
+    font-family:var(--mono); font-size:11.5px;
+    color:var(--ink-faint); font-variant-numeric:tabular-nums;
+  }
+  .stamp{display:grid; gap:2px; text-align:right; letter-spacing:.06em;}
+  .stamp .lbl{font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; opacity:.75;}
+
   .theme-btn{
-    font-family:var(--mono); font-size:9.5px; font-weight:500;
-    letter-spacing:.2em; text-transform:uppercase; padding:0 12px;
-    background:var(--surface); color:var(--ink-faint);
-    border:1px solid var(--rule); border-radius:0; cursor:pointer;
+    font-family:var(--mono); font-size:10px; letter-spacing:.14em;
+    text-transform:uppercase; padding:7px 10px;
+    background:transparent; color:var(--ink-faint);
+    border:1px solid var(--rule-strong); border-radius:0;
+    cursor:pointer; white-space:nowrap;
     transition:color .15s, border-color .15s;
   }
   .theme-btn:hover{color:var(--accent); border-color:var(--accent);}
-  .theme-btn:focus-visible{outline:2px solid var(--probe); outline-offset:2px;}
 
   /* ---------- sync bar ---------- */
   .syncbar{
-    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
-    margin-top:16px; padding:10px 14px;
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    margin-top:14px; padding:9px 12px;
     border:1px solid var(--rule); background:var(--surface);
-    font-size:10.5px; font-weight:500; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--ink-faint);
+    font-family:var(--mono); font-size:10.5px; font-weight:500;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint);
   }
-  .syncbar .led{width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;}
+  .syncbar .led{
+    width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;
+  }
+  .syncbar[data-state="off"]{color:var(--ink-faint);}
   .syncbar[data-state="ok"]{color:var(--done);}
   .syncbar[data-state="busy"]{color:var(--probe);}
-  .syncbar[data-state="busy"] .led{animation:blink 1s ease-in-out infinite;}
+  .syncbar[data-state="busy"] .led{animation:blink 1.1s ease-in-out infinite;}
   .syncbar[data-state="err"]{color:var(--block); border-color:var(--block);}
-  .syncbar .msg{flex:1; min-width:190px; color:inherit;}
-  .syncbar .tick{
-    font-variant-numeric:tabular-nums; color:var(--ink-faint);
-    letter-spacing:.12em; opacity:.8;
-  }
-  .link{
+  .syncbar .msg{flex:1; min-width:180px;}
+  .syncbar .link{
     font:inherit; background:none; border:0; padding:0; cursor:pointer;
-    color:var(--accent); letter-spacing:.16em;
-    border-bottom:1px solid currentColor; line-height:1.2;
+    color:var(--accent); text-decoration:underline; text-underline-offset:3px;
+    letter-spacing:.14em;
   }
-  .link:hover{opacity:.72;}
-  .link:focus-visible{outline:2px solid var(--probe); outline-offset:3px;}
+  .syncbar .link:hover{opacity:.75;}
 
-  /* ---------- summary ---------- */
+  /* ---------- summary strip ---------- */
   .summary{
     display:grid; grid-template-columns:repeat(4,1fr);
-    margin-top:12px; border:1px solid var(--rule); background:var(--surface);
+    margin-top:14px;
+    border:1px solid var(--rule);
+    background:var(--surface);
+    box-shadow:var(--shadow);
   }
   .cell{
-    padding:15px 15px 16px; border-right:1px solid var(--rule);
-    display:grid; gap:7px; position:relative;
+    padding:16px 16px 18px; border-right:1px solid var(--rule);
+    display:grid; gap:6px; position:relative; overflow:hidden;
   }
   .cell:last-child{border-right:0;}
-  .cell::before{
-    content:""; position:absolute; top:0; left:0; right:0; height:2px; background:currentColor;
+  .cell::before{ /* state hairline along the top edge */
+    content:""; position:absolute; top:0; left:0; right:0; height:2px;
+    background:currentColor; opacity:.85;
   }
   .cell[data-k="blocked"]{color:var(--block);}
   .cell[data-k="progress"]{color:var(--run);}
   .cell[data-k="testing"]{color:var(--test);}
   .cell[data-k="done"]{color:var(--done);}
   .cell .n{
-    font-family:var(--display); font-weight:600; font-size:29px; line-height:1;
-    letter-spacing:-.08em; font-variant-numeric:tabular-nums;
+    font-family:var(--mono); font-weight:500;
+    font-size:34px; line-height:1;
+    font-variant-numeric:tabular-nums; letter-spacing:-.04em;
   }
   .cell .l{
-    font-size:9px; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
-    color:var(--ink-faint);
+    font-family:var(--mono); font-size:9.5px; font-weight:500;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint);
   }
-  .cell.is-zero .n{color:var(--ink-faint); opacity:.4;}
-  @media (max-width:640px){
+  .cell.is-zero .n{color:var(--ink-faint); opacity:.45;}
+  @media (max-width:620px){
     .summary{grid-template-columns:repeat(2,1fr);}
     .cell:nth-child(2){border-right:0;}
     .cell:nth-child(-n+2){border-bottom:1px solid var(--rule);}
   }
 
-  /* stacked distribution of the whole board */
-  .dist{
-    display:flex; height:6px; margin-top:-1px;
-    border:1px solid var(--rule); background:var(--surface);
-  }
-  .dist span{transition:flex-grow .5s cubic-bezier(.2,.8,.25,1);}
-  .dist .d-blocked{background:var(--block);}
-  .dist .d-progress{background:var(--run);}
-  .dist .d-testing{background:var(--test);}
-  .dist .d-done{background:var(--done); opacity:.55;}
-
   /* ---------- toolbar ---------- */
-  .toolbar{display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:22px 0 16px;}
+  .toolbar{
+    display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    padding:24px 0 18px;
+  }
   .btn{
-    font-family:var(--mono); font-size:10.5px; font-weight:500;
-    letter-spacing:.18em; text-transform:uppercase;
-    cursor:pointer; padding:10px 15px;
+    font-family:var(--mono); font-size:11px; font-weight:500;
+    letter-spacing:.14em; text-transform:uppercase;
+    cursor:pointer; padding:10px 16px;
     background:var(--surface); color:var(--ink-soft);
     border:1px solid var(--rule-strong); border-radius:0;
-    transition:color .15s, border-color .15s, background .15s, transform .1s;
+    transition:color .15s, border-color .15s, background .15s, transform .12s;
   }
   .btn:hover{color:var(--accent); border-color:var(--accent); background:var(--accent-lift);}
   .btn:active{transform:translateY(1px);}
   .btn:focus-visible{outline:2px solid var(--probe); outline-offset:2px;}
-  .btn-primary{background:var(--accent); border-color:var(--accent); color:var(--surface);}
+  .btn[disabled]{opacity:.5; cursor:not-allowed;}
+  .btn-primary{
+    background:var(--accent); border-color:var(--accent); color:var(--surface);
+  }
   .btn-primary:hover{background:var(--accent); color:var(--surface); filter:brightness(1.1);}
   .flash{
-    font-size:10px; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
-    color:var(--done); opacity:0; transform:translateX(-4px);
-    transition:opacity .22s, transform .22s;
+    font-family:var(--mono); font-size:10.5px; font-weight:500;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--done);
+    opacity:0; transform:translateX(-4px);
+    transition:opacity .25s, transform .25s;
   }
   .flash.on{opacity:1; transform:none;}
 
@@ -241,150 +249,186 @@
   #reportBox{
     display:none; background:var(--surface);
     border:1px solid var(--rule); border-left:2px solid var(--accent);
-    padding:18px 20px; margin:0 0 24px;
-    font-size:12px; line-height:1.85; color:var(--ink-soft);
-    white-space:pre-wrap; overflow-x:auto;
+    box-shadow:var(--shadow);
+    padding:20px 22px; margin:0 0 26px;
+    font-family:var(--mono); font-size:12px; line-height:1.85;
+    white-space:pre-wrap; overflow-x:auto; color:var(--ink-soft);
   }
-  #reportBox.show{display:block; animation:riseIn .28s ease both;}
+  #reportBox.show{display:block; animation:riseIn .3s ease both;}
 
-  /* ---------- log ---------- */
+  /* ---------- section label ---------- */
   .log-label{
     display:flex; align-items:center; gap:12px;
-    font-size:9px; font-weight:500; letter-spacing:.24em; text-transform:uppercase;
-    color:var(--ink-faint); margin:0 0 9px;
+    font-family:var(--mono); font-size:9.5px; font-weight:500;
+    letter-spacing:.2em; text-transform:uppercase; color:var(--ink-faint);
+    margin-bottom:10px;
   }
   .log-label::after{content:""; flex:1; height:1px; background:var(--rule);}
-  .log{border-top:1px solid var(--ink);}
 
+  /* ---------- log rows ---------- */
+  .log{border-top:1px solid var(--ink);}
   .row{
-    display:grid; grid-template-columns:82px 1fr;
-    background:var(--surface); border-bottom:1px solid var(--rule);
-    animation:riseIn .4s cubic-bezier(.22,.9,.3,1) both;
-    animation-delay:calc(var(--i) * 42ms);
-    transition:background .16s;
+    background:var(--surface);
+    border-bottom:1px solid var(--rule);
+    padding:20px 22px 20px 24px;
+    display:grid; gap:13px;
+    position:relative;
+    transition:background .18s;
+    animation:riseIn .42s cubic-bezier(.22,.9,.3,1) both;
+    animation-delay:calc(var(--i) * 45ms);
   }
-  .row:hover{background:var(--surface-2);}
+  .row::before{ /* state edge, drawn on hover */
+    content:""; position:absolute; left:0; top:-1px; bottom:-1px; width:2px;
+    background:currentColor; transform:scaleY(0); transform-origin:top;
+    transition:transform .22s ease;
+  }
+  .row:hover::before{transform:scaleY(1);}
+  .row:hover{background:var(--accent-lift);}
   .row[data-s="blocked"]{color:var(--block);}
   .row[data-s="progress"]{color:var(--run);}
   .row[data-s="testing"]{color:var(--test);}
   .row[data-s="done"]{color:var(--done);}
 
-  .rail{
-    border-right:1px solid var(--rule);
-    padding:17px 12px; display:grid; align-content:start; gap:9px;
-    position:relative;
+  .row-head{
+    display:flex; align-items:baseline; justify-content:space-between;
+    gap:14px; flex-wrap:wrap;
   }
-  .rail::before{
-    content:""; position:absolute; left:0; top:0; bottom:0; width:2px;
-    background:currentColor;
-  }
-  .rail .code{
-    font-size:10px; font-weight:700; letter-spacing:.16em;
-    display:flex; align-items:center; gap:6px;
-  }
-  .rail .led{width:5px; height:5px; border-radius:50%; background:currentColor; flex:none;}
-  .row[data-s="blocked"] .led{animation:blink 1.5s ease-in-out infinite;}
-  .row[data-s="testing"] .led{animation:blink 2.6s ease-in-out infinite;}
-  .rail .pct{
-    font-family:var(--display); font-weight:400; font-size:17px; line-height:1;
-    letter-spacing:-.07em; color:var(--ink); font-variant-numeric:tabular-nums;
-  }
-  .rail .gauge{height:3px; background:var(--ground); overflow:hidden;}
-  .rail .fill{
-    display:block; height:100%; width:0; background:currentColor;
-    transition:width .75s cubic-bezier(.2,.8,.25,1);
-    transition-delay:calc(var(--i) * 42ms + 100ms);
-  }
-
-  .body{padding:16px 20px 17px; display:grid; gap:11px; min-width:0;}
-  .row-head{display:flex; align-items:baseline; justify-content:space-between; gap:14px; flex-wrap:wrap;}
   .name{
-    font-family:var(--display); font-size:14.5px; font-weight:600;
-    letter-spacing:-.05em; line-height:1.3; color:var(--ink);
-    overflow-wrap:anywhere;
+    font-family:var(--serif); font-size:23px; font-weight:500;
+    letter-spacing:-.02em; line-height:1.15; color:var(--ink);
   }
   .row[data-s="done"] .name{color:var(--ink-soft);}
   .cat{
-    font-size:9px; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
-    color:var(--ink-faint); border:1px solid var(--rule-strong);
-    padding:3px 7px; white-space:nowrap;
+    font-family:var(--mono); font-size:9.5px; font-weight:500;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint);
+    border:1px solid var(--rule-strong);
+    padding:2px 7px; margin-left:11px; vertical-align:4px; white-space:nowrap;
   }
-  .facts{display:grid; gap:7px; max-width:72ch;}
-  .fact{display:grid; grid-template-columns:78px 1fr; gap:10px; align-items:baseline;}
-  .fact .k{
-    font-size:9px; font-weight:500; letter-spacing:.16em; text-transform:uppercase;
+  .state{
+    font-family:var(--mono); font-size:10px; font-weight:500;
+    letter-spacing:.16em; text-transform:uppercase;
+    padding:5px 10px; white-space:nowrap;
+    display:inline-flex; align-items:center; gap:7px;
+  }
+  .state .led{
+    width:5px; height:5px; border-radius:50%; background:currentColor; flex:none;
+  }
+  .state-progress{background:var(--run-bg); color:var(--run);}
+  .state-testing{background:var(--test-bg); color:var(--test);}
+  .state-blocked{background:var(--block-bg); color:var(--block);}
+  .state-done{background:var(--done-bg); color:var(--done);}
+  .state-blocked .led{animation:blink 1.6s ease-in-out infinite;}
+  .state-testing .led{animation:blink 2.6s ease-in-out infinite;}
+
+  .facts{display:grid; gap:6px; font-size:16.5px; color:var(--ink-soft); max-width:66ch;}
+  .facts .k{
+    font-family:var(--mono); font-size:9.5px; font-weight:500;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint);
+    margin-right:10px;
+  }
+  .facts .blocked-line{color:var(--block);}
+  .facts .quiet{font-style:italic; opacity:.7;}
+
+  .meter{
+    display:flex; align-items:center; gap:14px;
+    font-family:var(--mono); font-size:11.5px; font-weight:500;
+    font-variant-numeric:tabular-nums; letter-spacing:.04em;
     color:var(--ink-faint);
   }
-  .fact .v{font-size:13.5px; color:var(--ink-soft); line-height:1.55; overflow-wrap:anywhere;}
-  .fact.blocked-line .v{color:var(--block);}
-  .fact .quiet{color:var(--ink-faint); opacity:.75;}
-  .fact .stamp-v{font-variant-numeric:tabular-nums; letter-spacing:.04em;}
-  @media (max-width:560px){
-    .row{grid-template-columns:1fr;}
-    .rail{border-right:0; border-bottom:1px solid var(--rule); grid-auto-flow:column; align-items:center; justify-content:start; gap:14px; padding:11px 14px;}
-    .rail .gauge{width:90px;}
-    .fact{grid-template-columns:1fr; gap:2px;}
+  .track{
+    position:relative; flex:1; height:10px;
+    background:var(--ground); border:1px solid var(--rule); overflow:hidden;
   }
+  .track::after{ /* quarter graduations */
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(to right,
+      transparent 0 calc(25% - 1px), var(--rule-strong) calc(25% - 1px), var(--rule-strong) 25%);
+    opacity:.8;
+  }
+  .fill{
+    height:100%; width:0; background:currentColor;
+    transition:width .8s cubic-bezier(.2,.8,.25,1);
+    transition-delay:calc(var(--i) * 45ms + 120ms);
+  }
+  .pct{min-width:4.5ch; text-align:right; color:var(--ink-soft);}
 
-  .row-actions{display:flex; gap:7px; padding-top:2px;}
-  .row-actions .btn{padding:6px 11px; font-size:9.5px; letter-spacing:.16em;}
+  .row-actions{display:flex; gap:8px;}
+  .row-actions .btn{padding:6px 12px; font-size:10px; letter-spacing:.12em;}
 
   .empty{
     background:var(--surface); border-bottom:1px solid var(--rule);
-    padding:58px 22px; text-align:center; color:var(--ink-faint);
+    padding:60px 24px; text-align:center; color:var(--ink-faint);
+    font-size:19px; font-style:italic;
   }
-  .empty b{
-    display:block; font-family:var(--display); font-weight:400; font-size:14px;
-    letter-spacing:-.04em; color:var(--ink-soft); margin-bottom:11px;
+  .empty span{
+    display:block; font-family:var(--mono); font-style:normal;
+    font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+    margin-top:12px; opacity:.7;
   }
-  .empty span{font-size:9.5px; letter-spacing:.22em; text-transform:uppercase; opacity:.75;}
 
-  /* ---------- dialogs ---------- */
+  /* ---------- dialog ---------- */
   dialog{
     border:1px solid var(--rule-strong); border-top:2px solid var(--accent);
     border-radius:0; background:var(--surface); color:var(--ink);
-    padding:0; width:480px; max-width:calc(100vw - 26px);
-    box-shadow:0 26px 60px -26px rgba(0,0,0,.55);
+    padding:0; width:470px; max-width:calc(100vw - 28px);
+    box-shadow:0 24px 60px -24px rgba(0,0,0,.5);
   }
-  dialog[open]{animation:riseIn .24s cubic-bezier(.22,.9,.3,1) both;}
-  dialog::backdrop{background:rgba(6,9,5,.66); backdrop-filter:blur(2px);}
-  .dlg-body{padding:22px 24px 24px; display:grid; gap:15px;}
+  dialog[open]{animation:riseIn .26s cubic-bezier(.22,.9,.3,1) both;}
+  dialog::backdrop{background:rgba(8,11,8,.62); backdrop-filter:blur(2px);}
+  .dlg-body{padding:24px 26px 26px; display:grid; gap:16px;}
   .dlg-title{
-    font-family:var(--display); font-size:11px; font-weight:600;
-    letter-spacing:-.02em; text-transform:uppercase; color:var(--accent);
-    margin:0; display:flex; align-items:center; gap:10px;
+    font-family:var(--mono); font-size:10.5px; font-weight:500;
+    letter-spacing:.22em; text-transform:uppercase; color:var(--accent);
+    margin:0; display:flex; align-items:center; gap:9px;
   }
   .dlg-title::after{content:""; flex:1; height:1px; background:var(--rule);}
   .field{display:grid; gap:6px;}
   .field label{
-    font-size:9px; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
-    color:var(--ink-faint);
+    font-family:var(--mono); font-size:9.5px; font-weight:500;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint);
   }
-  .hint{font-size:12px; line-height:1.7; color:var(--ink-faint); margin:0;}
-  .hint code{background:var(--ground); border:1px solid var(--rule); padding:1px 5px;}
+  .hint{
+    font-size:14.5px; color:var(--ink-faint); margin:0; line-height:1.5;
+  }
+  .hint code{
+    font-family:var(--mono); font-size:12px;
+    background:var(--ground); border:1px solid var(--rule); padding:1px 5px;
+  }
   .hint a{color:var(--accent); text-underline-offset:3px;}
   input,select,textarea{
-    font-family:var(--mono); font-size:13.5px; width:100%;
+    font-family:var(--serif); font-size:16px; width:100%;
     background:var(--ground); color:var(--ink);
     border:1px solid var(--rule-strong); border-radius:0; padding:9px 10px;
-    font-variant-numeric:tabular-nums;
     transition:border-color .15s, box-shadow .15s;
+  }
+  #f-pct,#s-token,#s-gist{
+    font-family:var(--mono); font-size:13.5px; font-variant-numeric:tabular-nums;
   }
   input:focus,select:focus,textarea:focus{
     outline:none; border-color:var(--probe);
-    box-shadow:0 0 0 2px color-mix(in srgb, var(--probe) 24%, transparent);
+    box-shadow:0 0 0 2px color-mix(in srgb, var(--probe) 22%, transparent);
   }
-  textarea{resize:vertical; min-height:62px; line-height:1.6;}
-  .two{display:grid; grid-template-columns:1fr 1fr; gap:15px;}
-  .dlg-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:3px; flex-wrap:wrap;}
+  textarea{resize:vertical; min-height:62px; line-height:1.5;}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .dlg-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:4px; flex-wrap:wrap;}
   .dlg-actions .spacer{flex:1;}
-  .err{color:var(--block); font-size:12px; letter-spacing:.02em; margin:0;}
+  .err{
+    color:var(--block); font-size:15px; font-style:italic; margin:0;
+    min-height:0;
+  }
 
   @media (prefers-reduced-motion: reduce){
     *{transition-duration:.001s !important; animation-duration:.001s !important; animation-iteration-count:1 !important;}
   }
-  @keyframes riseIn{ from{opacity:0; transform:translateY(9px);} to{opacity:1; transform:none;} }
-  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.25;} }
+
+  @keyframes riseIn{
+    from{opacity:0; transform:translateY(10px);}
+    to{opacity:1; transform:none;}
+  }
+  @keyframes blink{
+    0%,100%{opacity:1;}
+    50%{opacity:.28;}
+  }
 </style>
 </head>
 <body>
@@ -393,26 +437,25 @@
   <header class="masthead">
     <div>
       <p class="kicker">Hardware &amp; firmware bench log</p>
-      <h1>Project<span>_</span>tracker</h1>
+      <h1>Project <em>tracker</em></h1>
     </div>
     <div class="mast-right">
-      <div class="readout">
-        <span class="lbl">Date</span>
-        <span class="val" id="stamp"></span>
+      <div class="stamp">
+        <span class="lbl">Today</span>
+        <span id="stamp"></span>
       </div>
       <button type="button" class="theme-btn" id="btnTheme" aria-label="Change colour theme">Auto</button>
     </div>
   </header>
 
-  <div class="syncbar ticked" id="syncbar" data-state="off">
+  <div class="syncbar" id="syncbar" data-state="off">
     <span class="led"></span>
     <span class="msg" id="syncMsg">Saved on this device only</span>
-    <span class="tick" id="syncTick"></span>
+    <button type="button" class="link" id="btnSyncNow" hidden>Sync now</button>
     <button type="button" class="link" id="btnSyncSetup">Set up sync</button>
   </div>
 
-  <section class="summary ticked" id="summary"></section>
-  <div class="dist" id="dist" hidden></div>
+  <section class="summary" id="summary"></section>
 
   <div class="toolbar">
     <button type="button" class="btn btn-primary" id="btnAdd">Add project</button>
@@ -479,12 +522,13 @@
   <form method="dialog" class="dlg-body" id="formSync">
     <p class="dlg-title">Sync across devices</p>
     <p class="hint">
-      Projects live in a private
-      <a href="https://gist.github.com" target="_blank" rel="noopener">GitHub gist</a>
-      and sync automatically every 10 seconds, plus immediately on every change.
+      Your projects are stored in a private
+      <a href="https://gist.github.com" target="_blank" rel="noopener">GitHub gist</a>,
+      so every device you enter this token on sees the same list.
       Create a <b>classic</b> token at
       <a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=Project%20Tracker" target="_blank" rel="noopener">github.com/settings/tokens</a>
-      with the <code>gist</code> scope and nothing else. It stays in this browser — never in the repository.
+      with the <code>gist</code> scope and nothing else.
+      It is kept in this browser only — never in the repository.
     </p>
     <div class="field">
       <label for="s-token">GitHub token (classic, gist scope)</label>
@@ -516,19 +560,15 @@
   var LEGACY = "projects";
   var GIST_FILE = "project-tracker.json";
   var API = "https://api.github.com";
-  var POLL_MS = 10000;
+  var POLL_MS = 90000;
 
   var doc = {v:1, projects:[], deleted:{}};
   var editId = "";
   var syncing = false;
   var pushTimer = null;
-  var nextSyncAt = 0;
-  var lastState = "off";
-  var lastMsg = "Saved on this device only";
 
   var CATS = {pcb:"PCB", fw:"Firmware", other:"Other"};
   var STATES = {progress:"In progress", testing:"Testing", blocked:"Blocked", done:"Done"};
-  var CODES = {progress:"RUN", testing:"TEST", blocked:"BLOCK", done:"DONE"};
   var ORDER = ["blocked","progress","testing","done"];
   var RANK = {blocked:0, progress:1, testing:2, done:3};
 
@@ -545,8 +585,7 @@
   }
   function clock(ts){
     var d = new Date(ts);
-    return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0") +
-           ":" + String(d.getSeconds()).padStart(2,"0");
+    return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
   }
 
   /* ================= theme ================= */
@@ -569,11 +608,8 @@
   }
 
   /* ================= local storage ================= */
-  function newId(){
-    return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-  }
   function normalize(raw){
-    // accepts the current {projects,deleted} shape or the original bare array
+    // accepts either the current {projects,deleted} shape or the original bare array
     var d = {v:1, projects:[], deleted:{}};
     if(!raw) return d;
     var parsed;
@@ -590,9 +626,17 @@
     });
     return d;
   }
-  function load(){ doc = normalize(ls(KEY) || ls(LEGACY)); }
+
+  function load(){
+    doc = normalize(ls(KEY) || ls(LEGACY));
+  }
   function persist(){
-    if(!lsSet(KEY, JSON.stringify(doc))) flash("Couldn't save — storage is full or blocked", true);
+    if(!lsSet(KEY, JSON.stringify(doc))){
+      flash("Couldn't save — storage is full or blocked", true);
+    }
+  }
+  function newId(){
+    return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
   }
 
   /* ================= merge ================= */
@@ -619,24 +663,17 @@
     return out;
   }
 
-  /* ================= sync ================= */
+  /* ================= sync (private gist) ================= */
   function token(){ return ls(TOKEN_KEY) || ""; }
   function gistId(){ return ls(GIST_KEY) || ""; }
   function configured(){ return !!token(); }
 
   function setSyncState(state, msg){
-    lastState = state; lastMsg = msg;
-    $("syncbar").setAttribute("data-state", state);
+    var bar = $("syncbar");
+    bar.setAttribute("data-state", state);
     $("syncMsg").textContent = msg;
+    $("btnSyncNow").hidden = !configured();
     $("btnSyncSetup").textContent = configured() ? "Sync settings" : "Set up sync";
-    paintTick();
-  }
-
-  function paintTick(){
-    var el = $("syncTick");
-    if(!configured() || lastState === "busy"){ el.textContent = ""; return; }
-    var left = Math.max(0, Math.ceil((nextSyncAt - Date.now()) / 1000));
-    el.textContent = "next " + String(left).padStart(2,"0") + "s";
   }
 
   function gh(path, options){
@@ -673,7 +710,9 @@
     var body = {files:{}};
     body.files[GIST_FILE] = {content: JSON.stringify(data, null, 2)};
     var id = gistId();
-    if(id) return gh("/gists/" + id, {method:"PATCH", body: JSON.stringify(body)});
+    if(id){
+      return gh("/gists/" + id, {method:"PATCH", body: JSON.stringify(body)});
+    }
     body.description = "Project Tracker data";
     body.public = false;
     return gh("/gists", {method:"POST", body: JSON.stringify(body)}).then(function(g){
@@ -685,18 +724,21 @@
   function sync(reason){
     if(!configured() || syncing) return Promise.resolve();
     syncing = true;
-    setSyncState("busy", reason === "push" ? "Pushing changes…" : "Checking GitHub…");
+    setSyncState("busy", reason === "push" ? "Saving to GitHub…" : "Checking GitHub…");
     var localSnapshot = JSON.stringify(doc);
 
     return readGist().then(function(remote){
       var merged = remote ? merge(doc, remote) : doc;
       var mergedStr = JSON.stringify(merged);
-      if(mergedStr !== localSnapshot){
+      var changedLocally = mergedStr !== localSnapshot;
+      var changedRemotely = !remote || mergedStr !== JSON.stringify(remote);
+
+      if(changedLocally){
         doc = merged;
         persist();
         render(false);
       }
-      if(remote && mergedStr === JSON.stringify(remote)) return;
+      if(!changedRemotely) return;
       return writeGist(merged);
     }).then(function(){
       setSyncState("ok", "Synced " + clock(Date.now()) + " · " + doc.projects.length +
@@ -705,26 +747,23 @@
       setSyncState("err", e.message || "Sync failed");
     }).then(function(){
       syncing = false;
-      nextSyncAt = Date.now() + POLL_MS;
-      paintTick();
     });
   }
 
-  // any change to the board pushes straight away
-  function syncSoon(){
+  function queuePush(){
     if(!configured()) return;
     clearTimeout(pushTimer);
-    pushTimer = setTimeout(function(){ sync("push"); }, 250);
+    pushTimer = setTimeout(function(){ sync("push"); }, 400);
   }
 
-  /* ---- sync settings ---- */
+  /* ---- sync settings dialog ---- */
   function openSync(){
     $("s-token").value = token();
     $("s-gist").value = gistId();
     $("syncErr").textContent = "";
     $("syncHelp").textContent = gistId()
-      ? "Gist ID above + the same token on another device gives you the same board."
-      : "First device: leave the gist ID blank. A private gist is created and its ID shows up here.";
+      ? "Enter this same gist ID and token on another device to see the same projects."
+      : "On your first device leave the gist ID blank — a private gist is created for you, and its ID appears here afterwards.";
     $("dlgSync").showModal();
     $("s-token").focus();
   }
@@ -736,13 +775,15 @@
       $("syncErr").textContent = "Paste a token to connect, or choose Disconnect to stay local.";
       return;
     }
-    var m = g.match(/[0-9a-f]{20,}/i);   // accepts a full gist URL too
+    // accept a full gist URL as well as a bare ID
+    var m = g.match(/[0-9a-f]{20,}/i);
+    g = m ? m[0] : "";
     lsSet(TOKEN_KEY, t);
-    if(m) lsSet(GIST_KEY, m[0]); else lsDel(GIST_KEY);
+    if(g) lsSet(GIST_KEY, g); else lsDel(GIST_KEY);
     $("dlgSync").close();
     setSyncState("busy", "Connecting…");
     sync("pull").then(function(){
-      if(lastState === "ok") flash("Sync connected");
+      if($("syncbar").getAttribute("data-state") === "ok") flash("Sync connected");
     });
   }
 
@@ -755,7 +796,7 @@
     flash("Disconnected");
   }
 
-  /* ================= ui helpers ================= */
+  /* ================= misc ui ================= */
   function flash(msg, bad){
     var el = $("flash");
     el.textContent = msg;
@@ -773,7 +814,7 @@
 
   function countUp(el, to){
     if(reduceMotion || to === 0){ el.textContent = to; return; }
-    var start = performance.now(), dur = 460;
+    var start = performance.now(), dur = 480;
     (function step(now){
       var t = Math.min(1, (now - start) / dur);
       el.textContent = Math.round(to * (1 - Math.pow(1 - t, 3)));
@@ -804,55 +845,45 @@
       countUp(el, Number(el.getAttribute("data-n")));
     });
 
-    var dist = $("dist");
-    dist.hidden = doc.projects.length === 0;
-    dist.innerHTML = ORDER.map(function(k){
-      return '<span class="d-' + k + '" style="flex-grow:' + counts[k] + '" ' +
-             'title="' + esc(STATES[k]) + ': ' + counts[k] + '"></span>';
-    }).join("");
-
+    var log = $("log");
     $("logLabel").textContent = doc.projects.length
       ? "Active log — " + doc.projects.length + (doc.projects.length === 1 ? " project" : " projects")
       : "Active log";
 
-    var log = $("log");
     if(doc.projects.length === 0){
-      log.innerHTML = '<div class="empty"><b>Nothing on the bench yet</b>' +
-                      '<span>Add a project to start the log</span></div>';
+      log.innerHTML = '<div class="empty">Nothing on the bench yet.<span>Add a project to start the log</span></div>';
       return;
     }
 
     log.innerHTML = sortedProjects().map(function(p, i){
       var pct = Math.max(0, Math.min(100, Number(p.pct) || 0));
-      var d = animate ? i : 0;
+      var delay = animate ? i : 0;
       return '' +
-      '<article class="row" data-s="' + esc(p.status) + '" style="--i:' + d + '">' +
-        '<div class="rail">' +
-          '<span class="code"><span class="led"></span>' + esc(CODES[p.status] || "—") + '</span>' +
-          '<span class="pct">' + pct + '<small>%</small></span>' +
-          '<span class="gauge"><span class="fill" data-w="' + pct + '" style="--i:' + d + '"></span></span>' +
+      '<article class="row" data-s="' + esc(p.status) + '" style="--i:' + delay + '">' +
+        '<div class="row-head">' +
+          '<div><span class="name">' + esc(p.name) + '</span>' +
+            '<span class="cat">' + esc(CATS[p.cat] || "Other") + '</span></div>' +
+          '<span class="state state-' + esc(p.status) + '"><span class="led"></span>' +
+            esc(STATES[p.status] || p.status) + '</span>' +
         '</div>' +
-        '<div class="body">' +
-          '<div class="row-head">' +
-            '<span class="name">' + esc(p.name) + '</span>' +
-            '<span class="cat">' + esc(CATS[p.cat] || "Other") + '</span>' +
-          '</div>' +
-          '<div class="facts">' +
-            '<div class="fact"><span class="k">Next</span><span class="v">' +
-              (p.next ? esc(p.next) : '<span class="quiet">not set</span>') + '</span></div>' +
-            (p.blocker
-              ? '<div class="fact blocked-line"><span class="k">Blocked by</span><span class="v">' + esc(p.blocker) + '</span></div>'
-              : "") +
-            '<div class="fact"><span class="k">Updated</span><span class="v stamp-v">' + esc(p.updated || "—") + '</span></div>' +
-          '</div>' +
-          '<div class="row-actions">' +
-            '<button type="button" class="btn" data-act="edit" data-id="' + esc(p.id) + '">Edit</button>' +
-            '<button type="button" class="btn" data-act="del" data-id="' + esc(p.id) + '">Delete</button>' +
-          '</div>' +
+        '<div class="facts">' +
+          '<div><span class="k">Next</span>' +
+            (p.next ? esc(p.next) : '<span class="quiet">not set</span>') + '</div>' +
+          (p.blocker ? '<div class="blocked-line"><span class="k">Blocked by</span>' + esc(p.blocker) + '</div>' : "") +
+          '<div><span class="k">Updated</span>' + esc(p.updated || "—") + '</div>' +
+        '</div>' +
+        '<div class="meter">' +
+          '<div class="track"><div class="fill" data-w="' + pct + '" style="--i:' + delay + '"></div></div>' +
+          '<span class="pct">' + pct + '%</span>' +
+        '</div>' +
+        '<div class="row-actions">' +
+          '<button type="button" class="btn" data-act="edit" data-id="' + esc(p.id) + '">Edit</button>' +
+          '<button type="button" class="btn" data-act="del" data-id="' + esc(p.id) + '">Delete</button>' +
         '</div>' +
       '</article>';
     }).join("");
 
+    // paint width:0 first so the meters animate outward
     requestAnimationFrame(function(){
       Array.prototype.forEach.call(log.querySelectorAll(".fill"), function(el){
         el.style.width = el.getAttribute("data-w") + "%";
@@ -904,7 +935,7 @@
     render(false);
     $("dlg").close();
     flash(wasEdit ? "Updated" : "Added");
-    syncSoon();
+    queuePush();
   }
 
   function removeProject(id){
@@ -913,7 +944,7 @@
     persist();
     render(false);
     flash("Deleted");
-    syncSoon();
+    queuePush();
   }
 
   /* ================= report ================= */
@@ -951,8 +982,11 @@
     box.textContent = out;
 
     if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(out).then(function(){ flash("Copied to clipboard"); },
-                                            function(){ flash("Report ready — select and copy it"); });
+      navigator.clipboard.writeText(out).then(function(){
+        flash("Copied to clipboard");
+      }, function(){
+        flash("Report ready — select and copy it");
+      });
     }else{
       flash("Report ready — select and copy it");
     }
@@ -968,6 +1002,7 @@
       flash("Nothing to export yet", true);
       return;
     }
+
     var head = ["Project","Category","Status","Complete","Next action","Blocker","Updated"];
     var rows = sortedProjects().map(function(p){
       return [
@@ -985,6 +1020,9 @@
     ws["!cols"] = [{wch:34},{wch:11},{wch:13},{wch:10},{wch:46},{wch:40},{wch:12}];
     ws["!autofilter"] = {ref: XLSX.utils.encode_range({s:{r:0,c:0}, e:{r:rows.length, c:head.length-1}})};
     ws["!freeze"] = {xSplit:"0", ySplit:"1", topLeftCell:"A2"};
+
+    // header styling isn't available in the community build, but number
+    // formats are — show the completion column as a real percentage
     for(var r = 1; r <= rows.length; r++){
       var cell = ws[XLSX.utils.encode_cell({r:r, c:3})];
       if(cell) cell.z = "0%";
@@ -1005,6 +1043,7 @@
   $("btnCancel").addEventListener("click", function(){ $("dlg").close(); });
 
   $("btnSyncSetup").addEventListener("click", openSync);
+  $("btnSyncNow").addEventListener("click", function(){ sync("pull"); });
   $("btnSyncSave").addEventListener("click", saveSync);
   $("btnSyncCancel").addEventListener("click", function(){ $("dlgSync").close(); });
   $("btnForget").addEventListener("click", forgetSync);
@@ -1022,7 +1061,10 @@
     var btn = e.target.closest("button[data-act]");
     if(!btn) return;
     var id = btn.getAttribute("data-id");
-    if(btn.getAttribute("data-act") === "edit"){ openDialog(id); return; }
+    if(btn.getAttribute("data-act") === "edit"){
+      openDialog(id);
+      return;
+    }
     var p = doc.projects.filter(function(x){ return x.id === id; })[0];
     if(p && window.confirm('Delete "' + p.name + '"? It is removed from every synced device.')){
       removeProject(id);
@@ -1035,16 +1077,9 @@
     if(e.key === THEME_KEY){ initTheme(); }
   });
 
-  // ---- the 10-second loop: pull, and push anything local that is newer ----
-  setInterval(function(){
-    if(document.hidden) return;
-    if(Date.now() >= nextSyncAt) sync("poll");
-  }, 1000);
-  setInterval(paintTick, 1000);
-
-  // catching up the moment the tab comes back
-  document.addEventListener("visibilitychange", function(){ if(!document.hidden) sync("pull"); });
+  // other devices
   window.addEventListener("focus", function(){ sync("pull"); });
+  setInterval(function(){ if(!document.hidden) sync("pull"); }, POLL_MS);
 
   initTheme();
   load();
