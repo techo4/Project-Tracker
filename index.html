@@ -29,8 +29,7 @@
     --ink-soft:#4a5044;
     --ink-faint:#7e8577;
     --grid:rgba(18,21,15,.055);
-    --sheen:rgba(255,255,255,.85);
-    --ambient-glow:rgba(168,72,26,.16);
+    --ambient-glow:rgba(168,72,26,.36);
 
     --accent:#a8481a;
     --accent-lift:rgba(168,72,26,.08);
@@ -51,8 +50,7 @@
       --rule:#252b20; --rule-strong:#39412f;
       --ink:#e8ebe1; --ink-soft:#a2a99a; --ink-faint:#6f776a;
       --grid:rgba(232,235,225,.045);
-      --sheen:rgba(255,255,255,.5);
-      --ambient-glow:rgba(229,128,56,.2);
+      --ambient-glow:rgba(229,128,56,.42);
       --accent:#e58038; --accent-lift:rgba(229,128,56,.10);
       --probe:#59c0cb;
       --run:#74b2d3;  --run-bg:rgba(116,178,211,.13);
@@ -66,7 +64,7 @@
     --ground:#e8eae5; --ground-2:#dee1da; --surface:#f7f8f4; --surface-2:#eef0ea;
     --rule:#d0d5c9; --rule-strong:#b2b9a9;
     --ink:#12150f; --ink-soft:#4a5044; --ink-faint:#7e8577;
-    --grid:rgba(18,21,15,.055); --sheen:rgba(255,255,255,.85); --ambient-glow:rgba(168,72,26,.16);
+    --grid:rgba(18,21,15,.055); --ambient-glow:rgba(168,72,26,.36);
     --accent:#a8481a; --accent-lift:rgba(168,72,26,.08); --probe:#0d6874;
     --run:#215d7a;  --run-bg:rgba(33,93,122,.11);
     --test:#7a5804; --test-bg:rgba(122,88,4,.13);
@@ -78,7 +76,7 @@
     --ground:#0d100c; --ground-2:#090b08; --surface:#141810; --surface-2:#191d15;
     --rule:#252b20; --rule-strong:#39412f;
     --ink:#e8ebe1; --ink-soft:#a2a99a; --ink-faint:#6f776a;
-    --grid:rgba(232,235,225,.045); --sheen:rgba(255,255,255,.5); --ambient-glow:rgba(229,128,56,.2);
+    --grid:rgba(232,235,225,.045); --ambient-glow:rgba(229,128,56,.42);
     --accent:#e58038; --accent-lift:rgba(229,128,56,.10); --probe:#59c0cb;
     --run:#74b2d3;  --run-bg:rgba(116,178,211,.13);
     --test:#dab24d; --test-bg:rgba(218,178,77,.13);
@@ -106,11 +104,11 @@
 
   /* idle: a warm bloom wandering behind the panels */
   .ambient{
-    position:fixed; inset:-25%; z-index:0; pointer-events:none;
+    position:fixed; inset:-35%; z-index:0; pointer-events:none;
     background:
-      radial-gradient(46% 38% at 26% 20%, var(--ambient-glow), transparent 68%),
-      radial-gradient(42% 34% at 78% 74%, var(--ambient-glow), transparent 70%);
-    animation:wander 20s ease-in-out infinite alternate;
+      radial-gradient(58% 50% at 24% 18%, var(--ambient-glow), transparent 72%),
+      radial-gradient(54% 46% at 80% 76%, var(--ambient-glow), transparent 74%);
+    animation:wander 13s ease-in-out infinite alternate;
   }
 
   .wrap{position:relative; z-index:1; max-width:980px; margin:0 auto; padding:38px 20px 100px;}
@@ -222,6 +220,7 @@
   }
 
   .dist{display:flex; height:6px; margin-top:-1px; border:1px solid var(--rule); background:var(--surface);}
+  .dist[hidden]{display:none;}
   .dist span{transition:flex-grow .5s cubic-bezier(.2,.8,.25,1);}
   .dist .d-blocked{background:var(--block);}
   .dist .d-progress{background:var(--run);}
@@ -330,19 +329,7 @@
   }
   .meter-k{font-size:9px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-faint);}
   .track{position:relative; height:12px; background:var(--ground); border:1px solid var(--rule); overflow:hidden;}
-  .fill{
-    position:relative; height:100%; width:0; background:currentColor; overflow:hidden;
-    transition:width .9s cubic-bezier(.2,.8,.25,1);
-    transition-delay:calc(var(--i) * 42ms + 120ms);
-  }
-  .fill::after{ /* idle: a highlight travels the filled length */
-    content:""; position:absolute; inset:0;
-    background:linear-gradient(90deg, transparent, var(--sheen), transparent);
-    transform:translateX(-100%);
-    animation:sheen 3.6s ease-in-out infinite;
-    animation-delay:calc(var(--i) * 260ms);
-  }
-  .row[data-s="done"] .fill::after{animation:none;}
+  .fill{display:block; height:100%; background:currentColor;}
   .pct{
     font-family:var(--display); font-weight:400; font-size:17px; line-height:1;
     letter-spacing:-.07em; color:var(--ink); font-variant-numeric:tabular-nums;
@@ -393,6 +380,7 @@
   }
   .dlg-title::after{content:""; flex:1; height:1px; background:var(--rule);}
   .field{display:grid; gap:6px; min-width:0;}
+  .field[hidden]{display:none;}
   .field label{font-size:9px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint);}
   .hint{font-size:12px; line-height:1.7; color:var(--ink-faint); margin:0;}
   .hint code{background:var(--ground); border:1px solid var(--rule); padding:1px 5px;}
@@ -465,6 +453,54 @@
   .toggle.on::after{left:23px;}
   .toggle:focus-visible{outline:2px solid var(--probe); outline-offset:2px;}
 
+  /* ---------- smart (compact) UI style ---------- */
+  :root[data-ui="smart"] .wrap{padding-top:26px;}
+  :root[data-ui="smart"] .masthead{padding-bottom:10px;}
+  :root[data-ui="smart"] .summary .cell{padding:8px 12px 9px;}
+  :root[data-ui="smart"] .summary .cell .n{font-size:21px;}
+  :root[data-ui="smart"] .toolbar{padding:14px 0 10px;}
+  :root[data-ui="smart"] .log-label{margin-bottom:5px;}
+
+  .row-smart{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    padding:7px 14px 7px 16px; font-size:11.5px;
+  }
+  .row-smart .sm-led{width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;}
+  .row-smart .sm-name{
+    font-family:var(--display); font-weight:600; font-size:12px; letter-spacing:-.03em;
+    color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:220px;
+  }
+  .row-smart[data-s="done"] .sm-name{color:var(--ink-soft);}
+  .row-smart .sm-chip{
+    font-size:8px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    padding:2px 5px; border:1px solid var(--rule-strong); color:var(--ink-faint); flex:none;
+  }
+  .row-smart .sm-pri-high{color:var(--block); border-color:var(--block);}
+  .row-smart .sm-pri-medium{color:var(--test); border-color:var(--test);}
+  .row-smart .sm-pri-low{color:var(--ink-faint);}
+  .row-smart .sm-track{
+    position:relative; width:56px; height:5px; background:var(--ground);
+    border:1px solid var(--rule); flex:none; overflow:hidden;
+  }
+  .row-smart .sm-fill{display:block; height:100%; background:currentColor;}
+  .row-smart .sm-pct{
+    font-family:var(--mono); font-size:10.5px; font-variant-numeric:tabular-nums;
+    width:3.6ch; text-align:right; flex:none; color:var(--ink-soft);
+  }
+  .row-smart .sm-meta{font-size:10px; color:var(--ink-faint); white-space:nowrap; flex:none;}
+  .row-smart .sm-meta.overdue{color:var(--block); font-weight:600;}
+  .row-smart .sm-next{
+    flex:1 1 120px; min-width:60px; font-size:11px; color:var(--ink-soft);
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .row-smart .sm-actions{display:flex; gap:4px; flex:none; margin-left:auto;}
+  .row-smart .sm-act{
+    font-family:var(--mono); font-size:11px; width:20px; height:20px; line-height:1;
+    background:var(--surface); border:1px solid var(--rule-strong); color:var(--ink-faint);
+    cursor:pointer; padding:0;
+  }
+  .row-smart .sm-act:hover{color:var(--accent); border-color:var(--accent);}
+
   @media (prefers-reduced-motion: reduce){
     *{transition-duration:.001s !important; animation-duration:.001s !important; animation-iteration-count:1 !important;}
     .ambient{display:none;}
@@ -482,11 +518,7 @@
   @keyframes drift{ to{background-position:0 -56px, -56px 0, 0 0;} }
   @keyframes wander{
     0%{transform:translate3d(0,0,0) scale(1);}
-    100%{transform:translate3d(6%,-8%,0) scale(1.22);}
-  }
-  @keyframes sheen{
-    0%,58%{transform:translateX(-100%);}
-    86%,100%{transform:translateX(100%);}
+    100%{transform:translate3d(20%,-22%,0) scale(1.55);}
   }
   @keyframes sweepline{ 0%,100%{opacity:.6; transform:scaleX(1);} 50%{opacity:1; transform:scaleX(2.1);} }
   @keyframes caret{ 0%,49%{opacity:1;} 50%,100%{opacity:.1;} }
@@ -508,7 +540,6 @@
         <span class="val" id="stamp"></span>
       </div>
       <button type="button" class="bar-btn" id="btnSettings" aria-label="Settings">⚙ SET</button>
-      <button type="button" class="bar-btn" id="btnTheme" aria-label="Change colour theme">Auto</button>
     </div>
   </header>
 
@@ -597,6 +628,7 @@
             <li role="option" data-value="" aria-selected="true">No deadline</li>
             <li role="option" data-value="today">Today</li>
             <li role="option" data-value="tomorrow">Tomorrow</li>
+            <li role="option" data-value="days3">Within 3 days</li>
             <li role="option" data-value="week">End of this week</li>
             <li role="option" data-value="month">End of this month</li>
             <li role="option" data-value="custom">Custom date…</li>
@@ -667,6 +699,14 @@
   <form method="dialog" class="dlg-body" id="formSettings">
     <p class="dlg-title">Settings</p>
     <div class="settings-row">
+      <span class="settings-label">Theme</span>
+      <button type="button" class="btn" id="btnTheme">Auto</button>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label">UI style</span>
+      <button type="button" class="btn" id="btnUiStyle">Normal</button>
+    </div>
+    <div class="settings-row">
       <span class="settings-label">Animations</span>
       <button type="button" class="toggle" id="toggleAnim" aria-label="Toggle animations" aria-pressed="true"></button>
     </div>
@@ -685,6 +725,7 @@
   var TOKEN_KEY = "project-tracker.gh-token";
   var GIST_KEY = "project-tracker.gist-id";
   var ANIM_KEY = "project-tracker.anim";
+  var UI_KEY = "project-tracker.ui";
   var LEGACY = "projects";
   var GIST_FILE = "project-tracker.json";
   var API = "https://api.github.com";
@@ -724,6 +765,7 @@
     var d = new Date();
     if(v === "today") return today();
     if(v === "tomorrow"){ d.setDate(d.getDate() + 1); }
+    else if(v === "days3"){ d.setDate(d.getDate() + 3); }
     else if(v === "week"){ d.setDate(d.getDate() + (7 - d.getDay())); }
     else if(v === "month"){ d.setMonth(d.getMonth() + 1, 1); d.setDate(0); }
     else return "";
@@ -775,6 +817,24 @@
     var next = THEMES[(THEMES.indexOf(cur) + 1) % THEMES.length];
     applyTheme(next);
     lsSet(THEME_KEY, next);
+  }
+
+  /* ================= UI style (Normal / Smart) ================= */
+  function isSmart(){ return document.documentElement.getAttribute("data-ui") === "smart"; }
+  function applyUiStyle(s){
+    if(s === "smart"){ document.documentElement.setAttribute("data-ui", "smart"); }
+    else{ document.documentElement.removeAttribute("data-ui"); }
+    $("btnUiStyle").textContent = s === "smart" ? "Smart" : "Normal";
+  }
+  function initUiStyle(){
+    var s = ls(UI_KEY) || "normal";
+    applyUiStyle(s === "smart" ? "smart" : "normal");
+  }
+  function cycleUiStyle(){
+    var next = isSmart() ? "normal" : "smart";
+    applyUiStyle(next);
+    lsSet(UI_KEY, next);
+    render(false);
   }
 
   /* ================= custom dropdowns ================= */
@@ -1104,62 +1164,73 @@
       return;
     }
 
+    var smart = isSmart();
     log.innerHTML = sortedProjects().map(function(p, i){
       var pct = clampPct(p.pct);
       var d = animate ? i : 0;
       var dl = deadlineLabel(p);
       var overdue = isOverdue(p);
-      return '' +
-      '<article class="row" data-s="' + esc(p.status) + '" style="--i:' + d + '">' +
-
-        '<div class="row-name">' +
-          '<span class="name">' + esc(p.name) + '</span>' +
-          '<span class="tags">' +
-            '<span class="pri pri-' + esc(p.priority || "medium") + '">' + esc(PRIS[p.priority] || "Medium") + '</span>' +
-            '<span class="cat">' + esc(CATS[p.cat] || "Other") + '</span>' +
-          '</span>' +
-        '</div>' +
-
-        '<div class="row-status">' +
-          '<span class="led"></span>' +
-          '<span class="status-text">' + esc(STATES[p.status] || p.status) + '</span>' +
-          '<span class="when">Updated ' + esc(p.updated || "—") + '</span>' +
-        '</div>' +
-
-        '<div class="row-meter">' +
-          '<span class="meter-k">Progress</span>' +
-          '<span class="track"><span class="fill" data-w="' + pct + '" style="--i:' + d + '"></span></span>' +
-          '<span class="pct">' + pct + '<small>%</small></span>' +
-        '</div>' +
-
-        '<div class="row-facts">' +
-          '<div class="fact"><span class="k">Handler</span><span class="v">' +
-            (p.handler ? esc(p.handler) : '<span class="quiet">unassigned</span>') + '</span></div>' +
-          '<div class="fact"><span class="k">Deadline</span><span class="v' + (overdue ? " overdue" : "") + '">' +
-            (dl ? esc(dl) + (overdue ? " — overdue" : "") : '<span class="quiet">none</span>') + '</span></div>' +
-          '<div class="fact"><span class="k">Next</span><span class="v">' +
-            (p.next ? esc(p.next) : '<span class="quiet">not set</span>') + '</span></div>' +
-          (p.blocker
-            ? '<div class="fact blocked-line"><span class="k">Blocked by</span><span class="v">' + esc(p.blocker) + '</span></div>'
-            : "") +
-        '</div>' +
-
-        '<div class="row-actions">' +
-          '<button type="button" class="btn" data-act="edit" data-id="' + esc(p.id) + '">Edit</button>' +
-          '<button type="button" class="btn" data-act="del" data-id="' + esc(p.id) + '">Delete</button>' +
-        '</div>' +
-      '</article>';
+      return smart ? smartRowHtml(p, pct, dl, overdue, d) : fullRowHtml(p, pct, dl, overdue, d);
     }).join("");
+  }
 
-    // force a synchronous reflow of width:0 before animating to the real
-    // width. rAF alone depends on the tab actually compositing frames —
-    // it never fires in a backgrounded/hidden tab, which left every bar
-    // stuck at 0%. Reading offsetWidth commits layout immediately instead.
-    var fills = log.querySelectorAll(".fill");
-    Array.prototype.forEach.call(fills, function(el){ void el.offsetWidth; });
-    Array.prototype.forEach.call(fills, function(el){
-      el.style.width = el.getAttribute("data-w") + "%";
-    });
+  function fullRowHtml(p, pct, dl, overdue, i){
+    return '' +
+    '<article class="row" data-s="' + esc(p.status) + '" style="--i:' + i + '">' +
+      '<div class="row-name">' +
+        '<span class="name">' + esc(p.name) + '</span>' +
+        '<span class="tags">' +
+          '<span class="pri pri-' + esc(p.priority || "medium") + '">' + esc(PRIS[p.priority] || "Medium") + '</span>' +
+          '<span class="cat">' + esc(CATS[p.cat] || "Other") + '</span>' +
+        '</span>' +
+      '</div>' +
+      '<div class="row-status">' +
+        '<span class="led"></span>' +
+        '<span class="status-text">' + esc(STATES[p.status] || p.status) + '</span>' +
+        '<span class="when">Updated ' + esc(p.updated || "—") + '</span>' +
+      '</div>' +
+      '<div class="row-meter">' +
+        '<span class="meter-k">Progress</span>' +
+        '<span class="track"><span class="fill" style="width:' + pct + '%"></span></span>' +
+        '<span class="pct">' + pct + '<small>%</small></span>' +
+      '</div>' +
+      '<div class="row-facts">' +
+        '<div class="fact"><span class="k">Handler</span><span class="v">' +
+          (p.handler ? esc(p.handler) : '<span class="quiet">unassigned</span>') + '</span></div>' +
+        '<div class="fact"><span class="k">Deadline</span><span class="v' + (overdue ? " overdue" : "") + '">' +
+          (dl ? esc(dl) + (overdue ? " — overdue" : "") : '<span class="quiet">none</span>') + '</span></div>' +
+        '<div class="fact"><span class="k">Next</span><span class="v">' +
+          (p.next ? esc(p.next) : '<span class="quiet">not set</span>') + '</span></div>' +
+        (p.blocker
+          ? '<div class="fact blocked-line"><span class="k">Blocked by</span><span class="v">' + esc(p.blocker) + '</span></div>'
+          : "") +
+      '</div>' +
+      '<div class="row-actions">' +
+        '<button type="button" class="btn" data-act="edit" data-id="' + esc(p.id) + '">Edit</button>' +
+        '<button type="button" class="btn" data-act="del" data-id="' + esc(p.id) + '">Delete</button>' +
+      '</div>' +
+    '</article>';
+  }
+
+  function smartRowHtml(p, pct, dl, overdue, i){
+    return '' +
+    '<article class="row row-smart" data-s="' + esc(p.status) + '" style="--i:' + i + '">' +
+      '<span class="sm-led"></span>' +
+      '<span class="sm-name" title="' + esc(p.name) + '">' + esc(p.name) + '</span>' +
+      '<span class="sm-chip sm-pri-' + esc(p.priority || "medium") + '">' + esc((p.priority || "medium").charAt(0).toUpperCase()) + '</span>' +
+      '<span class="sm-chip">' + esc(CATS[p.cat] || "Other") + '</span>' +
+      '<span class="sm-track"><span class="sm-fill" style="width:' + pct + '%"></span></span>' +
+      '<span class="sm-pct">' + pct + '%</span>' +
+      (p.handler ? '<span class="sm-meta">@' + esc(p.handler) + '</span>' : "") +
+      (dl ? '<span class="sm-meta' + (overdue ? " overdue" : "") + '">' + esc(dl) + '</span>' : "") +
+      '<span class="sm-next" title="' + esc(p.blocker ? ("Blocked: " + p.blocker) : (p.next || "")) + '">' +
+        esc(p.blocker ? "⚠ " + p.blocker : (p.next || "—")) +
+      '</span>' +
+      '<span class="sm-actions">' +
+        '<button type="button" class="sm-act" data-act="edit" data-id="' + esc(p.id) + '" aria-label="Edit">✎</button>' +
+        '<button type="button" class="sm-act" data-act="del" data-id="' + esc(p.id) + '" aria-label="Delete">✕</button>' +
+      '</span>' +
+    '</article>';
   }
 
   /* ================= project editor ================= */
@@ -1494,6 +1565,7 @@
 
   /* ================= wiring ================= */
   $("btnTheme").addEventListener("click", cycleTheme);
+  $("btnUiStyle").addEventListener("click", cycleUiStyle);
   $("btnSettings").addEventListener("click", function(){ $("dlgSettings").showModal(); });
   $("btnSettingsClose").addEventListener("click", function(){ $("dlgSettings").close(); });
   $("toggleAnim").addEventListener("click", function(){
@@ -1535,6 +1607,7 @@
     if(e.key === KEY){ load(); render(false); }
     if(e.key === THEME_KEY){ initTheme(); }
     if(e.key === ANIM_KEY){ initAnimations(); }
+    if(e.key === UI_KEY){ initUiStyle(); render(false); }
   });
 
   // ---- the 10-second loop ----
@@ -1548,6 +1621,7 @@
 
   initTheme();
   initAnimations();
+  initUiStyle();
   load();
   render(true);
   if(configured()){
