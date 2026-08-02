@@ -29,7 +29,8 @@
     --ink-soft:#4a5044;
     --ink-faint:#7e8577;
     --grid:rgba(18,21,15,.055);
-    --sheen:rgba(255,255,255,.55);
+    --sheen:rgba(255,255,255,.85);
+    --ambient-glow:rgba(168,72,26,.16);
 
     --accent:#a8481a;
     --accent-lift:rgba(168,72,26,.08);
@@ -50,7 +51,8 @@
       --rule:#252b20; --rule-strong:#39412f;
       --ink:#e8ebe1; --ink-soft:#a2a99a; --ink-faint:#6f776a;
       --grid:rgba(232,235,225,.045);
-      --sheen:rgba(255,255,255,.28);
+      --sheen:rgba(255,255,255,.5);
+      --ambient-glow:rgba(229,128,56,.2);
       --accent:#e58038; --accent-lift:rgba(229,128,56,.10);
       --probe:#59c0cb;
       --run:#74b2d3;  --run-bg:rgba(116,178,211,.13);
@@ -64,7 +66,7 @@
     --ground:#e8eae5; --ground-2:#dee1da; --surface:#f7f8f4; --surface-2:#eef0ea;
     --rule:#d0d5c9; --rule-strong:#b2b9a9;
     --ink:#12150f; --ink-soft:#4a5044; --ink-faint:#7e8577;
-    --grid:rgba(18,21,15,.055); --sheen:rgba(255,255,255,.55);
+    --grid:rgba(18,21,15,.055); --sheen:rgba(255,255,255,.85); --ambient-glow:rgba(168,72,26,.16);
     --accent:#a8481a; --accent-lift:rgba(168,72,26,.08); --probe:#0d6874;
     --run:#215d7a;  --run-bg:rgba(33,93,122,.11);
     --test:#7a5804; --test-bg:rgba(122,88,4,.13);
@@ -76,7 +78,7 @@
     --ground:#0d100c; --ground-2:#090b08; --surface:#141810; --surface-2:#191d15;
     --rule:#252b20; --rule-strong:#39412f;
     --ink:#e8ebe1; --ink-soft:#a2a99a; --ink-faint:#6f776a;
-    --grid:rgba(232,235,225,.045); --sheen:rgba(255,255,255,.28);
+    --grid:rgba(232,235,225,.045); --sheen:rgba(255,255,255,.5); --ambient-glow:rgba(229,128,56,.2);
     --accent:#e58038; --accent-lift:rgba(229,128,56,.10); --probe:#59c0cb;
     --run:#74b2d3;  --run-bg:rgba(116,178,211,.13);
     --test:#dab24d; --test-bg:rgba(218,178,77,.13);
@@ -98,17 +100,17 @@
       linear-gradient(var(--ground), var(--ground-2));
     background-attachment:fixed;
     min-height:100vh;
-    animation:drift 60s linear infinite;   /* idle: the grid creeps */
+    animation:drift 30s linear infinite;   /* idle: the grid creeps */
   }
   ::selection{background:var(--accent); color:var(--surface);}
 
-  /* idle: a slow warm bloom wandering behind the panels */
+  /* idle: a warm bloom wandering behind the panels */
   .ambient{
     position:fixed; inset:-25%; z-index:0; pointer-events:none;
     background:
-      radial-gradient(42% 34% at 28% 22%, var(--accent-lift), transparent 68%),
-      radial-gradient(38% 30% at 76% 72%, var(--accent-lift), transparent 70%);
-    animation:wander 34s ease-in-out infinite alternate;
+      radial-gradient(46% 38% at 26% 20%, var(--ambient-glow), transparent 68%),
+      radial-gradient(42% 34% at 78% 74%, var(--ambient-glow), transparent 70%);
+    animation:wander 20s ease-in-out infinite alternate;
   }
 
   .wrap{position:relative; z-index:1; max-width:980px; margin:0 auto; padding:38px 20px 100px;}
@@ -135,7 +137,7 @@
   }
   .kicker::before{
     content:""; width:26px; height:1px; background:var(--accent);
-    animation:sweepline 6s ease-in-out infinite;
+    transform-origin:left; animation:sweepline 3.2s ease-in-out infinite;
   }
   h1{
     font-family:var(--display); font-weight:600;
@@ -143,7 +145,7 @@
     letter-spacing:-.055em; margin:0; color:var(--ink);
     text-wrap:balance;
   }
-  h1 span{color:var(--accent); animation:caret 1.6s steps(1) infinite;}
+  h1 span{color:var(--accent); animation:caret 1.3s steps(1) infinite;}
   .mast-right{display:flex; align-items:stretch; gap:10px;}
   .readout{
     border:1px solid var(--rule); background:var(--surface);
@@ -152,15 +154,15 @@
   }
   .readout .lbl{font-size:8.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-faint);}
   .readout .val{font-size:13px; font-weight:500; letter-spacing:.02em;}
-  .theme-btn{
+  .bar-btn{
     font-family:var(--mono); font-size:9.5px; font-weight:500;
     letter-spacing:.2em; text-transform:uppercase; padding:0 12px;
     background:var(--surface); color:var(--ink-faint);
     border:1px solid var(--rule); border-radius:0; cursor:pointer;
     transition:color .15s, border-color .15s;
   }
-  .theme-btn:hover{color:var(--accent); border-color:var(--accent);}
-  .theme-btn:focus-visible{outline:2px solid var(--probe); outline-offset:2px;}
+  .bar-btn:hover{color:var(--accent); border-color:var(--accent);}
+  .bar-btn:focus-visible{outline:2px solid var(--probe); outline-offset:2px;}
 
   /* ---------- sync bar ---------- */
   .syncbar{
@@ -173,7 +175,7 @@
   .syncbar .led{width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;}
   .syncbar[data-state="ok"]{color:var(--done);}
   .syncbar[data-state="busy"]{color:var(--probe);}
-  .syncbar[data-state="busy"] .led{animation:blink 1s ease-in-out infinite;}
+  .syncbar[data-state="busy"] .led{animation:blink .8s ease-in-out infinite;}
   .syncbar[data-state="err"]{color:var(--block); border-color:var(--block);}
   .syncbar .msg{flex:1; min-width:190px; color:inherit;}
   .syncbar .tick{font-variant-numeric:tabular-nums; color:var(--ink-faint); letter-spacing:.12em; opacity:.8;}
@@ -284,9 +286,10 @@
 
   /* name plate */
   .row-name{
-    display:flex; align-items:baseline; justify-content:space-between; gap:14px;
+    display:flex; align-items:baseline; justify-content:space-between; gap:14px; flex-wrap:wrap;
     padding:16px 20px 14px 23px; border-bottom:1px solid var(--rule);
   }
+  .row-name .tags{display:flex; align-items:center; gap:6px; flex-wrap:wrap;}
   .name{
     font-family:var(--display); font-size:15px; font-weight:600;
     letter-spacing:-.05em; line-height:1.3; color:var(--ink); overflow-wrap:anywhere;
@@ -297,6 +300,13 @@
     color:var(--ink-faint); border:1px solid var(--rule-strong);
     padding:3px 7px; white-space:nowrap; flex:none;
   }
+  .pri{
+    font-size:9px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+    padding:3px 7px; white-space:nowrap; flex:none; border:1px solid;
+  }
+  .pri-high{color:var(--block); border-color:var(--block); background:var(--block-bg);}
+  .pri-medium{color:var(--test); border-color:var(--test); background:var(--test-bg);}
+  .pri-low{color:var(--ink-faint); border-color:var(--rule-strong); background:transparent;}
 
   /* status band */
   .row-status{
@@ -310,8 +320,8 @@
     margin-left:auto; font-size:9.5px; font-weight:500; letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-faint); font-variant-numeric:tabular-nums;
   }
-  .row[data-s="blocked"] .led{animation:blink 1.5s ease-in-out infinite;}
-  .row[data-s="testing"] .led{animation:blink 2.6s ease-in-out infinite;}
+  .row[data-s="blocked"] .led{animation:blink 1.2s ease-in-out infinite;}
+  .row[data-s="testing"] .led{animation:blink 2s ease-in-out infinite;}
 
   /* progress channel */
   .row-meter{
@@ -320,23 +330,17 @@
   }
   .meter-k{font-size:9px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-faint);}
   .track{position:relative; height:12px; background:var(--ground); border:1px solid var(--rule); overflow:hidden;}
-  .track::after{
-    content:""; position:absolute; inset:0; pointer-events:none;
-    background:repeating-linear-gradient(to right,
-      transparent 0 calc(10% - 1px), var(--rule-strong) calc(10% - 1px), var(--rule-strong) 10%);
-    opacity:.7;
-  }
   .fill{
     position:relative; height:100%; width:0; background:currentColor; overflow:hidden;
-    transition:width .8s cubic-bezier(.2,.8,.25,1);
+    transition:width .9s cubic-bezier(.2,.8,.25,1);
     transition-delay:calc(var(--i) * 42ms + 120ms);
   }
   .fill::after{ /* idle: a highlight travels the filled length */
     content:""; position:absolute; inset:0;
     background:linear-gradient(90deg, transparent, var(--sheen), transparent);
     transform:translateX(-100%);
-    animation:sheen 5.5s ease-in-out infinite;
-    animation-delay:calc(var(--i) * 300ms);
+    animation:sheen 3.6s ease-in-out infinite;
+    animation-delay:calc(var(--i) * 260ms);
   }
   .row[data-s="done"] .fill::after{animation:none;}
   .pct{
@@ -352,6 +356,7 @@
   .fact .k{font-size:9px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint);}
   .fact .v{font-size:13.5px; color:var(--ink-soft); line-height:1.6; overflow-wrap:anywhere;}
   .fact.blocked-line .v{color:var(--block);}
+  .fact .v.overdue{color:var(--block); font-weight:600;}
   .fact .quiet{color:var(--ink-faint); opacity:.75;}
   .row-actions{display:flex; gap:7px; padding:12px 20px 16px 23px;}
   .row-actions .btn{padding:6px 11px; font-size:9.5px; letter-spacing:.16em;}
@@ -375,7 +380,7 @@
   dialog{
     border:1px solid var(--rule-strong); border-top:2px solid var(--accent);
     border-radius:0; background:var(--surface); color:var(--ink);
-    padding:0; width:480px; max-width:calc(100vw - 26px);
+    padding:0; width:520px; max-width:calc(100vw - 26px);
     box-shadow:0 26px 60px -26px rgba(0,0,0,.55);
   }
   dialog[open]{animation:riseIn .24s cubic-bezier(.22,.9,.3,1) both;}
@@ -387,46 +392,104 @@
     margin:0; display:flex; align-items:center; gap:10px;
   }
   .dlg-title::after{content:""; flex:1; height:1px; background:var(--rule);}
-  .field{display:grid; gap:6px;}
+  .field{display:grid; gap:6px; min-width:0;}
   .field label{font-size:9px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint);}
   .hint{font-size:12px; line-height:1.7; color:var(--ink-faint); margin:0;}
   .hint code{background:var(--ground); border:1px solid var(--rule); padding:1px 5px;}
   .hint a{color:var(--accent); text-underline-offset:3px;}
-  input,select,textarea{
+  input,textarea{
     font-family:var(--mono); font-size:13.5px; width:100%;
     background:var(--ground); color:var(--ink);
     border:1px solid var(--rule-strong); border-radius:0; padding:9px 10px;
     font-variant-numeric:tabular-nums;
     transition:border-color .15s, box-shadow .15s;
   }
-  input:focus,select:focus,textarea:focus{
+  input:focus,textarea:focus{
     outline:none; border-color:var(--probe);
     box-shadow:0 0 0 2px color-mix(in srgb, var(--probe) 24%, transparent);
   }
   textarea{resize:vertical; min-height:62px; line-height:1.6;}
-  .two{display:grid; grid-template-columns:1fr 1fr; gap:15px;}
+  .two, .three{display:grid; gap:15px;}
+  .two{grid-template-columns:1fr 1fr;}
+  .three{grid-template-columns:1fr 1fr 1fr;}
+  @media (max-width:480px){ .three{grid-template-columns:1fr;} }
   .dlg-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:3px; flex-wrap:wrap;}
   .dlg-actions .spacer{flex:1;}
   .err{color:var(--block); font-size:12px; letter-spacing:.02em; margin:0;}
+
+  /* ---------- custom dropdowns ---------- */
+  .ddown{position:relative;}
+  .ddown-btn{
+    font-family:var(--mono); font-size:13.5px; text-align:left; width:100%; cursor:pointer;
+    background:var(--ground); color:var(--ink);
+    border:1px solid var(--rule-strong); border-radius:0; padding:9px 28px 9px 10px;
+    position:relative; transition:border-color .15s, box-shadow .15s;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .ddown-btn::after{
+    content:"▾"; position:absolute; right:10px; top:50%; transform:translateY(-50%);
+    color:var(--ink-faint); font-size:10px; pointer-events:none;
+  }
+  .ddown-btn:focus-visible, .ddown.open .ddown-btn{
+    outline:none; border-color:var(--probe);
+    box-shadow:0 0 0 2px color-mix(in srgb, var(--probe) 24%, transparent);
+  }
+  .ddown-menu{
+    list-style:none; margin:0; padding:0;
+    position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:50;
+    background:var(--surface); border:1px solid var(--rule-strong);
+    max-height:210px; overflow-y:auto;
+    box-shadow:0 16px 34px -14px rgba(0,0,0,.45);
+  }
+  .ddown-menu li{
+    padding:8px 10px; font-size:13px; color:var(--ink-soft); cursor:pointer;
+    border-bottom:1px solid var(--rule);
+  }
+  .ddown-menu li:last-child{border-bottom:0;}
+  .ddown-menu li:hover{background:var(--accent-lift); color:var(--accent);}
+  .ddown-menu li[aria-selected="true"]{background:var(--surface-2); color:var(--ink); font-weight:600;}
+
+  /* ---------- settings ---------- */
+  .settings-row{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:2px 0;}
+  .settings-label{font-size:11px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft);}
+  .toggle{
+    width:44px; height:24px; position:relative; background:var(--rule-strong);
+    border:1px solid var(--rule-strong); border-radius:0; cursor:pointer; padding:0; flex:none;
+    transition:background .18s, border-color .18s;
+  }
+  .toggle.on{background:var(--done); border-color:var(--done);}
+  .toggle::after{
+    content:""; position:absolute; width:16px; height:16px; background:var(--surface);
+    top:3px; left:3px; transition:left .18s;
+  }
+  .toggle.on::after{left:23px;}
+  .toggle:focus-visible{outline:2px solid var(--probe); outline-offset:2px;}
 
   @media (prefers-reduced-motion: reduce){
     *{transition-duration:.001s !important; animation-duration:.001s !important; animation-iteration-count:1 !important;}
     .ambient{display:none;}
   }
-  @keyframes riseIn{ from{opacity:0; transform:translateY(9px);} to{opacity:1; transform:none;} }
-  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.25;} }
+  :root[data-anim="off"] *{
+    transition-duration:.001s !important;
+    animation-duration:.001s !important;
+    animation-iteration-count:1 !important;
+  }
+  :root[data-anim="off"] .ambient{display:none;}
+
+  @keyframes riseIn{ from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:none;} }
+  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.12;} }
   @keyframes drawIn{ to{transform:scaleX(1);} }
-  @keyframes drift{ to{background-position:0 -28px, -28px 0, 0 0;} }
+  @keyframes drift{ to{background-position:0 -56px, -56px 0, 0 0;} }
   @keyframes wander{
     0%{transform:translate3d(0,0,0) scale(1);}
-    100%{transform:translate3d(2%,-3%,0) scale(1.08);}
+    100%{transform:translate3d(6%,-8%,0) scale(1.22);}
   }
   @keyframes sheen{
-    0%,62%{transform:translateX(-100%);}
-    88%,100%{transform:translateX(100%);}
+    0%,58%{transform:translateX(-100%);}
+    86%,100%{transform:translateX(100%);}
   }
-  @keyframes sweepline{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
-  @keyframes caret{ 0%,49%{opacity:1;} 50%,100%{opacity:.15;} }
+  @keyframes sweepline{ 0%,100%{opacity:.6; transform:scaleX(1);} 50%{opacity:1; transform:scaleX(2.1);} }
+  @keyframes caret{ 0%,49%{opacity:1;} 50%,100%{opacity:.1;} }
 </style>
 </head>
 <body>
@@ -444,7 +507,8 @@
         <span class="lbl">Date</span>
         <span class="val" id="stamp"></span>
       </div>
-      <button type="button" class="theme-btn" id="btnTheme" aria-label="Change colour theme">Auto</button>
+      <button type="button" class="bar-btn" id="btnSettings" aria-label="Settings">⚙ SET</button>
+      <button type="button" class="bar-btn" id="btnTheme" aria-label="Change colour theme">Auto</button>
     </div>
   </header>
 
@@ -479,29 +543,78 @@
       <label for="f-name">Project name</label>
       <input id="f-name" placeholder="OVP circuit rev2 PCB" autocomplete="off">
     </div>
+
+    <div class="three">
+      <div class="field">
+        <label>Category</label>
+        <div class="ddown" id="dd-cat" data-value="pcb">
+          <button type="button" class="ddown-btn" aria-haspopup="listbox" aria-expanded="false">PCB design</button>
+          <ul class="ddown-menu" role="listbox" hidden>
+            <li role="option" data-value="pcb" aria-selected="true">PCB design</li>
+            <li role="option" data-value="fw">Firmware</li>
+            <li role="option" data-value="other">Other</li>
+          </ul>
+        </div>
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <div class="ddown" id="dd-status" data-value="progress">
+          <button type="button" class="ddown-btn" aria-haspopup="listbox" aria-expanded="false">In progress</button>
+          <ul class="ddown-menu" role="listbox" hidden>
+            <li role="option" data-value="progress" aria-selected="true">In progress</li>
+            <li role="option" data-value="testing">Testing</li>
+            <li role="option" data-value="blocked">Blocked</li>
+            <li role="option" data-value="done">Done</li>
+          </ul>
+        </div>
+      </div>
+      <div class="field">
+        <label>Priority</label>
+        <div class="ddown" id="dd-priority" data-value="medium">
+          <button type="button" class="ddown-btn" aria-haspopup="listbox" aria-expanded="false">Medium</button>
+          <ul class="ddown-menu" role="listbox" hidden>
+            <li role="option" data-value="low">Low</li>
+            <li role="option" data-value="medium" aria-selected="true">Medium</li>
+            <li role="option" data-value="high">High</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <div class="two">
       <div class="field">
-        <label for="f-cat">Category</label>
-        <select id="f-cat">
-          <option value="pcb">PCB design</option>
-          <option value="fw">Firmware</option>
-          <option value="other">Other</option>
-        </select>
+        <label>Percent complete</label>
+        <div class="ddown" id="dd-pct" data-value="10">
+          <button type="button" class="ddown-btn" aria-haspopup="listbox" aria-expanded="false">10%</button>
+          <ul class="ddown-menu" role="listbox" hidden></ul>
+        </div>
       </div>
       <div class="field">
-        <label for="f-status">Status</label>
-        <select id="f-status">
-          <option value="progress">In progress</option>
-          <option value="testing">Testing</option>
-          <option value="blocked">Blocked</option>
-          <option value="done">Done</option>
-        </select>
+        <label>Deadline</label>
+        <div class="ddown" id="dd-deadline" data-value="">
+          <button type="button" class="ddown-btn" aria-haspopup="listbox" aria-expanded="false">No deadline</button>
+          <ul class="ddown-menu" role="listbox" hidden>
+            <li role="option" data-value="" aria-selected="true">No deadline</li>
+            <li role="option" data-value="today">Today</li>
+            <li role="option" data-value="tomorrow">Tomorrow</li>
+            <li role="option" data-value="week">End of this week</li>
+            <li role="option" data-value="month">End of this month</li>
+            <li role="option" data-value="custom">Custom date…</li>
+          </ul>
+        </div>
       </div>
     </div>
-    <div class="field">
-      <label for="f-pct">Percent complete</label>
-      <input id="f-pct" type="number" min="0" max="100" step="5" value="0">
+
+    <div class="field" id="customDateField" hidden>
+      <label for="f-deadlineCustom">Custom deadline date</label>
+      <input id="f-deadlineCustom" type="date">
     </div>
+
+    <div class="field">
+      <label for="f-handler">Handler / owner</label>
+      <input id="f-handler" placeholder="Name or handle" autocomplete="off">
+    </div>
+
     <div class="field">
       <label for="f-next">Next action</label>
       <textarea id="f-next" placeholder="What you'll do next on this"></textarea>
@@ -549,6 +662,20 @@
   </form>
 </dialog>
 
+<!-- settings -->
+<dialog id="dlgSettings">
+  <form method="dialog" class="dlg-body" id="formSettings">
+    <p class="dlg-title">Settings</p>
+    <div class="settings-row">
+      <span class="settings-label">Animations</span>
+      <button type="button" class="toggle" id="toggleAnim" aria-label="Toggle animations" aria-pressed="true"></button>
+    </div>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-primary" id="btnSettingsClose">Close</button>
+    </div>
+  </form>
+</dialog>
+
 <script>
 (function(){
   "use strict";
@@ -557,6 +684,7 @@
   var THEME_KEY = "project-tracker.theme";
   var TOKEN_KEY = "project-tracker.gh-token";
   var GIST_KEY = "project-tracker.gist-id";
+  var ANIM_KEY = "project-tracker.anim";
   var LEGACY = "projects";
   var GIST_FILE = "project-tracker.json";
   var API = "https://api.github.com";
@@ -571,6 +699,8 @@
 
   var CATS = {pcb:"PCB", fw:"Firmware", other:"Other"};
   var STATES = {progress:"In progress", testing:"Testing", blocked:"Blocked", done:"Done"};
+  var PRIS = {low:"Low", medium:"Medium", high:"High"};
+  var PRI_RANK = {high:0, medium:1, low:2};
   var ORDER = ["blocked","progress","testing","done"];
   var RANK = {blocked:0, progress:1, testing:2, done:3};
 
@@ -589,6 +719,43 @@
     var d = new Date(ts);
     return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0") +
            ":" + String(d.getSeconds()).padStart(2,"0");
+  }
+  function deadlineDate(v){
+    var d = new Date();
+    if(v === "today") return today();
+    if(v === "tomorrow"){ d.setDate(d.getDate() + 1); }
+    else if(v === "week"){ d.setDate(d.getDate() + (7 - d.getDay())); }
+    else if(v === "month"){ d.setMonth(d.getMonth() + 1, 1); d.setDate(0); }
+    else return "";
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+  function deadlineLabel(p){
+    if(!p.deadline) return "";
+    if(p.deadline === "custom") return p.deadlineCustom || "";
+    return deadlineDate(p.deadline);
+  }
+  function deadlineSortKey(p){
+    var lbl = deadlineLabel(p);
+    if(!lbl) return Infinity;
+    var t = Date.parse(lbl);
+    return isNaN(t) ? Infinity : t;
+  }
+  function isOverdue(p){
+    if(p.status === "done") return false;
+    var lbl = deadlineLabel(p);
+    return !!lbl && lbl < today();
+  }
+
+  /* ================= animations toggle ================= */
+  function setAnimations(on){
+    document.documentElement.setAttribute("data-anim", on ? "on" : "off");
+    lsSet(ANIM_KEY, on ? "1" : "0");
+    var t = $("toggleAnim");
+    t.classList.toggle("on", on);
+    t.setAttribute("aria-pressed", on ? "true" : "false");
+  }
+  function initAnimations(){
+    setAnimations(ls(ANIM_KEY) !== "0");
   }
 
   /* ================= theme ================= */
@@ -609,6 +776,79 @@
     applyTheme(next);
     lsSet(THEME_KEY, next);
   }
+
+  /* ================= custom dropdowns ================= */
+  var openDropdown = null;
+  function Dropdown(root, onChange){
+    this.root = root;
+    this.btn = root.querySelector(".ddown-btn");
+    this.menu = root.querySelector(".ddown-menu");
+    this.onChange = onChange;
+    var self = this;
+    this.btn.addEventListener("click", function(e){
+      e.stopPropagation();
+      self.menu.hidden ? self.open() : self.close();
+    });
+    this.menu.addEventListener("click", function(e){
+      var li = e.target.closest("li[data-value]");
+      if(!li) return;
+      e.stopPropagation();
+      self.setValue(li.getAttribute("data-value"), true);
+    });
+  }
+  Dropdown.prototype.open = function(){
+    if(openDropdown && openDropdown !== this) openDropdown.close();
+    this.menu.hidden = false;
+    this.btn.setAttribute("aria-expanded", "true");
+    this.root.classList.add("open");
+    openDropdown = this;
+  };
+  Dropdown.prototype.close = function(){
+    this.menu.hidden = true;
+    this.btn.setAttribute("aria-expanded", "false");
+    this.root.classList.remove("open");
+    if(openDropdown === this) openDropdown = null;
+  };
+  Dropdown.prototype.setValue = function(value, fromUser){
+    var items = this.menu.querySelectorAll("li[data-value]");
+    var match = null;
+    Array.prototype.forEach.call(items, function(li){
+      if(li.getAttribute("data-value") === value) match = li;
+    });
+    if(!match) match = items[0];
+    if(!match) return;
+    Array.prototype.forEach.call(items, function(li){
+      li.setAttribute("aria-selected", li === match ? "true" : "false");
+    });
+    this.root.setAttribute("data-value", match.getAttribute("data-value"));
+    this.btn.textContent = match.textContent;
+    this.close();
+    if(fromUser && this.onChange) this.onChange(this.root.getAttribute("data-value"));
+  };
+  Dropdown.prototype.getValue = function(){ return this.root.getAttribute("data-value") || ""; };
+
+  document.addEventListener("click", function(){ if(openDropdown) openDropdown.close(); });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape" && openDropdown) openDropdown.close(); });
+
+  // build the 10–100 step-10 percentage options before wiring the dropdown
+  (function(){
+    var ul = $("dd-pct").querySelector(".ddown-menu");
+    var html = "";
+    for(var v = 10; v <= 100; v += 10){
+      html += '<li role="option" data-value="' + v + '"' + (v === 10 ? ' aria-selected="true"' : "") + '>' + v + '%</li>';
+    }
+    ul.innerHTML = html;
+  })();
+
+  function showCustomDate(v){ $("customDateField").hidden = v !== "custom"; }
+
+  var ddCat      = new Dropdown($("dd-cat"));
+  var ddStatus   = new Dropdown($("dd-status"));
+  var ddPriority = new Dropdown($("dd-priority"));
+  var ddPct      = new Dropdown($("dd-pct"));
+  var ddDeadline = new Dropdown($("dd-deadline"), showCustomDate);
+
+  function snapPct(v){ return Math.min(100, Math.max(10, Math.round((Number(v) || 10) / 10) * 10)); }
 
   /* ================= local storage ================= */
   function newId(){
@@ -821,7 +1061,10 @@
 
   function sortedProjects(){
     return doc.projects.slice().sort(function(a,b){
-      return (RANK[a.status] - RANK[b.status]) || a.name.localeCompare(b.name);
+      return (RANK[a.status] - RANK[b.status])
+        || ((PRI_RANK[a.priority] != null ? PRI_RANK[a.priority] : 1) - (PRI_RANK[b.priority] != null ? PRI_RANK[b.priority] : 1))
+        || (deadlineSortKey(a) - deadlineSortKey(b))
+        || a.name.localeCompare(b.name);
     });
   }
   function clampPct(v){ return Math.max(0, Math.min(100, Number(v) || 0)); }
@@ -864,12 +1107,17 @@
     log.innerHTML = sortedProjects().map(function(p, i){
       var pct = clampPct(p.pct);
       var d = animate ? i : 0;
+      var dl = deadlineLabel(p);
+      var overdue = isOverdue(p);
       return '' +
       '<article class="row" data-s="' + esc(p.status) + '" style="--i:' + d + '">' +
 
         '<div class="row-name">' +
           '<span class="name">' + esc(p.name) + '</span>' +
-          '<span class="cat">' + esc(CATS[p.cat] || "Other") + '</span>' +
+          '<span class="tags">' +
+            '<span class="pri pri-' + esc(p.priority || "medium") + '">' + esc(PRIS[p.priority] || "Medium") + '</span>' +
+            '<span class="cat">' + esc(CATS[p.cat] || "Other") + '</span>' +
+          '</span>' +
         '</div>' +
 
         '<div class="row-status">' +
@@ -885,6 +1133,10 @@
         '</div>' +
 
         '<div class="row-facts">' +
+          '<div class="fact"><span class="k">Handler</span><span class="v">' +
+            (p.handler ? esc(p.handler) : '<span class="quiet">unassigned</span>') + '</span></div>' +
+          '<div class="fact"><span class="k">Deadline</span><span class="v' + (overdue ? " overdue" : "") + '">' +
+            (dl ? esc(dl) + (overdue ? " — overdue" : "") : '<span class="quiet">none</span>') + '</span></div>' +
           '<div class="fact"><span class="k">Next</span><span class="v">' +
             (p.next ? esc(p.next) : '<span class="quiet">not set</span>') + '</span></div>' +
           (p.blocker
@@ -899,10 +1151,14 @@
       '</article>';
     }).join("");
 
-    requestAnimationFrame(function(){
-      Array.prototype.forEach.call(log.querySelectorAll(".fill"), function(el){
-        el.style.width = el.getAttribute("data-w") + "%";
-      });
+    // force a synchronous reflow of width:0 before animating to the real
+    // width. rAF alone depends on the tab actually compositing frames —
+    // it never fires in a backgrounded/hidden tab, which left every bar
+    // stuck at 0%. Reading offsetWidth commits layout immediately instead.
+    var fills = log.querySelectorAll(".fill");
+    Array.prototype.forEach.call(fills, function(el){ void el.offsetWidth; });
+    Array.prototype.forEach.call(fills, function(el){
+      el.style.width = el.getAttribute("data-w") + "%";
     });
   }
 
@@ -912,10 +1168,15 @@
     $("err").textContent = "";
     $("dlgTitle").textContent = id ? "Edit project" : "Add project";
     var p = id ? doc.projects.filter(function(x){ return x.id === id; })[0] : null;
-    $("f-name").value    = p ? p.name : "";
-    $("f-cat").value     = p ? (p.cat || "other") : "pcb";
-    $("f-status").value  = p ? p.status : "progress";
-    $("f-pct").value     = p ? clampPct(p.pct) : 0;
+    $("f-name").value = p ? p.name : "";
+    ddCat.setValue(p ? (p.cat || "other") : "pcb");
+    ddStatus.setValue(p ? p.status : "progress");
+    ddPriority.setValue(p ? (p.priority || "medium") : "medium");
+    ddPct.setValue(String(p ? snapPct(p.pct) : 10));
+    ddDeadline.setValue(p ? (p.deadline || "") : "");
+    showCustomDate(p ? (p.deadline || "") : "");
+    $("f-deadlineCustom").value = p && p.deadline === "custom" ? (p.deadlineCustom || "") : "";
+    $("f-handler").value = p ? (p.handler || "") : "";
     $("f-next").value    = p ? (p.next || "") : "";
     $("f-blocker").value = p ? (p.blocker || "") : "";
     $("dlg").showModal();
@@ -929,11 +1190,16 @@
       $("f-name").focus();
       return;
     }
+    var deadline = ddDeadline.getValue();
     var data = {
       name: name,
-      cat: $("f-cat").value,
-      status: $("f-status").value,
-      pct: clampPct($("f-pct").value),
+      cat: ddCat.getValue(),
+      status: ddStatus.getValue(),
+      priority: ddPriority.getValue(),
+      pct: clampPct(ddPct.getValue()),
+      handler: $("f-handler").value.trim(),
+      deadline: deadline,
+      deadlineCustom: deadline === "custom" ? $("f-deadlineCustom").value : "",
       next: $("f-next").value.trim(),
       blocker: $("f-blocker").value.trim(),
       updated: today(),
@@ -963,6 +1229,15 @@
   }
 
   /* ================= report ================= */
+  function metaSuffix(p){
+    var bits = [];
+    if(p.priority === "high") bits.push("HIGH PRIORITY");
+    if(p.handler) bits.push("owner: " + p.handler);
+    var dl = deadlineLabel(p);
+    if(dl) bits.push((isOverdue(p) ? "OVERDUE — was due " : "due ") + dl);
+    return bits.length ? " [" + bits.join(" · ") + "]" : "";
+  }
+
   function report(){
     var box = $("reportBox");
     box.classList.add("show");
@@ -976,17 +1251,17 @@
     var out = "Daily update — " + today() + "\n\n";
     if(g.progress.length){
       out += "In progress:\n";
-      g.progress.forEach(function(p){ out += "- " + p.name + " (" + clampPct(p.pct) + "%) — " + (p.next || "next step tbd") + "\n"; });
+      g.progress.forEach(function(p){ out += "- " + p.name + " (" + clampPct(p.pct) + "%) — " + (p.next || "next step tbd") + metaSuffix(p) + "\n"; });
       out += "\n";
     }
     if(g.testing.length){
       out += "In testing:\n";
-      g.testing.forEach(function(p){ out += "- " + p.name + " — " + (p.next || "validating results") + "\n"; });
+      g.testing.forEach(function(p){ out += "- " + p.name + " — " + (p.next || "validating results") + metaSuffix(p) + "\n"; });
       out += "\n";
     }
     if(g.blocked.length){
       out += "Blocked — need input:\n";
-      g.blocked.forEach(function(p){ out += "- " + p.name + " — " + (p.blocker || "blocker not specified") + "\n"; });
+      g.blocked.forEach(function(p){ out += "- " + p.name + " — " + (p.blocker || "blocker not specified") + metaSuffix(p) + "\n"; });
       out += "\n";
     }
     if(g.done.length){
@@ -1019,6 +1294,11 @@
     blocked: {fg:"A02719", bg:"F7E4E1"},
     done:    {fg:"31603C", bg:"E4EDE6"}
   };
+  var XPRI = {
+    high:  {fg:"A02719", bg:"F7E4E1"},
+    medium:{fg:"7A5804", bg:"F3EBD8"},
+    low:   {fg:XC.faint, bg:XC.surface2}
+  };
   var MONO = "Consolas";
 
   function xBorder(sides, color){
@@ -1047,10 +1327,11 @@
     var counts = {progress:0, testing:0, blocked:0, done:0};
     doc.projects.forEach(function(p){ if(counts[p.status] != null) counts[p.status]++; });
 
-    var HEAD = ["Project","Category","Status","Complete","Progress","Next action","Blocker","Updated"];
+    var HEAD = ["Project","Category","Status","Priority","Complete","Progress","Handler","Deadline","Next action","Blocker","Updated"];
     var LASTC = HEAD.length - 1;
     var HEAD_R = 4;          // zero-based: masthead 0-1, tally 2, spacer 3
     var FIRST_R = HEAD_R + 1;
+    var CENTER_COLS = [3,4,5,7];
 
     var aoa = [
       ["PROJECT_TRACKER"],
@@ -1067,8 +1348,11 @@
         p.name,
         CATS[p.cat] || "Other",
         STATES[p.status] || p.status,
+        PRIS[p.priority] || "Medium",
         pct / 100,
         new Array(filled + 1).join("█") + new Array(10 - filled + 1).join("░"),
+        p.handler || "",
+        deadlineLabel(p),
         p.next || "",
         p.blocker || "",
         p.updated || ""
@@ -1108,7 +1392,7 @@
       style(HEAD_R, c, {
         font:{name:MONO, sz:10, bold:true, color:{rgb:"FFFFFF"}},
         fill:xFill(XC.ink),
-        alignment:{vertical:"center", horizontal:(c === 3 || c === 4) ? "center" : "left"},
+        alignment:{vertical:"center", horizontal: CENTER_COLS.indexOf(c) !== -1 ? "center" : "left"},
         border:xBorder("b", XC.accent)
       });
     }
@@ -1117,6 +1401,8 @@
     list.forEach(function(p, i){
       var r = FIRST_R + i;
       var sc = XSTATE[p.status] || XSTATE.progress;
+      var pc = XPRI[p.priority] || XPRI.medium;
+      var overdue = isOverdue(p);
       var band = (i % 2) ? XC.surface2 : XC.surface;
       var base = {
         font:{name:MONO, sz:10, color:{rgb:XC.inkSoft}},
@@ -1146,29 +1432,47 @@
         alignment:{vertical:"center", horizontal:"center"},
         border:xBorder("b")
       });
-      var pctCell = at(r, 3);
-      if(pctCell) pctCell.z = "0%";
       style(r, 3, {
+        font:{name:MONO, sz:9, bold:true, color:{rgb:pc.fg}},
+        fill:xFill(pc.bg),
+        alignment:{vertical:"center", horizontal:"center"},
+        border:xBorder("b")
+      });
+      var pctCell = at(r, 4);
+      if(pctCell) pctCell.z = "0%";
+      style(r, 4, {
         font:{name:MONO, sz:11, bold:true, color:{rgb:XC.ink}},
         fill:xFill(band),
         alignment:{vertical:"center", horizontal:"center"},
         border:xBorder("b")
       });
-      style(r, 4, {
+      style(r, 5, {
         font:{name:MONO, sz:10, color:{rgb:sc.fg}},
         fill:xFill(band),
         alignment:{vertical:"center", horizontal:"center"},
         border:xBorder("b")
       });
+      style(r, 6, {
+        font:{name:MONO, sz:10, color:{rgb:XC.inkSoft}},
+        fill:xFill(band),
+        alignment:{vertical:"center", horizontal:"left"},
+        border:xBorder("b")
+      });
+      style(r, 7, {
+        font:{name:MONO, sz:9, bold: overdue, color:{rgb: overdue ? XSTATE.blocked.fg : XC.faint}},
+        fill:xFill(band),
+        alignment:{vertical:"center", horizontal:"center"},
+        border:xBorder("b")
+      });
       if(p.blocker){
-        style(r, 6, {
+        style(r, 9, {
           font:{name:MONO, sz:10, color:{rgb:XSTATE.blocked.fg}},
           fill:xFill(band),
           alignment:{vertical:"center", wrapText:true},
           border:xBorder("b")
         });
       }
-      style(r, 7, {
+      style(r, 10, {
         font:{name:MONO, sz:9, color:{rgb:XC.faint}},
         fill:xFill(band),
         alignment:{vertical:"center", horizontal:"center"},
@@ -1176,7 +1480,7 @@
       });
     });
 
-    ws["!cols"] = [{wch:36},{wch:11},{wch:14},{wch:11},{wch:14},{wch:44},{wch:36},{wch:13}];
+    ws["!cols"] = [{wch:34},{wch:11},{wch:13},{wch:10},{wch:10},{wch:14},{wch:16},{wch:13},{wch:42},{wch:34},{wch:12}];
     ws["!rows"] = [{hpt:30},{hpt:15},{hpt:18},{hpt:7},{hpt:22}];
     list.forEach(function(){ ws["!rows"].push({hpt:32}); });
     ws["!autofilter"] = {ref: XLSX.utils.encode_range({s:{r:HEAD_R,c:0}, e:{r:FIRST_R + list.length - 1, c:LASTC}})};
@@ -1190,6 +1494,11 @@
 
   /* ================= wiring ================= */
   $("btnTheme").addEventListener("click", cycleTheme);
+  $("btnSettings").addEventListener("click", function(){ $("dlgSettings").showModal(); });
+  $("btnSettingsClose").addEventListener("click", function(){ $("dlgSettings").close(); });
+  $("toggleAnim").addEventListener("click", function(){
+    setAnimations(!$("toggleAnim").classList.contains("on"));
+  });
   $("btnAdd").addEventListener("click", function(){ openDialog(); });
   $("btnReport").addEventListener("click", report);
   $("btnExport").addEventListener("click", exportExcel);
@@ -1203,6 +1512,7 @@
 
   $("form").addEventListener("submit", function(e){ e.preventDefault(); });
   $("formSync").addEventListener("submit", function(e){ e.preventDefault(); });
+  $("formSettings").addEventListener("submit", function(e){ e.preventDefault(); });
   $("f-name").addEventListener("keydown", function(e){
     if(e.key === "Enter"){ e.preventDefault(); save(); }
   });
@@ -1224,6 +1534,7 @@
   window.addEventListener("storage", function(e){
     if(e.key === KEY){ load(); render(false); }
     if(e.key === THEME_KEY){ initTheme(); }
+    if(e.key === ANIM_KEY){ initAnimations(); }
   });
 
   // ---- the 10-second loop ----
@@ -1236,6 +1547,7 @@
   window.addEventListener("focus", function(){ sync("pull"); });
 
   initTheme();
+  initAnimations();
   load();
   render(true);
   if(configured()){
