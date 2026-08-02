@@ -7,13 +7,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Martian+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<!-- styled-cell fork of SheetJS: the community build drops fills/fonts/borders -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <style>
   /* ============================================================
      All monospace. Martian Mono — wide, mechanical — carries the
      display type; JetBrains Mono carries everything you read.
-     Layout is an instrument panel: ruled channels, corner ticks,
-     a status rail down the left of every entry.
+     Every entry is a stacked instrument panel: name plate, status
+     band, progress channel, then the notes.
      ============================================================ */
   :root{
     color-scheme: light;
@@ -28,6 +29,7 @@
     --ink-soft:#4a5044;
     --ink-faint:#7e8577;
     --grid:rgba(18,21,15,.055);
+    --sheen:rgba(255,255,255,.55);
 
     --accent:#a8481a;
     --accent-lift:rgba(168,72,26,.08);
@@ -48,6 +50,7 @@
       --rule:#252b20; --rule-strong:#39412f;
       --ink:#e8ebe1; --ink-soft:#a2a99a; --ink-faint:#6f776a;
       --grid:rgba(232,235,225,.045);
+      --sheen:rgba(255,255,255,.28);
       --accent:#e58038; --accent-lift:rgba(229,128,56,.10);
       --probe:#59c0cb;
       --run:#74b2d3;  --run-bg:rgba(116,178,211,.13);
@@ -61,7 +64,7 @@
     --ground:#e8eae5; --ground-2:#dee1da; --surface:#f7f8f4; --surface-2:#eef0ea;
     --rule:#d0d5c9; --rule-strong:#b2b9a9;
     --ink:#12150f; --ink-soft:#4a5044; --ink-faint:#7e8577;
-    --grid:rgba(18,21,15,.055);
+    --grid:rgba(18,21,15,.055); --sheen:rgba(255,255,255,.55);
     --accent:#a8481a; --accent-lift:rgba(168,72,26,.08); --probe:#0d6874;
     --run:#215d7a;  --run-bg:rgba(33,93,122,.11);
     --test:#7a5804; --test-bg:rgba(122,88,4,.13);
@@ -73,7 +76,7 @@
     --ground:#0d100c; --ground-2:#090b08; --surface:#141810; --surface-2:#191d15;
     --rule:#252b20; --rule-strong:#39412f;
     --ink:#e8ebe1; --ink-soft:#a2a99a; --ink-faint:#6f776a;
-    --grid:rgba(232,235,225,.045);
+    --grid:rgba(232,235,225,.045); --sheen:rgba(255,255,255,.28);
     --accent:#e58038; --accent-lift:rgba(229,128,56,.10); --probe:#59c0cb;
     --run:#74b2d3;  --run-bg:rgba(116,178,211,.13);
     --test:#dab24d; --test-bg:rgba(218,178,77,.13);
@@ -95,10 +98,20 @@
       linear-gradient(var(--ground), var(--ground-2));
     background-attachment:fixed;
     min-height:100vh;
+    animation:drift 60s linear infinite;   /* idle: the grid creeps */
   }
   ::selection{background:var(--accent); color:var(--surface);}
 
-  .wrap{max-width:980px; margin:0 auto; padding:38px 20px 100px;}
+  /* idle: a slow warm bloom wandering behind the panels */
+  .ambient{
+    position:fixed; inset:-25%; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(42% 34% at 28% 22%, var(--accent-lift), transparent 68%),
+      radial-gradient(38% 30% at 76% 72%, var(--accent-lift), transparent 70%);
+    animation:wander 34s ease-in-out infinite alternate;
+  }
+
+  .wrap{position:relative; z-index:1; max-width:980px; margin:0 auto; padding:38px 20px 100px;}
 
   /* corner ticks — crosshair marks on framed panels */
   .ticked{position:relative;}
@@ -120,14 +133,17 @@
     color:var(--accent); margin:0 0 12px;
     display:flex; align-items:center; gap:10px;
   }
-  .kicker::before{content:""; width:26px; height:1px; background:var(--accent);}
+  .kicker::before{
+    content:""; width:26px; height:1px; background:var(--accent);
+    animation:sweepline 6s ease-in-out infinite;
+  }
   h1{
     font-family:var(--display); font-weight:600;
     font-size:clamp(20px, 3.4vw, 31px); line-height:1.1;
     letter-spacing:-.055em; margin:0; color:var(--ink);
     text-wrap:balance;
   }
-  h1 span{color:var(--accent);}
+  h1 span{color:var(--accent); animation:caret 1.6s steps(1) infinite;}
   .mast-right{display:flex; align-items:stretch; gap:10px;}
   .readout{
     border:1px solid var(--rule); background:var(--surface);
@@ -160,10 +176,7 @@
   .syncbar[data-state="busy"] .led{animation:blink 1s ease-in-out infinite;}
   .syncbar[data-state="err"]{color:var(--block); border-color:var(--block);}
   .syncbar .msg{flex:1; min-width:190px; color:inherit;}
-  .syncbar .tick{
-    font-variant-numeric:tabular-nums; color:var(--ink-faint);
-    letter-spacing:.12em; opacity:.8;
-  }
+  .syncbar .tick{font-variant-numeric:tabular-nums; color:var(--ink-faint); letter-spacing:.12em; opacity:.8;}
   .link{
     font:inherit; background:none; border:0; padding:0; cursor:pointer;
     color:var(--accent); letter-spacing:.16em;
@@ -180,10 +193,15 @@
   .cell{
     padding:15px 15px 16px; border-right:1px solid var(--rule);
     display:grid; gap:7px; position:relative;
+    transition:background .18s;
   }
+  .cell:hover{background:var(--surface-2);}
   .cell:last-child{border-right:0;}
   .cell::before{
     content:""; position:absolute; top:0; left:0; right:0; height:2px; background:currentColor;
+    transform:scaleX(0); transform-origin:left;
+    animation:drawIn .5s cubic-bezier(.2,.8,.25,1) forwards;
+    animation-delay:calc(var(--c) * 70ms);
   }
   .cell[data-k="blocked"]{color:var(--block);}
   .cell[data-k="progress"]{color:var(--run);}
@@ -193,10 +211,7 @@
     font-family:var(--display); font-weight:600; font-size:29px; line-height:1;
     letter-spacing:-.08em; font-variant-numeric:tabular-nums;
   }
-  .cell .l{
-    font-size:9px; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
-    color:var(--ink-faint);
-  }
+  .cell .l{font-size:9px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-faint);}
   .cell.is-zero .n{color:var(--ink-faint); opacity:.4;}
   @media (max-width:640px){
     .summary{grid-template-columns:repeat(2,1fr);}
@@ -204,11 +219,7 @@
     .cell:nth-child(-n+2){border-bottom:1px solid var(--rule);}
   }
 
-  /* stacked distribution of the whole board */
-  .dist{
-    display:flex; height:6px; margin-top:-1px;
-    border:1px solid var(--rule); background:var(--surface);
-  }
+  .dist{display:flex; height:6px; margin-top:-1px; border:1px solid var(--rule); background:var(--surface);}
   .dist span{transition:flex-grow .5s cubic-bezier(.2,.8,.25,1);}
   .dist .d-blocked{background:var(--block);}
   .dist .d-progress{background:var(--run);}
@@ -257,77 +268,98 @@
   .log{border-top:1px solid var(--ink);}
 
   .row{
-    display:grid; grid-template-columns:82px 1fr;
-    background:var(--surface); border-bottom:1px solid var(--rule);
+    position:relative; background:var(--surface);
+    border-bottom:1px solid var(--rule);
     animation:riseIn .4s cubic-bezier(.22,.9,.3,1) both;
     animation-delay:calc(var(--i) * 42ms);
-    transition:background .16s;
   }
-  .row:hover{background:var(--surface-2);}
+  .row::before{
+    content:""; position:absolute; left:0; top:0; bottom:0; width:3px;
+    background:currentColor;
+  }
   .row[data-s="blocked"]{color:var(--block);}
   .row[data-s="progress"]{color:var(--run);}
   .row[data-s="testing"]{color:var(--test);}
   .row[data-s="done"]{color:var(--done);}
 
-  .rail{
-    border-right:1px solid var(--rule);
-    padding:17px 12px; display:grid; align-content:start; gap:9px;
-    position:relative;
+  /* name plate */
+  .row-name{
+    display:flex; align-items:baseline; justify-content:space-between; gap:14px;
+    padding:16px 20px 14px 23px; border-bottom:1px solid var(--rule);
   }
-  .rail::before{
-    content:""; position:absolute; left:0; top:0; bottom:0; width:2px;
-    background:currentColor;
-  }
-  .rail .code{
-    font-size:10px; font-weight:700; letter-spacing:.16em;
-    display:flex; align-items:center; gap:6px;
-  }
-  .rail .led{width:5px; height:5px; border-radius:50%; background:currentColor; flex:none;}
-  .row[data-s="blocked"] .led{animation:blink 1.5s ease-in-out infinite;}
-  .row[data-s="testing"] .led{animation:blink 2.6s ease-in-out infinite;}
-  .rail .pct{
-    font-family:var(--display); font-weight:400; font-size:17px; line-height:1;
-    letter-spacing:-.07em; color:var(--ink); font-variant-numeric:tabular-nums;
-  }
-  .rail .gauge{height:3px; background:var(--ground); overflow:hidden;}
-  .rail .fill{
-    display:block; height:100%; width:0; background:currentColor;
-    transition:width .75s cubic-bezier(.2,.8,.25,1);
-    transition-delay:calc(var(--i) * 42ms + 100ms);
-  }
-
-  .body{padding:16px 20px 17px; display:grid; gap:11px; min-width:0;}
-  .row-head{display:flex; align-items:baseline; justify-content:space-between; gap:14px; flex-wrap:wrap;}
   .name{
-    font-family:var(--display); font-size:14.5px; font-weight:600;
-    letter-spacing:-.05em; line-height:1.3; color:var(--ink);
-    overflow-wrap:anywhere;
+    font-family:var(--display); font-size:15px; font-weight:600;
+    letter-spacing:-.05em; line-height:1.3; color:var(--ink); overflow-wrap:anywhere;
   }
   .row[data-s="done"] .name{color:var(--ink-soft);}
   .cat{
     font-size:9px; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
     color:var(--ink-faint); border:1px solid var(--rule-strong);
-    padding:3px 7px; white-space:nowrap;
-  }
-  .facts{display:grid; gap:7px; max-width:72ch;}
-  .fact{display:grid; grid-template-columns:78px 1fr; gap:10px; align-items:baseline;}
-  .fact .k{
-    font-size:9px; font-weight:500; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--ink-faint);
-  }
-  .fact .v{font-size:13.5px; color:var(--ink-soft); line-height:1.55; overflow-wrap:anywhere;}
-  .fact.blocked-line .v{color:var(--block);}
-  .fact .quiet{color:var(--ink-faint); opacity:.75;}
-  .fact .stamp-v{font-variant-numeric:tabular-nums; letter-spacing:.04em;}
-  @media (max-width:560px){
-    .row{grid-template-columns:1fr;}
-    .rail{border-right:0; border-bottom:1px solid var(--rule); grid-auto-flow:column; align-items:center; justify-content:start; gap:14px; padding:11px 14px;}
-    .rail .gauge{width:90px;}
-    .fact{grid-template-columns:1fr; gap:2px;}
+    padding:3px 7px; white-space:nowrap; flex:none;
   }
 
-  .row-actions{display:flex; gap:7px; padding-top:2px;}
+  /* status band */
+  .row-status{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding:9px 20px 9px 23px;
+    background:var(--surface-2); border-bottom:1px solid var(--rule);
+  }
+  .row-status .led{width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;}
+  .status-text{font-size:10.5px; font-weight:700; letter-spacing:.2em; text-transform:uppercase;}
+  .row-status .when{
+    margin-left:auto; font-size:9.5px; font-weight:500; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-faint); font-variant-numeric:tabular-nums;
+  }
+  .row[data-s="blocked"] .led{animation:blink 1.5s ease-in-out infinite;}
+  .row[data-s="testing"] .led{animation:blink 2.6s ease-in-out infinite;}
+
+  /* progress channel */
+  .row-meter{
+    display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center;
+    padding:14px 20px 14px 23px; border-bottom:1px solid var(--rule);
+  }
+  .meter-k{font-size:9px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-faint);}
+  .track{position:relative; height:12px; background:var(--ground); border:1px solid var(--rule); overflow:hidden;}
+  .track::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(to right,
+      transparent 0 calc(10% - 1px), var(--rule-strong) calc(10% - 1px), var(--rule-strong) 10%);
+    opacity:.7;
+  }
+  .fill{
+    position:relative; height:100%; width:0; background:currentColor; overflow:hidden;
+    transition:width .8s cubic-bezier(.2,.8,.25,1);
+    transition-delay:calc(var(--i) * 42ms + 120ms);
+  }
+  .fill::after{ /* idle: a highlight travels the filled length */
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(90deg, transparent, var(--sheen), transparent);
+    transform:translateX(-100%);
+    animation:sheen 5.5s ease-in-out infinite;
+    animation-delay:calc(var(--i) * 300ms);
+  }
+  .row[data-s="done"] .fill::after{animation:none;}
+  .pct{
+    font-family:var(--display); font-weight:400; font-size:17px; line-height:1;
+    letter-spacing:-.07em; color:var(--ink); font-variant-numeric:tabular-nums;
+    min-width:4.5ch; text-align:right;
+  }
+  .pct small{font-size:11px; opacity:.6;}
+
+  /* notes */
+  .row-facts{padding:15px 20px 6px 23px; display:grid; gap:8px; max-width:78ch;}
+  .fact{display:grid; grid-template-columns:82px 1fr; gap:10px; align-items:baseline;}
+  .fact .k{font-size:9px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint);}
+  .fact .v{font-size:13.5px; color:var(--ink-soft); line-height:1.6; overflow-wrap:anywhere;}
+  .fact.blocked-line .v{color:var(--block);}
+  .fact .quiet{color:var(--ink-faint); opacity:.75;}
+  .row-actions{display:flex; gap:7px; padding:12px 20px 16px 23px;}
   .row-actions .btn{padding:6px 11px; font-size:9.5px; letter-spacing:.16em;}
+  @media (max-width:560px){
+    .row-meter{grid-template-columns:1fr auto; row-gap:9px;}
+    .meter-k{grid-column:1 / -1;}
+    .fact{grid-template-columns:1fr; gap:2px;}
+  }
 
   .empty{
     background:var(--surface); border-bottom:1px solid var(--rule);
@@ -356,10 +388,7 @@
   }
   .dlg-title::after{content:""; flex:1; height:1px; background:var(--rule);}
   .field{display:grid; gap:6px;}
-  .field label{
-    font-size:9px; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
-    color:var(--ink-faint);
-  }
+  .field label{font-size:9px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint);}
   .hint{font-size:12px; line-height:1.7; color:var(--ink-faint); margin:0;}
   .hint code{background:var(--ground); border:1px solid var(--rule); padding:1px 5px;}
   .hint a{color:var(--accent); text-underline-offset:3px;}
@@ -382,12 +411,27 @@
 
   @media (prefers-reduced-motion: reduce){
     *{transition-duration:.001s !important; animation-duration:.001s !important; animation-iteration-count:1 !important;}
+    .ambient{display:none;}
   }
   @keyframes riseIn{ from{opacity:0; transform:translateY(9px);} to{opacity:1; transform:none;} }
   @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.25;} }
+  @keyframes drawIn{ to{transform:scaleX(1);} }
+  @keyframes drift{ to{background-position:0 -28px, -28px 0, 0 0;} }
+  @keyframes wander{
+    0%{transform:translate3d(0,0,0) scale(1);}
+    100%{transform:translate3d(2%,-3%,0) scale(1.08);}
+  }
+  @keyframes sheen{
+    0%,62%{transform:translateX(-100%);}
+    88%,100%{transform:translateX(100%);}
+  }
+  @keyframes sweepline{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+  @keyframes caret{ 0%,49%{opacity:1;} 50%,100%{opacity:.15;} }
 </style>
 </head>
 <body>
+
+<div class="ambient" aria-hidden="true"></div>
 
 <div class="wrap">
   <header class="masthead">
@@ -524,11 +568,9 @@
   var pushTimer = null;
   var nextSyncAt = 0;
   var lastState = "off";
-  var lastMsg = "Saved on this device only";
 
   var CATS = {pcb:"PCB", fw:"Firmware", other:"Other"};
   var STATES = {progress:"In progress", testing:"Testing", blocked:"Blocked", done:"Done"};
-  var CODES = {progress:"RUN", testing:"TEST", blocked:"BLOCK", done:"DONE"};
   var ORDER = ["blocked","progress","testing","done"];
   var RANK = {blocked:0, progress:1, testing:2, done:3};
 
@@ -573,7 +615,6 @@
     return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
   }
   function normalize(raw){
-    // accepts the current {projects,deleted} shape or the original bare array
     var d = {v:1, projects:[], deleted:{}};
     if(!raw) return d;
     var parsed;
@@ -612,8 +653,8 @@
     Object.keys(byId).forEach(function(id){
       var p = byId[id];
       var del = out.deleted[id];
-      if(del && del >= (p.updatedAt || 0)) return;  // deletion wins
-      if(del) delete out.deleted[id];               // edited after the delete
+      if(del && del >= (p.updatedAt || 0)) return;
+      if(del) delete out.deleted[id];
       out.projects.push(p);
     });
     return out;
@@ -625,13 +666,12 @@
   function configured(){ return !!token(); }
 
   function setSyncState(state, msg){
-    lastState = state; lastMsg = msg;
+    lastState = state;
     $("syncbar").setAttribute("data-state", state);
     $("syncMsg").textContent = msg;
     $("btnSyncSetup").textContent = configured() ? "Sync settings" : "Set up sync";
     paintTick();
   }
-
   function paintTick(){
     var el = $("syncTick");
     if(!configured() || lastState === "busy"){ el.textContent = ""; return; }
@@ -710,14 +750,12 @@
     });
   }
 
-  // any change to the board pushes straight away
   function syncSoon(){
     if(!configured()) return;
     clearTimeout(pushTimer);
     pushTimer = setTimeout(function(){ sync("push"); }, 250);
   }
 
-  /* ---- sync settings ---- */
   function openSync(){
     $("s-token").value = token();
     $("s-gist").value = gistId();
@@ -736,7 +774,7 @@
       $("syncErr").textContent = "Paste a token to connect, or choose Disconnect to stay local.";
       return;
     }
-    var m = g.match(/[0-9a-f]{20,}/i);   // accepts a full gist URL too
+    var m = g.match(/[0-9a-f]{20,}/i);
     lsSet(TOKEN_KEY, t);
     if(m) lsSet(GIST_KEY, m[0]); else lsDel(GIST_KEY);
     $("dlgSync").close();
@@ -786,6 +824,7 @@
       return (RANK[a.status] - RANK[b.status]) || a.name.localeCompare(b.name);
     });
   }
+  function clampPct(v){ return Math.max(0, Math.min(100, Number(v) || 0)); }
 
   /* ================= render ================= */
   function render(animate){
@@ -794,8 +833,8 @@
     var counts = {progress:0, testing:0, blocked:0, done:0};
     doc.projects.forEach(function(p){ if(counts[p.status] != null) counts[p.status]++; });
 
-    $("summary").innerHTML = ORDER.map(function(k){
-      return '<div class="cell' + (counts[k] === 0 ? " is-zero" : "") + '" data-k="' + k + '">' +
+    $("summary").innerHTML = ORDER.map(function(k, i){
+      return '<div class="cell' + (counts[k] === 0 ? " is-zero" : "") + '" data-k="' + k + '" style="--c:' + i + '">' +
                '<span class="n" data-n="' + counts[k] + '">0</span>' +
                '<span class="l">' + esc(STATES[k]) + '</span>' +
              '</div>';
@@ -823,32 +862,39 @@
     }
 
     log.innerHTML = sortedProjects().map(function(p, i){
-      var pct = Math.max(0, Math.min(100, Number(p.pct) || 0));
+      var pct = clampPct(p.pct);
       var d = animate ? i : 0;
       return '' +
       '<article class="row" data-s="' + esc(p.status) + '" style="--i:' + d + '">' +
-        '<div class="rail">' +
-          '<span class="code"><span class="led"></span>' + esc(CODES[p.status] || "—") + '</span>' +
-          '<span class="pct">' + pct + '<small>%</small></span>' +
-          '<span class="gauge"><span class="fill" data-w="' + pct + '" style="--i:' + d + '"></span></span>' +
+
+        '<div class="row-name">' +
+          '<span class="name">' + esc(p.name) + '</span>' +
+          '<span class="cat">' + esc(CATS[p.cat] || "Other") + '</span>' +
         '</div>' +
-        '<div class="body">' +
-          '<div class="row-head">' +
-            '<span class="name">' + esc(p.name) + '</span>' +
-            '<span class="cat">' + esc(CATS[p.cat] || "Other") + '</span>' +
-          '</div>' +
-          '<div class="facts">' +
-            '<div class="fact"><span class="k">Next</span><span class="v">' +
-              (p.next ? esc(p.next) : '<span class="quiet">not set</span>') + '</span></div>' +
-            (p.blocker
-              ? '<div class="fact blocked-line"><span class="k">Blocked by</span><span class="v">' + esc(p.blocker) + '</span></div>'
-              : "") +
-            '<div class="fact"><span class="k">Updated</span><span class="v stamp-v">' + esc(p.updated || "—") + '</span></div>' +
-          '</div>' +
-          '<div class="row-actions">' +
-            '<button type="button" class="btn" data-act="edit" data-id="' + esc(p.id) + '">Edit</button>' +
-            '<button type="button" class="btn" data-act="del" data-id="' + esc(p.id) + '">Delete</button>' +
-          '</div>' +
+
+        '<div class="row-status">' +
+          '<span class="led"></span>' +
+          '<span class="status-text">' + esc(STATES[p.status] || p.status) + '</span>' +
+          '<span class="when">Updated ' + esc(p.updated || "—") + '</span>' +
+        '</div>' +
+
+        '<div class="row-meter">' +
+          '<span class="meter-k">Progress</span>' +
+          '<span class="track"><span class="fill" data-w="' + pct + '" style="--i:' + d + '"></span></span>' +
+          '<span class="pct">' + pct + '<small>%</small></span>' +
+        '</div>' +
+
+        '<div class="row-facts">' +
+          '<div class="fact"><span class="k">Next</span><span class="v">' +
+            (p.next ? esc(p.next) : '<span class="quiet">not set</span>') + '</span></div>' +
+          (p.blocker
+            ? '<div class="fact blocked-line"><span class="k">Blocked by</span><span class="v">' + esc(p.blocker) + '</span></div>'
+            : "") +
+        '</div>' +
+
+        '<div class="row-actions">' +
+          '<button type="button" class="btn" data-act="edit" data-id="' + esc(p.id) + '">Edit</button>' +
+          '<button type="button" class="btn" data-act="del" data-id="' + esc(p.id) + '">Delete</button>' +
         '</div>' +
       '</article>';
     }).join("");
@@ -869,7 +915,7 @@
     $("f-name").value    = p ? p.name : "";
     $("f-cat").value     = p ? (p.cat || "other") : "pcb";
     $("f-status").value  = p ? p.status : "progress";
-    $("f-pct").value     = p ? (Number(p.pct) || 0) : 0;
+    $("f-pct").value     = p ? clampPct(p.pct) : 0;
     $("f-next").value    = p ? (p.next || "") : "";
     $("f-blocker").value = p ? (p.blocker || "") : "";
     $("dlg").showModal();
@@ -887,7 +933,7 @@
       name: name,
       cat: $("f-cat").value,
       status: $("f-status").value,
-      pct: Math.max(0, Math.min(100, Number($("f-pct").value) || 0)),
+      pct: clampPct($("f-pct").value),
       next: $("f-next").value.trim(),
       blocker: $("f-blocker").value.trim(),
       updated: today(),
@@ -930,7 +976,7 @@
     var out = "Daily update — " + today() + "\n\n";
     if(g.progress.length){
       out += "In progress:\n";
-      g.progress.forEach(function(p){ out += "- " + p.name + " (" + (Number(p.pct)||0) + "%) — " + (p.next || "next step tbd") + "\n"; });
+      g.progress.forEach(function(p){ out += "- " + p.name + " (" + clampPct(p.pct) + "%) — " + (p.next || "next step tbd") + "\n"; });
       out += "\n";
     }
     if(g.testing.length){
@@ -958,7 +1004,35 @@
     }
   }
 
-  /* ================= Excel export ================= */
+  /* ================= Excel export =================
+     Laid out like the site: masthead block, a status tally,
+     then the log — mono type, copper accent, status colours. */
+  var XC = {
+    ink:"12150F", inkSoft:"4A5044", faint:"7E8577",
+    rule:"D0D5C9", ruleStrong:"B2B9A9",
+    surface:"FFFFFF", surface2:"F4F6F1", ground:"E8EAE5",
+    accent:"A8481A", paper:"FBFCF9"
+  };
+  var XSTATE = {
+    progress:{fg:"215D7A", bg:"E2EBF0"},
+    testing: {fg:"7A5804", bg:"F3EBD8"},
+    blocked: {fg:"A02719", bg:"F7E4E1"},
+    done:    {fg:"31603C", bg:"E4EDE6"}
+  };
+  var MONO = "Consolas";
+
+  function xBorder(sides, color){
+    var b = {}, c = {rgb: color || XC.rule};
+    (sides || "").split("").forEach(function(s){
+      if(s === "t") b.top = {style:"thin", color:c};
+      if(s === "b") b.bottom = {style:"thin", color:c};
+      if(s === "l") b.left = {style:"thin", color:c};
+      if(s === "r") b.right = {style:"thin", color:c};
+    });
+    return b;
+  }
+  function xFill(rgb){ return {patternType:"solid", fgColor:{rgb:rgb}}; }
+
   function exportExcel(){
     if(typeof XLSX === "undefined"){
       flash("Spreadsheet library didn't load — check your connection", true);
@@ -968,30 +1042,148 @@
       flash("Nothing to export yet", true);
       return;
     }
-    var head = ["Project","Category","Status","Complete","Next action","Blocker","Updated"];
-    var rows = sortedProjects().map(function(p){
-      return [
+
+    var list = sortedProjects();
+    var counts = {progress:0, testing:0, blocked:0, done:0};
+    doc.projects.forEach(function(p){ if(counts[p.status] != null) counts[p.status]++; });
+
+    var HEAD = ["Project","Category","Status","Complete","Progress","Next action","Blocker","Updated"];
+    var LASTC = HEAD.length - 1;
+    var HEAD_R = 4;          // zero-based: masthead 0-1, tally 2, spacer 3
+    var FIRST_R = HEAD_R + 1;
+
+    var aoa = [
+      ["PROJECT_TRACKER"],
+      ["Hardware & firmware bench log · exported " + today()],
+      [ORDER.map(function(k){ return counts[k] + " " + STATES[k].toUpperCase(); }).join("   ·   ")],
+      [],
+      HEAD
+    ];
+
+    list.forEach(function(p){
+      var pct = clampPct(p.pct);
+      var filled = Math.round(pct / 10);
+      aoa.push([
         p.name,
         CATS[p.cat] || "Other",
         STATES[p.status] || p.status,
-        Math.max(0, Math.min(100, Number(p.pct) || 0)) / 100,
+        pct / 100,
+        new Array(filled + 1).join("█") + new Array(10 - filled + 1).join("░"),
         p.next || "",
         p.blocker || "",
         p.updated || ""
-      ];
+      ]);
     });
 
-    var ws = XLSX.utils.aoa_to_sheet([head].concat(rows));
-    ws["!cols"] = [{wch:34},{wch:11},{wch:13},{wch:10},{wch:46},{wch:40},{wch:12}];
-    ws["!autofilter"] = {ref: XLSX.utils.encode_range({s:{r:0,c:0}, e:{r:rows.length, c:head.length-1}})};
-    ws["!freeze"] = {xSplit:"0", ySplit:"1", topLeftCell:"A2"};
-    for(var r = 1; r <= rows.length; r++){
-      var cell = ws[XLSX.utils.encode_cell({r:r, c:3})];
-      if(cell) cell.z = "0%";
+    var ws = XLSX.utils.aoa_to_sheet(aoa);
+    var at = function(r, c){ return ws[XLSX.utils.encode_cell({r:r, c:c})]; };
+    var style = function(r, c, s){ var cell = at(r, c); if(cell) cell.s = s; };
+
+    // ---- masthead ----
+    ws["!merges"] = [
+      {s:{r:0,c:0}, e:{r:0,c:LASTC}},
+      {s:{r:1,c:0}, e:{r:1,c:LASTC}},
+      {s:{r:2,c:0}, e:{r:2,c:LASTC}},
+      {s:{r:3,c:0}, e:{r:3,c:LASTC}}
+    ];
+    for(var c = 0; c <= LASTC; c++){
+      style(0, c, {
+        font:{name:MONO, sz:18, bold:true, color:{rgb:XC.accent}},
+        fill:xFill(XC.paper),
+        alignment:{vertical:"center"},
+        border:xBorder("t", XC.accent)
+      });
+      style(1, c, {
+        font:{name:MONO, sz:9, color:{rgb:XC.faint}},
+        fill:xFill(XC.paper),
+        alignment:{vertical:"center"}
+      });
+      style(2, c, {
+        font:{name:MONO, sz:9, bold:true, color:{rgb:XC.inkSoft}},
+        fill:xFill(XC.surface2),
+        alignment:{vertical:"center"},
+        border:xBorder("tb")
+      });
+      style(3, c, {fill:xFill(XC.paper)});
+      style(HEAD_R, c, {
+        font:{name:MONO, sz:10, bold:true, color:{rgb:"FFFFFF"}},
+        fill:xFill(XC.ink),
+        alignment:{vertical:"center", horizontal:(c === 3 || c === 4) ? "center" : "left"},
+        border:xBorder("b", XC.accent)
+      });
     }
 
+    // ---- log rows ----
+    list.forEach(function(p, i){
+      var r = FIRST_R + i;
+      var sc = XSTATE[p.status] || XSTATE.progress;
+      var band = (i % 2) ? XC.surface2 : XC.surface;
+      var base = {
+        font:{name:MONO, sz:10, color:{rgb:XC.inkSoft}},
+        fill:xFill(band),
+        alignment:{vertical:"center", wrapText:true},
+        border:xBorder("b")
+      };
+      for(var c = 0; c <= LASTC; c++) style(r, c, JSON.parse(JSON.stringify(base)));
+
+      // project name — the anchor of the row, like the name plate on the site
+      style(r, 0, {
+        font:{name:MONO, sz:11, bold:true, color:{rgb: p.status === "done" ? XC.inkSoft : XC.ink}},
+        fill:xFill(band),
+        alignment:{vertical:"center", wrapText:true},
+        border:Object.assign(xBorder("b"), {left:{style:"medium", color:{rgb:sc.fg}}})
+      });
+      style(r, 1, {
+        font:{name:MONO, sz:9, color:{rgb:XC.faint}},
+        fill:xFill(band),
+        alignment:{vertical:"center", horizontal:"left"},
+        border:xBorder("b")
+      });
+      // status keeps the exact wording chosen in the app
+      style(r, 2, {
+        font:{name:MONO, sz:9, bold:true, color:{rgb:sc.fg}},
+        fill:xFill(sc.bg),
+        alignment:{vertical:"center", horizontal:"center"},
+        border:xBorder("b")
+      });
+      var pctCell = at(r, 3);
+      if(pctCell) pctCell.z = "0%";
+      style(r, 3, {
+        font:{name:MONO, sz:11, bold:true, color:{rgb:XC.ink}},
+        fill:xFill(band),
+        alignment:{vertical:"center", horizontal:"center"},
+        border:xBorder("b")
+      });
+      style(r, 4, {
+        font:{name:MONO, sz:10, color:{rgb:sc.fg}},
+        fill:xFill(band),
+        alignment:{vertical:"center", horizontal:"center"},
+        border:xBorder("b")
+      });
+      if(p.blocker){
+        style(r, 6, {
+          font:{name:MONO, sz:10, color:{rgb:XSTATE.blocked.fg}},
+          fill:xFill(band),
+          alignment:{vertical:"center", wrapText:true},
+          border:xBorder("b")
+        });
+      }
+      style(r, 7, {
+        font:{name:MONO, sz:9, color:{rgb:XC.faint}},
+        fill:xFill(band),
+        alignment:{vertical:"center", horizontal:"center"},
+        border:xBorder("b")
+      });
+    });
+
+    ws["!cols"] = [{wch:36},{wch:11},{wch:14},{wch:11},{wch:14},{wch:44},{wch:36},{wch:13}];
+    ws["!rows"] = [{hpt:30},{hpt:15},{hpt:18},{hpt:7},{hpt:22}];
+    list.forEach(function(){ ws["!rows"].push({hpt:32}); });
+    ws["!autofilter"] = {ref: XLSX.utils.encode_range({s:{r:HEAD_R,c:0}, e:{r:FIRST_R + list.length - 1, c:LASTC}})};
+    ws["!freeze"] = {xSplit:"0", ySplit:String(FIRST_R), topLeftCell:XLSX.utils.encode_cell({r:FIRST_R,c:0}), activePane:"bottomLeft", state:"frozen"};
+
     var wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Projects");
+    XLSX.utils.book_append_sheet(wb, ws, "Bench log");
     XLSX.writeFile(wb, "project-tracker-" + today() + ".xlsx", {compression:true});
     flash("Exported");
   }
@@ -1029,20 +1221,17 @@
     }
   });
 
-  // other tabs on this device
   window.addEventListener("storage", function(e){
     if(e.key === KEY){ load(); render(false); }
     if(e.key === THEME_KEY){ initTheme(); }
   });
 
-  // ---- the 10-second loop: pull, and push anything local that is newer ----
+  // ---- the 10-second loop ----
   setInterval(function(){
     if(document.hidden) return;
     if(Date.now() >= nextSyncAt) sync("poll");
   }, 1000);
   setInterval(paintTick, 1000);
-
-  // catching up the moment the tab comes back
   document.addEventListener("visibilitychange", function(){ if(!document.hidden) sync("pull"); });
   window.addEventListener("focus", function(){ sync("pull"); });
 
