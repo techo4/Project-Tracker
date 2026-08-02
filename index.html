@@ -7,18 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Martian+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
-<!-- styled-cell fork of SheetJS: the community build drops fills/fonts/borders -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <style>
-  /* ============================================================
-     All monospace. Martian Mono — wide, mechanical — carries the
-     display type; JetBrains Mono carries everything you read.
-     Every entry is a stacked instrument panel: name plate, status
-     band, progress channel, then the notes.
-     ============================================================ */
   :root{
     color-scheme: light;
-
     --ground:#e8eae5;
     --ground-2:#dee1da;
     --surface:#f7f8f4;
@@ -29,19 +21,17 @@
     --ink-soft:#4a5044;
     --ink-faint:#7e8577;
     --grid:rgba(18,21,15,.055);
-    --sheen:rgba(255,255,255,.55);
-
+    --sheen:rgba(255,255,255,.8);
     --accent:#a8481a;
     --accent-lift:rgba(168,72,26,.08);
     --probe:#0d6874;
-
     --run:#215d7a;  --run-bg:rgba(33,93,122,.11);
     --test:#7a5804; --test-bg:rgba(122,88,4,.13);
     --block:#a02719; --block-bg:rgba(160,39,25,.11);
     --done:#31603c;  --done-bg:rgba(49,96,60,.12);
-
     --display:"Martian Mono",ui-monospace,monospace;
     --mono:"JetBrains Mono",ui-monospace,"Cascadia Mono","Consolas",monospace;
+    --anim-enabled:1;
   }
   @media (prefers-color-scheme: dark){
     :root{
@@ -49,10 +39,8 @@
       --ground:#0d100c; --ground-2:#090b08; --surface:#141810; --surface-2:#191d15;
       --rule:#252b20; --rule-strong:#39412f;
       --ink:#e8ebe1; --ink-soft:#a2a99a; --ink-faint:#6f776a;
-      --grid:rgba(232,235,225,.045);
-      --sheen:rgba(255,255,255,.28);
-      --accent:#e58038; --accent-lift:rgba(229,128,56,.10);
-      --probe:#59c0cb;
+      --grid:rgba(232,235,225,.045); --sheen:rgba(255,255,255,.45);
+      --accent:#e58038; --accent-lift:rgba(229,128,56,.10); --probe:#59c0cb;
       --run:#74b2d3;  --run-bg:rgba(116,178,211,.13);
       --test:#dab24d; --test-bg:rgba(218,178,77,.13);
       --block:#e5776a; --block-bg:rgba(229,119,106,.13);
@@ -64,7 +52,7 @@
     --ground:#e8eae5; --ground-2:#dee1da; --surface:#f7f8f4; --surface-2:#eef0ea;
     --rule:#d0d5c9; --rule-strong:#b2b9a9;
     --ink:#12150f; --ink-soft:#4a5044; --ink-faint:#7e8577;
-    --grid:rgba(18,21,15,.055); --sheen:rgba(255,255,255,.55);
+    --grid:rgba(18,21,15,.055); --sheen:rgba(255,255,255,.8);
     --accent:#a8481a; --accent-lift:rgba(168,72,26,.08); --probe:#0d6874;
     --run:#215d7a;  --run-bg:rgba(33,93,122,.11);
     --test:#7a5804; --test-bg:rgba(122,88,4,.13);
@@ -76,7 +64,7 @@
     --ground:#0d100c; --ground-2:#090b08; --surface:#141810; --surface-2:#191d15;
     --rule:#252b20; --rule-strong:#39412f;
     --ink:#e8ebe1; --ink-soft:#a2a99a; --ink-faint:#6f776a;
-    --grid:rgba(232,235,225,.045); --sheen:rgba(255,255,255,.28);
+    --grid:rgba(232,235,225,.045); --sheen:rgba(255,255,255,.45);
     --accent:#e58038; --accent-lift:rgba(229,128,56,.10); --probe:#59c0cb;
     --run:#74b2d3;  --run-bg:rgba(116,178,211,.13);
     --test:#dab24d; --test-bg:rgba(218,178,77,.13);
@@ -85,12 +73,8 @@
   }
 
   *{box-sizing:border-box;}
-
   body{
-    margin:0;
-    color:var(--ink);
-    font-family:var(--mono);
-    font-size:14px; font-weight:400; line-height:1.6;
+    margin:0; color:var(--ink); font-family:var(--mono); font-size:14px; font-weight:400; line-height:1.6;
     -webkit-font-smoothing:antialiased;
     background:
       linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 100% 28px,
@@ -98,22 +82,20 @@
       linear-gradient(var(--ground), var(--ground-2));
     background-attachment:fixed;
     min-height:100vh;
-    animation:drift 60s linear infinite;   /* idle: the grid creeps */
+    animation:drift calc(60s / var(--anim-enabled)) linear infinite;
   }
   ::selection{background:var(--accent); color:var(--surface);}
 
-  /* idle: a slow warm bloom wandering behind the panels */
   .ambient{
     position:fixed; inset:-25%; z-index:0; pointer-events:none;
     background:
       radial-gradient(42% 34% at 28% 22%, var(--accent-lift), transparent 68%),
       radial-gradient(38% 30% at 76% 72%, var(--accent-lift), transparent 70%);
-    animation:wander 34s ease-in-out infinite alternate;
+    animation:wander calc(34s / var(--anim-enabled)) ease-in-out infinite alternate;
+    opacity:calc(var(--anim-enabled) * 1);
   }
 
   .wrap{position:relative; z-index:1; max-width:980px; margin:0 auto; padding:38px 20px 100px;}
-
-  /* corner ticks — crosshair marks on framed panels */
   .ticked{position:relative;}
   .ticked::before,.ticked::after{
     content:""; position:absolute; width:7px; height:7px; pointer-events:none;
@@ -122,7 +104,6 @@
   .ticked::before{top:-1px; left:-1px; border-top:1px solid; border-left:1px solid;}
   .ticked::after{bottom:-1px; right:-1px; border-bottom:1px solid; border-right:1px solid;}
 
-  /* ---------- masthead ---------- */
   .masthead{
     display:flex; align-items:flex-end; justify-content:space-between;
     gap:22px; flex-wrap:wrap; padding-bottom:16px;
@@ -135,34 +116,28 @@
   }
   .kicker::before{
     content:""; width:26px; height:1px; background:var(--accent);
-    animation:sweepline 6s ease-in-out infinite;
+    animation:sweepline calc(6s / var(--anim-enabled)) ease-in-out infinite;
   }
   h1{
     font-family:var(--display); font-weight:600;
     font-size:clamp(20px, 3.4vw, 31px); line-height:1.1;
-    letter-spacing:-.055em; margin:0; color:var(--ink);
-    text-wrap:balance;
+    letter-spacing:-.055em; margin:0; color:var(--ink); text-wrap:balance;
   }
-  h1 span{color:var(--accent); animation:caret 1.6s steps(1) infinite;}
+  h1 span{color:var(--accent); animation:caret calc(1.6s / var(--anim-enabled)) steps(1) infinite;}
   .mast-right{display:flex; align-items:stretch; gap:10px;}
-  .readout{
-    border:1px solid var(--rule); background:var(--surface);
-    padding:7px 12px; display:grid; gap:1px; text-align:right;
-    font-variant-numeric:tabular-nums;
-  }
+  .readout{border:1px solid var(--rule); background:var(--surface); padding:7px 12px; display:grid; gap:1px; text-align:right; font-variant-numeric:tabular-nums;}
   .readout .lbl{font-size:8.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-faint);}
   .readout .val{font-size:13px; font-weight:500; letter-spacing:.02em;}
-  .theme-btn{
+  .theme-btn, .settings-btn{
     font-family:var(--mono); font-size:9.5px; font-weight:500;
     letter-spacing:.2em; text-transform:uppercase; padding:0 12px;
     background:var(--surface); color:var(--ink-faint);
     border:1px solid var(--rule); border-radius:0; cursor:pointer;
     transition:color .15s, border-color .15s;
   }
-  .theme-btn:hover{color:var(--accent); border-color:var(--accent);}
-  .theme-btn:focus-visible{outline:2px solid var(--probe); outline-offset:2px;}
+  .theme-btn:hover, .settings-btn:hover{color:var(--accent); border-color:var(--accent);}
+  .theme-btn:focus-visible, .settings-btn:focus-visible{outline:2px solid var(--probe); outline-offset:2px;}
 
-  /* ---------- sync bar ---------- */
   .syncbar{
     display:flex; align-items:center; gap:12px; flex-wrap:wrap;
     margin-top:16px; padding:10px 14px;
@@ -173,60 +148,41 @@
   .syncbar .led{width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;}
   .syncbar[data-state="ok"]{color:var(--done);}
   .syncbar[data-state="busy"]{color:var(--probe);}
-  .syncbar[data-state="busy"] .led{animation:blink 1s ease-in-out infinite;}
+  .syncbar[data-state="busy"] .led{animation:blink calc(1s / var(--anim-enabled)) ease-in-out infinite;}
   .syncbar[data-state="err"]{color:var(--block); border-color:var(--block);}
   .syncbar .msg{flex:1; min-width:190px; color:inherit;}
   .syncbar .tick{font-variant-numeric:tabular-nums; color:var(--ink-faint); letter-spacing:.12em; opacity:.8;}
   .link{
     font:inherit; background:none; border:0; padding:0; cursor:pointer;
-    color:var(--accent); letter-spacing:.16em;
-    border-bottom:1px solid currentColor; line-height:1.2;
+    color:var(--accent); letter-spacing:.16em; border-bottom:1px solid currentColor; line-height:1.2;
   }
-  .link:hover{opacity:.72;}
-  .link:focus-visible{outline:2px solid var(--probe); outline-offset:3px;}
+  .link:hover{opacity:.72;} .link:focus-visible{outline:2px solid var(--probe); outline-offset:3px;}
 
-  /* ---------- summary ---------- */
-  .summary{
-    display:grid; grid-template-columns:repeat(4,1fr);
-    margin-top:12px; border:1px solid var(--rule); background:var(--surface);
-  }
+  .summary{display:grid; grid-template-columns:repeat(4,1fr); margin-top:12px; border:1px solid var(--rule); background:var(--surface);}
   .cell{
     padding:15px 15px 16px; border-right:1px solid var(--rule);
-    display:grid; gap:7px; position:relative;
-    transition:background .18s;
+    display:grid; gap:7px; position:relative; transition:background .18s;
   }
   .cell:hover{background:var(--surface-2);}
   .cell:last-child{border-right:0;}
   .cell::before{
     content:""; position:absolute; top:0; left:0; right:0; height:2px; background:currentColor;
     transform:scaleX(0); transform-origin:left;
-    animation:drawIn .5s cubic-bezier(.2,.8,.25,1) forwards;
-    animation-delay:calc(var(--c) * 70ms);
+    animation:drawIn calc(0.5s / var(--anim-enabled)) cubic-bezier(.2,.8,.25,1) forwards;
+    animation-delay:calc(var(--c) * 70ms / var(--anim-enabled));
   }
-  .cell[data-k="blocked"]{color:var(--block);}
-  .cell[data-k="progress"]{color:var(--run);}
-  .cell[data-k="testing"]{color:var(--test);}
-  .cell[data-k="done"]{color:var(--done);}
-  .cell .n{
-    font-family:var(--display); font-weight:600; font-size:29px; line-height:1;
-    letter-spacing:-.08em; font-variant-numeric:tabular-nums;
-  }
+  .cell[data-k="blocked"]{color:var(--block);} .cell[data-k="progress"]{color:var(--run);}
+  .cell[data-k="testing"]{color:var(--test);} .cell[data-k="done"]{color:var(--done);}
+  .cell .n{font-family:var(--display); font-weight:600; font-size:29px; line-height:1; letter-spacing:-.08em; font-variant-numeric:tabular-nums;}
   .cell .l{font-size:9px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-faint);}
   .cell.is-zero .n{color:var(--ink-faint); opacity:.4;}
-  @media (max-width:640px){
-    .summary{grid-template-columns:repeat(2,1fr);}
-    .cell:nth-child(2){border-right:0;}
-    .cell:nth-child(-n+2){border-bottom:1px solid var(--rule);}
-  }
+  @media (max-width:640px){.summary{grid-template-columns:repeat(2,1fr);} .cell:nth-child(2){border-right:0;} .cell:nth-child(-n+2){border-bottom:1px solid var(--rule);}}
 
   .dist{display:flex; height:6px; margin-top:-1px; border:1px solid var(--rule); background:var(--surface);}
-  .dist span{transition:flex-grow .5s cubic-bezier(.2,.8,.25,1);}
-  .dist .d-blocked{background:var(--block);}
-  .dist .d-progress{background:var(--run);}
-  .dist .d-testing{background:var(--test);}
-  .dist .d-done{background:var(--done); opacity:.55;}
+  .dist span{transition:flex-grow calc(0.5s / var(--anim-enabled)) cubic-bezier(.2,.8,.25,1);}
+  .dist .d-blocked{background:var(--block);} .dist .d-progress{background:var(--run);}
+  .dist .d-testing{background:var(--test);} .dist .d-done{background:var(--done); opacity:.55;}
 
-  /* ---------- toolbar ---------- */
   .toolbar{display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:22px 0 16px;}
   .btn{
     font-family:var(--mono); font-size:10.5px; font-weight:500;
@@ -248,7 +204,6 @@
   }
   .flash.on{opacity:1; transform:none;}
 
-  /* ---------- report ---------- */
   #reportBox{
     display:none; background:var(--surface);
     border:1px solid var(--rule); border-left:2px solid var(--accent);
@@ -256,9 +211,8 @@
     font-size:12px; line-height:1.85; color:var(--ink-soft);
     white-space:pre-wrap; overflow-x:auto;
   }
-  #reportBox.show{display:block; animation:riseIn .28s ease both;}
+  #reportBox.show{display:block; animation:riseIn calc(0.28s / var(--anim-enabled)) ease both;}
 
-  /* ---------- log ---------- */
   .log-label{
     display:flex; align-items:center; gap:12px;
     font-size:9px; font-weight:500; letter-spacing:.24em; text-transform:uppercase;
@@ -270,83 +224,44 @@
   .row{
     position:relative; background:var(--surface);
     border-bottom:1px solid var(--rule);
-    animation:riseIn .4s cubic-bezier(.22,.9,.3,1) both;
-    animation-delay:calc(var(--i) * 42ms);
+    animation:riseIn calc(0.4s / var(--anim-enabled)) cubic-bezier(.22,.9,.3,1) both;
+    animation-delay:calc(var(--i) * 42ms / var(--anim-enabled));
   }
-  .row::before{
-    content:""; position:absolute; left:0; top:0; bottom:0; width:3px;
-    background:currentColor;
-  }
-  .row[data-s="blocked"]{color:var(--block);}
-  .row[data-s="progress"]{color:var(--run);}
-  .row[data-s="testing"]{color:var(--test);}
-  .row[data-s="done"]{color:var(--done);}
+  .row::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:currentColor;}
+  .row[data-s="blocked"]{color:var(--block);} .row[data-s="progress"]{color:var(--run);}
+  .row[data-s="testing"]{color:var(--test);} .row[data-s="done"]{color:var(--done);}
 
-  /* name plate */
-  .row-name{
-    display:flex; align-items:baseline; justify-content:space-between; gap:14px;
-    padding:16px 20px 14px 23px; border-bottom:1px solid var(--rule);
-  }
-  .name{
-    font-family:var(--display); font-size:15px; font-weight:600;
-    letter-spacing:-.05em; line-height:1.3; color:var(--ink); overflow-wrap:anywhere;
-  }
+  .row-name{display:flex; align-items:baseline; justify-content:space-between; gap:14px; padding:16px 20px 14px 23px; border-bottom:1px solid var(--rule);}
+  .name{font-family:var(--display); font-size:15px; font-weight:600; letter-spacing:-.05em; line-height:1.3; color:var(--ink); overflow-wrap:anywhere;}
   .row[data-s="done"] .name{color:var(--ink-soft);}
-  .cat{
-    font-size:9px; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
-    color:var(--ink-faint); border:1px solid var(--rule-strong);
-    padding:3px 7px; white-space:nowrap; flex:none;
-  }
+  .cat{font-size:9px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint); border:1px solid var(--rule-strong); padding:3px 7px; white-space:nowrap; flex:none;}
 
-  /* status band */
-  .row-status{
-    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-    padding:9px 20px 9px 23px;
-    background:var(--surface-2); border-bottom:1px solid var(--rule);
-  }
+  .row-status{display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:9px 20px 9px 23px; background:var(--surface-2); border-bottom:1px solid var(--rule);}
   .row-status .led{width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;}
   .status-text{font-size:10.5px; font-weight:700; letter-spacing:.2em; text-transform:uppercase;}
-  .row-status .when{
-    margin-left:auto; font-size:9.5px; font-weight:500; letter-spacing:.14em;
-    text-transform:uppercase; color:var(--ink-faint); font-variant-numeric:tabular-nums;
-  }
-  .row[data-s="blocked"] .led{animation:blink 1.5s ease-in-out infinite;}
-  .row[data-s="testing"] .led{animation:blink 2.6s ease-in-out infinite;}
+  .row-status .when{margin-left:auto; font-size:9.5px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); font-variant-numeric:tabular-nums;}
+  .row[data-s="blocked"] .led{animation:blink calc(1.5s / var(--anim-enabled)) ease-in-out infinite;}
+  .row[data-s="testing"] .led{animation:blink calc(2.6s / var(--anim-enabled)) ease-in-out infinite;}
 
-  /* progress channel */
-  .row-meter{
-    display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center;
-    padding:14px 20px 14px 23px; border-bottom:1px solid var(--rule);
-  }
+  .row-meter{display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center; padding:14px 20px 14px 23px; border-bottom:1px solid var(--rule);}
   .meter-k{font-size:9px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-faint);}
   .track{position:relative; height:12px; background:var(--ground); border:1px solid var(--rule); overflow:hidden;}
-  .track::after{
-    content:""; position:absolute; inset:0; pointer-events:none;
-    background:repeating-linear-gradient(to right,
-      transparent 0 calc(10% - 1px), var(--rule-strong) calc(10% - 1px), var(--rule-strong) 10%);
-    opacity:.7;
-  }
   .fill{
     position:relative; height:100%; width:0; background:currentColor; overflow:hidden;
-    transition:width .8s cubic-bezier(.2,.8,.25,1);
-    transition-delay:calc(var(--i) * 42ms + 120ms);
+    transition:width calc(0.8s / var(--anim-enabled)) cubic-bezier(.2,.8,.25,1);
+    transition-delay:calc(var(--i) * 42ms / var(--anim-enabled) + 120ms);
   }
-  .fill::after{ /* idle: a highlight travels the filled length */
+  .fill::after{
     content:""; position:absolute; inset:0;
     background:linear-gradient(90deg, transparent, var(--sheen), transparent);
     transform:translateX(-100%);
-    animation:sheen 5.5s ease-in-out infinite;
-    animation-delay:calc(var(--i) * 300ms);
+    animation:sheen calc(5.5s / var(--anim-enabled)) ease-in-out infinite;
+    animation-delay:calc(var(--i) * 300ms / var(--anim-enabled));
   }
   .row[data-s="done"] .fill::after{animation:none;}
-  .pct{
-    font-family:var(--display); font-weight:400; font-size:17px; line-height:1;
-    letter-spacing:-.07em; color:var(--ink); font-variant-numeric:tabular-nums;
-    min-width:4.5ch; text-align:right;
-  }
+  .pct{font-family:var(--display); font-weight:400; font-size:17px; line-height:1; letter-spacing:-.07em; color:var(--ink); font-variant-numeric:tabular-nums; min-width:4.5ch; text-align:right;}
   .pct small{font-size:11px; opacity:.6;}
 
-  /* notes */
   .row-facts{padding:15px 20px 6px 23px; display:grid; gap:8px; max-width:78ch;}
   .fact{display:grid; grid-template-columns:82px 1fr; gap:10px; align-items:baseline;}
   .fact .k{font-size:9px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint);}
@@ -356,36 +271,19 @@
   .row-actions{display:flex; gap:7px; padding:12px 20px 16px 23px;}
   .row-actions .btn{padding:6px 11px; font-size:9.5px; letter-spacing:.16em;}
   @media (max-width:560px){
-    .row-meter{grid-template-columns:1fr auto; row-gap:9px;}
-    .meter-k{grid-column:1 / -1;}
+    .row-meter{grid-template-columns:1fr auto; row-gap:9px;} .meter-k{grid-column:1 / -1;}
     .fact{grid-template-columns:1fr; gap:2px;}
   }
 
-  .empty{
-    background:var(--surface); border-bottom:1px solid var(--rule);
-    padding:58px 22px; text-align:center; color:var(--ink-faint);
-  }
-  .empty b{
-    display:block; font-family:var(--display); font-weight:400; font-size:14px;
-    letter-spacing:-.04em; color:var(--ink-soft); margin-bottom:11px;
-  }
+  .empty{background:var(--surface); border-bottom:1px solid var(--rule); padding:58px 22px; text-align:center; color:var(--ink-faint);}
+  .empty b{display:block; font-family:var(--display); font-weight:400; font-size:14px; letter-spacing:-.04em; color:var(--ink-soft); margin-bottom:11px;}
   .empty span{font-size:9.5px; letter-spacing:.22em; text-transform:uppercase; opacity:.75;}
 
-  /* ---------- dialogs ---------- */
-  dialog{
-    border:1px solid var(--rule-strong); border-top:2px solid var(--accent);
-    border-radius:0; background:var(--surface); color:var(--ink);
-    padding:0; width:480px; max-width:calc(100vw - 26px);
-    box-shadow:0 26px 60px -26px rgba(0,0,0,.55);
-  }
-  dialog[open]{animation:riseIn .24s cubic-bezier(.22,.9,.3,1) both;}
+  dialog{border:1px solid var(--rule-strong); border-top:2px solid var(--accent); border-radius:0; background:var(--surface); color:var(--ink); padding:0; width:480px; max-width:calc(100vw - 26px); box-shadow:0 26px 60px -26px rgba(0,0,0,.55);}
+  dialog[open]{animation:riseIn calc(0.24s / var(--anim-enabled)) cubic-bezier(.22,.9,.3,1) both;}
   dialog::backdrop{background:rgba(6,9,5,.66); backdrop-filter:blur(2px);}
   .dlg-body{padding:22px 24px 24px; display:grid; gap:15px;}
-  .dlg-title{
-    font-family:var(--display); font-size:11px; font-weight:600;
-    letter-spacing:-.02em; text-transform:uppercase; color:var(--accent);
-    margin:0; display:flex; align-items:center; gap:10px;
-  }
+  .dlg-title{font-family:var(--display); font-size:11px; font-weight:600; letter-spacing:-.02em; text-transform:uppercase; color:var(--accent); margin:0; display:flex; align-items:center; gap:10px;}
   .dlg-title::after{content:""; flex:1; height:1px; background:var(--rule);}
   .field{display:grid; gap:6px;}
   .field label{font-size:9px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint);}
@@ -399,15 +297,27 @@
     font-variant-numeric:tabular-nums;
     transition:border-color .15s, box-shadow .15s;
   }
-  input:focus,select:focus,textarea:focus{
-    outline:none; border-color:var(--probe);
-    box-shadow:0 0 0 2px color-mix(in srgb, var(--probe) 24%, transparent);
-  }
+  input:focus,select:focus,textarea:focus{outline:none; border-color:var(--probe); box-shadow:0 0 0 2px color-mix(in srgb, var(--probe) 24%, transparent);}
   textarea{resize:vertical; min-height:62px; line-height:1.6;}
-  .two{display:grid; grid-template-columns:1fr 1fr; gap:15px;}
+  .two, .three{display:grid; gap:15px;}
+  .two{grid-template-columns:1fr 1fr;} .three{grid-template-columns:1fr 1fr 1fr;}
   .dlg-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:3px; flex-wrap:wrap;}
   .dlg-actions .spacer{flex:1;}
   .err{color:var(--block); font-size:12px; letter-spacing:.02em; margin:0;}
+  .settings-grid{display:grid; gap:16px;}
+  .settings-row{display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--rule);}
+  .settings-row:last-child{border-bottom:0;}
+  .settings-label{font-size:12px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);}
+  .toggle{
+    width:40px; height:22px; position:relative; background:var(--rule-strong); border:0; border-radius:11px;
+    cursor:pointer; transition:background .2s;
+  }
+  .toggle.on{background:var(--done);}
+  .toggle::after{
+    content:""; position:absolute; width:18px; height:18px; background:var(--surface);
+    border-radius:50%; top:2px; left:2px; transition:left .2s;
+  }
+  .toggle.on::after{left:20px;}
 
   @media (prefers-reduced-motion: reduce){
     *{transition-duration:.001s !important; animation-duration:.001s !important; animation-iteration-count:1 !important;}
@@ -417,14 +327,8 @@
   @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.25;} }
   @keyframes drawIn{ to{transform:scaleX(1);} }
   @keyframes drift{ to{background-position:0 -28px, -28px 0, 0 0;} }
-  @keyframes wander{
-    0%{transform:translate3d(0,0,0) scale(1);}
-    100%{transform:translate3d(2%,-3%,0) scale(1.08);}
-  }
-  @keyframes sheen{
-    0%,62%{transform:translateX(-100%);}
-    88%,100%{transform:translateX(100%);}
-  }
+  @keyframes wander{ 0%{transform:translate3d(0,0,0) scale(1);} 100%{transform:translate3d(2%,-3%,0) scale(1.08);} }
+  @keyframes sheen{ 0%,62%{transform:translateX(-100%);} 88%,100%{transform:translateX(100%);} }
   @keyframes sweepline{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
   @keyframes caret{ 0%,49%{opacity:1;} 50%,100%{opacity:.15;} }
 </style>
@@ -444,6 +348,7 @@
         <span class="lbl">Date</span>
         <span class="val" id="stamp"></span>
       </div>
+      <button type="button" class="settings-btn" id="btnSettings" aria-label="Settings">⚙</button>
       <button type="button" class="theme-btn" id="btnTheme" aria-label="Change colour theme">Auto</button>
     </div>
   </header>
@@ -479,7 +384,7 @@
       <label for="f-name">Project name</label>
       <input id="f-name" placeholder="OVP circuit rev2 PCB" autocomplete="off">
     </div>
-    <div class="two">
+    <div class="three">
       <div class="field">
         <label for="f-cat">Category</label>
         <select id="f-cat">
@@ -497,10 +402,39 @@
           <option value="done">Done</option>
         </select>
       </div>
+      <div class="field">
+        <label for="f-priority">Priority</label>
+        <select id="f-priority">
+          <option value="low">Low</option>
+          <option value="medium" selected>Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+    </div>
+    <div class="two">
+      <div class="field">
+        <label for="f-pct">Percent complete</label>
+        <input id="f-pct" type="number" min="0" max="100" step="5" value="0">
+      </div>
+      <div class="field">
+        <label for="f-deadline">Deadline</label>
+        <select id="f-deadline">
+          <option value="">None</option>
+          <option value="today">Today</option>
+          <option value="tomorrow">Tomorrow</option>
+          <option value="week">This week</option>
+          <option value="month">This month</option>
+          <option value="custom">Custom date</option>
+        </select>
+      </div>
+    </div>
+    <div class="field" id="customDateField" hidden>
+      <label for="f-deadlineCustom">Custom deadline</label>
+      <input id="f-deadlineCustom" type="date">
     </div>
     <div class="field">
-      <label for="f-pct">Percent complete</label>
-      <input id="f-pct" type="number" min="0" max="100" step="5" value="0">
+      <label for="f-handler">Handler / Owner</label>
+      <input id="f-handler" placeholder="Name or handle" autocomplete="off">
     </div>
     <div class="field">
       <label for="f-next">Next action</label>
@@ -549,6 +483,22 @@
   </form>
 </dialog>
 
+<!-- settings -->
+<dialog id="dlgSettings">
+  <form method="dialog" class="dlg-body" id="formSettings">
+    <p class="dlg-title">Settings</p>
+    <div class="settings-grid">
+      <div class="settings-row">
+        <span class="settings-label">Animations</span>
+        <button type="button" class="toggle" id="toggleAnim" aria-label="Toggle animations"></button>
+      </div>
+    </div>
+    <div class="dlg-actions">
+      <button type="button" class="btn" id="btnSettingsClose">Close</button>
+    </div>
+  </form>
+</dialog>
+
 <script>
 (function(){
   "use strict";
@@ -557,6 +507,7 @@
   var THEME_KEY = "project-tracker.theme";
   var TOKEN_KEY = "project-tracker.gh-token";
   var GIST_KEY = "project-tracker.gist-id";
+  var ANIM_KEY = "project-tracker.anim";
   var LEGACY = "projects";
   var GIST_FILE = "project-tracker.json";
   var API = "https://api.github.com";
@@ -571,6 +522,7 @@
 
   var CATS = {pcb:"PCB", fw:"Firmware", other:"Other"};
   var STATES = {progress:"In progress", testing:"Testing", blocked:"Blocked", done:"Done"};
+  var PRIS = {low:"Low", medium:"Medium", high:"High"};
   var ORDER = ["blocked","progress","testing","done"];
   var RANK = {blocked:0, progress:1, testing:2, done:3};
 
@@ -589,6 +541,29 @@
     var d = new Date(ts);
     return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0") +
            ":" + String(d.getSeconds()).padStart(2,"0");
+  }
+  function deadlineDate(v){
+    var d = new Date();
+    if(v === "today") return today();
+    if(v === "tomorrow"){ d.setDate(d.getDate() + 1); }
+    else if(v === "week"){ d.setDate(d.getDate() + (7 - d.getDay())); }
+    else if(v === "month"){ d.setMonth(d.getMonth() + 1, 1); d.setDate(0); }
+    else if(v) return v;
+    else return "";
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+
+  /* ================= animations ================= */
+  function setAnimations(on){
+    var root = document.documentElement;
+    root.style.setProperty("--anim-enabled", on ? 1 : 0);
+    lsSet(ANIM_KEY, on ? "1" : "0");
+    var tog = $("toggleAnim");
+    if(on) tog.classList.add("on"); else tog.classList.remove("on");
+  }
+  function initAnimations(){
+    var on = ls(ANIM_KEY) !== "0";
+    setAnimations(on);
   }
 
   /* ================= theme ================= */
@@ -864,34 +839,30 @@
     log.innerHTML = sortedProjects().map(function(p, i){
       var pct = clampPct(p.pct);
       var d = animate ? i : 0;
+      var deadlineText = p.deadline ? (p.deadline === "custom" ? p.deadlineCustom : p.deadline) : "—";
       return '' +
       '<article class="row" data-s="' + esc(p.status) + '" style="--i:' + d + '">' +
-
         '<div class="row-name">' +
           '<span class="name">' + esc(p.name) + '</span>' +
           '<span class="cat">' + esc(CATS[p.cat] || "Other") + '</span>' +
         '</div>' +
-
         '<div class="row-status">' +
           '<span class="led"></span>' +
           '<span class="status-text">' + esc(STATES[p.status] || p.status) + '</span>' +
           '<span class="when">Updated ' + esc(p.updated || "—") + '</span>' +
         '</div>' +
-
         '<div class="row-meter">' +
           '<span class="meter-k">Progress</span>' +
           '<span class="track"><span class="fill" data-w="' + pct + '" style="--i:' + d + '"></span></span>' +
           '<span class="pct">' + pct + '<small>%</small></span>' +
         '</div>' +
-
         '<div class="row-facts">' +
-          '<div class="fact"><span class="k">Next</span><span class="v">' +
-            (p.next ? esc(p.next) : '<span class="quiet">not set</span>') + '</span></div>' +
-          (p.blocker
-            ? '<div class="fact blocked-line"><span class="k">Blocked by</span><span class="v">' + esc(p.blocker) + '</span></div>'
-            : "") +
+          '<div class="fact"><span class="k">Priority</span><span class="v">' + esc(PRIS[p.priority] || "Medium") + '</span></div>' +
+          '<div class="fact"><span class="k">Handler</span><span class="v">' + (p.handler ? esc(p.handler) : '<span class="quiet">unassigned</span>') + '</span></div>' +
+          '<div class="fact"><span class="k">Deadline</span><span class="v">' + esc(deadlineText) + '</span></div>' +
+          '<div class="fact"><span class="k">Next</span><span class="v">' + (p.next ? esc(p.next) : '<span class="quiet">not set</span>') + '</span></div>' +
+          (p.blocker ? '<div class="fact blocked-line"><span class="k">Blocked by</span><span class="v">' + esc(p.blocker) + '</span></div>' : "") +
         '</div>' +
-
         '<div class="row-actions">' +
           '<button type="button" class="btn" data-act="edit" data-id="' + esc(p.id) + '">Edit</button>' +
           '<button type="button" class="btn" data-act="del" data-id="' + esc(p.id) + '">Delete</button>' +
@@ -899,6 +870,7 @@
       '</article>';
     }).join("");
 
+    // paint width:0 first, then animate to the actual width
     requestAnimationFrame(function(){
       Array.prototype.forEach.call(log.querySelectorAll(".fill"), function(el){
         el.style.width = el.getAttribute("data-w") + "%";
@@ -915,11 +887,21 @@
     $("f-name").value    = p ? p.name : "";
     $("f-cat").value     = p ? (p.cat || "other") : "pcb";
     $("f-status").value  = p ? p.status : "progress";
+    $("f-priority").value = p ? (p.priority || "medium") : "medium";
     $("f-pct").value     = p ? clampPct(p.pct) : 0;
+    $("f-handler").value = p ? (p.handler || "") : "";
+    $("f-deadline").value = p ? (p.deadline || "") : "";
+    $("f-deadlineCustom").value = p && p.deadline === "custom" ? (p.deadlineCustom || "") : "";
     $("f-next").value    = p ? (p.next || "") : "";
     $("f-blocker").value = p ? (p.blocker || "") : "";
+    showCustomDate();
     $("dlg").showModal();
     $("f-name").focus();
+  }
+
+  function showCustomDate(){
+    var val = $("f-deadline").value;
+    $("customDateField").hidden = val !== "custom";
   }
 
   function save(){
@@ -929,11 +911,17 @@
       $("f-name").focus();
       return;
     }
+    var deadline = $("f-deadline").value;
+    var deadlineCustom = deadline === "custom" ? $("f-deadlineCustom").value : "";
     var data = {
       name: name,
       cat: $("f-cat").value,
       status: $("f-status").value,
+      priority: $("f-priority").value,
       pct: clampPct($("f-pct").value),
+      handler: $("f-handler").value.trim(),
+      deadline: deadline,
+      deadlineCustom: deadlineCustom,
       next: $("f-next").value.trim(),
       blocker: $("f-blocker").value.trim(),
       updated: today(),
@@ -1004,9 +992,7 @@
     }
   }
 
-  /* ================= Excel export =================
-     Laid out like the site: masthead block, a status tally,
-     then the log — mono type, copper accent, status colours. */
+  /* ================= Excel export ================= */
   var XC = {
     ink:"12150F", inkSoft:"4A5044", faint:"7E8577",
     rule:"D0D5C9", ruleStrong:"B2B9A9",
@@ -1047,9 +1033,9 @@
     var counts = {progress:0, testing:0, blocked:0, done:0};
     doc.projects.forEach(function(p){ if(counts[p.status] != null) counts[p.status]++; });
 
-    var HEAD = ["Project","Category","Status","Complete","Progress","Next action","Blocker","Updated"];
+    var HEAD = ["Project","Category","Status","Priority","Complete","Progress","Handler","Deadline","Next action","Blocker","Updated"];
     var LASTC = HEAD.length - 1;
-    var HEAD_R = 4;          // zero-based: masthead 0-1, tally 2, spacer 3
+    var HEAD_R = 4;
     var FIRST_R = HEAD_R + 1;
 
     var aoa = [
@@ -1063,12 +1049,16 @@
     list.forEach(function(p){
       var pct = clampPct(p.pct);
       var filled = Math.round(pct / 10);
+      var deadlineText = p.deadline ? (p.deadline === "custom" ? p.deadlineCustom : deadlineDate(p.deadline)) : "";
       aoa.push([
         p.name,
         CATS[p.cat] || "Other",
         STATES[p.status] || p.status,
+        PRIS[p.priority] || "Medium",
         pct / 100,
         new Array(filled + 1).join("█") + new Array(10 - filled + 1).join("░"),
+        p.handler || "",
+        deadlineText,
         p.next || "",
         p.blocker || "",
         p.updated || ""
@@ -1079,7 +1069,6 @@
     var at = function(r, c){ return ws[XLSX.utils.encode_cell({r:r, c:c})]; };
     var style = function(r, c, s){ var cell = at(r, c); if(cell) cell.s = s; };
 
-    // ---- masthead ----
     ws["!merges"] = [
       {s:{r:0,c:0}, e:{r:0,c:LASTC}},
       {s:{r:1,c:0}, e:{r:1,c:LASTC}},
@@ -1087,96 +1076,39 @@
       {s:{r:3,c:0}, e:{r:3,c:LASTC}}
     ];
     for(var c = 0; c <= LASTC; c++){
-      style(0, c, {
-        font:{name:MONO, sz:18, bold:true, color:{rgb:XC.accent}},
-        fill:xFill(XC.paper),
-        alignment:{vertical:"center"},
-        border:xBorder("t", XC.accent)
-      });
-      style(1, c, {
-        font:{name:MONO, sz:9, color:{rgb:XC.faint}},
-        fill:xFill(XC.paper),
-        alignment:{vertical:"center"}
-      });
-      style(2, c, {
-        font:{name:MONO, sz:9, bold:true, color:{rgb:XC.inkSoft}},
-        fill:xFill(XC.surface2),
-        alignment:{vertical:"center"},
-        border:xBorder("tb")
-      });
+      style(0, c, {font:{name:MONO, sz:18, bold:true, color:{rgb:XC.accent}}, fill:xFill(XC.paper), alignment:{vertical:"center"}, border:xBorder("t", XC.accent)});
+      style(1, c, {font:{name:MONO, sz:9, color:{rgb:XC.faint}}, fill:xFill(XC.paper), alignment:{vertical:"center"}});
+      style(2, c, {font:{name:MONO, sz:9, bold:true, color:{rgb:XC.inkSoft}}, fill:xFill(XC.surface2), alignment:{vertical:"center"}, border:xBorder("tb")});
       style(3, c, {fill:xFill(XC.paper)});
       style(HEAD_R, c, {
         font:{name:MONO, sz:10, bold:true, color:{rgb:"FFFFFF"}},
         fill:xFill(XC.ink),
-        alignment:{vertical:"center", horizontal:(c === 3 || c === 4) ? "center" : "left"},
+        alignment:{vertical:"center", horizontal:(c === 4 || c === 5 || c === 7) ? "center" : "left"},
         border:xBorder("b", XC.accent)
       });
     }
 
-    // ---- log rows ----
     list.forEach(function(p, i){
       var r = FIRST_R + i;
       var sc = XSTATE[p.status] || XSTATE.progress;
       var band = (i % 2) ? XC.surface2 : XC.surface;
-      var base = {
-        font:{name:MONO, sz:10, color:{rgb:XC.inkSoft}},
-        fill:xFill(band),
-        alignment:{vertical:"center", wrapText:true},
-        border:xBorder("b")
-      };
+      var base = {font:{name:MONO, sz:10, color:{rgb:XC.inkSoft}}, fill:xFill(band), alignment:{vertical:"center", wrapText:true}, border:xBorder("b")};
       for(var c = 0; c <= LASTC; c++) style(r, c, JSON.parse(JSON.stringify(base)));
-
-      // project name — the anchor of the row, like the name plate on the site
-      style(r, 0, {
-        font:{name:MONO, sz:11, bold:true, color:{rgb: p.status === "done" ? XC.inkSoft : XC.ink}},
-        fill:xFill(band),
-        alignment:{vertical:"center", wrapText:true},
-        border:Object.assign(xBorder("b"), {left:{style:"medium", color:{rgb:sc.fg}}})
-      });
-      style(r, 1, {
-        font:{name:MONO, sz:9, color:{rgb:XC.faint}},
-        fill:xFill(band),
-        alignment:{vertical:"center", horizontal:"left"},
-        border:xBorder("b")
-      });
-      // status keeps the exact wording chosen in the app
-      style(r, 2, {
-        font:{name:MONO, sz:9, bold:true, color:{rgb:sc.fg}},
-        fill:xFill(sc.bg),
-        alignment:{vertical:"center", horizontal:"center"},
-        border:xBorder("b")
-      });
-      var pctCell = at(r, 3);
+      style(r, 0, {font:{name:MONO, sz:11, bold:true, color:{rgb: p.status === "done" ? XC.inkSoft : XC.ink}}, fill:xFill(band), alignment:{vertical:"center", wrapText:true}, border:Object.assign(xBorder("b"), {left:{style:"medium", color:{rgb:sc.fg}}})});
+      style(r, 1, {font:{name:MONO, sz:9, color:{rgb:XC.faint}}, fill:xFill(band), alignment:{vertical:"center", horizontal:"left"}, border:xBorder("b")});
+      style(r, 2, {font:{name:MONO, sz:9, bold:true, color:{rgb:sc.fg}}, fill:xFill(sc.bg), alignment:{vertical:"center", horizontal:"center"}, border:xBorder("b")});
+      style(r, 3, {font:{name:MONO, sz:9, color:{rgb:XC.inkSoft}}, fill:xFill(band), alignment:{vertical:"center", horizontal:"center"}, border:xBorder("b")});
+      var pctCell = at(r, 4);
       if(pctCell) pctCell.z = "0%";
-      style(r, 3, {
-        font:{name:MONO, sz:11, bold:true, color:{rgb:XC.ink}},
-        fill:xFill(band),
-        alignment:{vertical:"center", horizontal:"center"},
-        border:xBorder("b")
-      });
-      style(r, 4, {
-        font:{name:MONO, sz:10, color:{rgb:sc.fg}},
-        fill:xFill(band),
-        alignment:{vertical:"center", horizontal:"center"},
-        border:xBorder("b")
-      });
+      style(r, 4, {font:{name:MONO, sz:11, bold:true, color:{rgb:XC.ink}}, fill:xFill(band), alignment:{vertical:"center", horizontal:"center"}, border:xBorder("b")});
+      style(r, 5, {font:{name:MONO, sz:10, color:{rgb:sc.fg}}, fill:xFill(band), alignment:{vertical:"center", horizontal:"center"}, border:xBorder("b")});
+      style(r, 7, {font:{name:MONO, sz:9, color:{rgb:XC.faint}}, fill:xFill(band), alignment:{vertical:"center", horizontal:"center"}, border:xBorder("b")});
       if(p.blocker){
-        style(r, 6, {
-          font:{name:MONO, sz:10, color:{rgb:XSTATE.blocked.fg}},
-          fill:xFill(band),
-          alignment:{vertical:"center", wrapText:true},
-          border:xBorder("b")
-        });
+        style(r, 9, {font:{name:MONO, sz:10, color:{rgb:XSTATE.blocked.fg}}, fill:xFill(band), alignment:{vertical:"center", wrapText:true}, border:xBorder("b")});
       }
-      style(r, 7, {
-        font:{name:MONO, sz:9, color:{rgb:XC.faint}},
-        fill:xFill(band),
-        alignment:{vertical:"center", horizontal:"center"},
-        border:xBorder("b")
-      });
     });
 
-    ws["!cols"] = [{wch:36},{wch:11},{wch:14},{wch:11},{wch:14},{wch:44},{wch:36},{wch:13}];
+    ws["!cols"] = [{wch:36},{wch:11},{wch:14},{wch:10},{wch:11},{wch:14},{wch:16},{wch:14},{wch:44},{wch:36},{wch:13}];
     ws["!rows"] = [{hpt:30},{hpt:15},{hpt:18},{hpt:7},{hpt:22}];
     list.forEach(function(){ ws["!rows"].push({hpt:32}); });
     ws["!autofilter"] = {ref: XLSX.utils.encode_range({s:{r:HEAD_R,c:0}, e:{r:FIRST_R + list.length - 1, c:LASTC}})};
@@ -1190,11 +1122,17 @@
 
   /* ================= wiring ================= */
   $("btnTheme").addEventListener("click", cycleTheme);
+  $("btnSettings").addEventListener("click", function(){ $("dlgSettings").showModal(); });
+  $("btnSettingsClose").addEventListener("click", function(){ $("dlgSettings").close(); });
+  $("toggleAnim").addEventListener("click", function(){
+    setAnimations(!$("toggleAnim").classList.contains("on"));
+  });
   $("btnAdd").addEventListener("click", function(){ openDialog(); });
   $("btnReport").addEventListener("click", report);
   $("btnExport").addEventListener("click", exportExcel);
   $("btnSave").addEventListener("click", save);
   $("btnCancel").addEventListener("click", function(){ $("dlg").close(); });
+  $("f-deadline").addEventListener("change", showCustomDate);
 
   $("btnSyncSetup").addEventListener("click", openSync);
   $("btnSyncSave").addEventListener("click", saveSync);
@@ -1224,9 +1162,9 @@
   window.addEventListener("storage", function(e){
     if(e.key === KEY){ load(); render(false); }
     if(e.key === THEME_KEY){ initTheme(); }
+    if(e.key === ANIM_KEY){ initAnimations(); }
   });
 
-  // ---- the 10-second loop ----
   setInterval(function(){
     if(document.hidden) return;
     if(Date.now() >= nextSyncAt) sync("poll");
@@ -1236,6 +1174,7 @@
   window.addEventListener("focus", function(){ sync("pull"); });
 
   initTheme();
+  initAnimations();
   load();
   render(true);
   if(configured()){
