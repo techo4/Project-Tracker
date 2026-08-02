@@ -77,8 +77,7 @@
     margin:0; color:var(--ink); font-family:var(--mono); font-size:14px; font-weight:400; line-height:1.6;
     -webkit-font-smoothing:antialiased;
     background:
-      linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 100% 28px,
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 28px 100%,
+      radial-gradient(var(--dot) 1px, transparent 1.2px) 0 0 / 22px 22px,
       linear-gradient(var(--ground), var(--ground-2));
     background-attachment:fixed;
     min-height:100vh;
@@ -106,13 +105,23 @@
 
   .masthead{
     display:flex; align-items:flex-end; justify-content:space-between;
-    gap:22px; flex-wrap:wrap; padding-bottom:16px;
+    gap:20px; flex-wrap:wrap;
+    padding-bottom:18px;
     border-bottom:1px solid var(--ink);
+    position:relative;
+  }
+  .masthead::after{ /* double rule, the thin one offset — a printed-ledger cue */
+    content:""; position:absolute; left:0; right:0; bottom:-4px;
+    border-bottom:1px solid var(--rule-strong);
   }
   .kicker{
-    font-size:10px; font-weight:500; letter-spacing:.26em; text-transform:uppercase;
-    color:var(--accent); margin:0 0 12px;
-    display:flex; align-items:center; gap:10px;
+    font-family:var(--mono); font-size:10.5px; font-weight:500;
+    letter-spacing:.22em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 10px;
+    display:flex; align-items:center; gap:9px;
+  }
+  .kicker::before{
+    content:""; width:22px; height:1px; background:var(--accent); flex:none;
   }
   .kicker::before{
     content:""; width:26px; height:1px; background:var(--accent);
@@ -139,13 +148,16 @@
   .theme-btn:focus-visible, .settings-btn:focus-visible{outline:2px solid var(--probe); outline-offset:2px;}
 
   .syncbar{
-    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
-    margin-top:16px; padding:10px 14px;
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    margin-top:14px; padding:9px 12px;
     border:1px solid var(--rule); background:var(--surface);
-    font-size:10.5px; font-weight:500; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--ink-faint);
+    font-family:var(--mono); font-size:10.5px; font-weight:500;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint);
   }
-  .syncbar .led{width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;}
+  .syncbar .led{
+    width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;
+  }
+  .syncbar[data-state="off"]{color:var(--ink-faint);}
   .syncbar[data-state="ok"]{color:var(--done);}
   .syncbar[data-state="busy"]{color:var(--probe);}
   .syncbar[data-state="busy"] .led{animation:blink calc(1s / var(--anim-enabled)) ease-in-out infinite;}
@@ -185,42 +197,49 @@
 
   .toolbar{display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:22px 0 16px;}
   .btn{
-    font-family:var(--mono); font-size:10.5px; font-weight:500;
-    letter-spacing:.18em; text-transform:uppercase;
-    cursor:pointer; padding:10px 15px;
+    font-family:var(--mono); font-size:11px; font-weight:500;
+    letter-spacing:.14em; text-transform:uppercase;
+    cursor:pointer; padding:10px 16px;
     background:var(--surface); color:var(--ink-soft);
     border:1px solid var(--rule-strong); border-radius:0;
-    transition:color .15s, border-color .15s, background .15s, transform .1s;
+    transition:color .15s, border-color .15s, background .15s, transform .12s;
   }
   .btn:hover{color:var(--accent); border-color:var(--accent); background:var(--accent-lift);}
   .btn:active{transform:translateY(1px);}
   .btn:focus-visible{outline:2px solid var(--probe); outline-offset:2px;}
-  .btn-primary{background:var(--accent); border-color:var(--accent); color:var(--surface);}
+  .btn[disabled]{opacity:.5; cursor:not-allowed;}
+  .btn-primary{
+    background:var(--accent); border-color:var(--accent); color:var(--surface);
+  }
   .btn-primary:hover{background:var(--accent); color:var(--surface); filter:brightness(1.1);}
   .flash{
-    font-size:10px; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
-    color:var(--done); opacity:0; transform:translateX(-4px);
-    transition:opacity .22s, transform .22s;
+    font-family:var(--mono); font-size:10.5px; font-weight:500;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--done);
+    opacity:0; transform:translateX(-4px);
+    transition:opacity .25s, transform .25s;
   }
   .flash.on{opacity:1; transform:none;}
 
   #reportBox{
     display:none; background:var(--surface);
     border:1px solid var(--rule); border-left:2px solid var(--accent);
-    padding:18px 20px; margin:0 0 24px;
-    font-size:12px; line-height:1.85; color:var(--ink-soft);
-    white-space:pre-wrap; overflow-x:auto;
+    box-shadow:var(--shadow);
+    padding:20px 22px; margin:0 0 26px;
+    font-family:var(--mono); font-size:12px; line-height:1.85;
+    white-space:pre-wrap; overflow-x:auto; color:var(--ink-soft);
   }
   #reportBox.show{display:block; animation:riseIn calc(0.28s / var(--anim-enabled)) ease both;}
 
   .log-label{
     display:flex; align-items:center; gap:12px;
-    font-size:9px; font-weight:500; letter-spacing:.24em; text-transform:uppercase;
-    color:var(--ink-faint); margin:0 0 9px;
+    font-family:var(--mono); font-size:9.5px; font-weight:500;
+    letter-spacing:.2em; text-transform:uppercase; color:var(--ink-faint);
+    margin-bottom:10px;
   }
   .log-label::after{content:""; flex:1; height:1px; background:var(--rule);}
-  .log{border-top:1px solid var(--ink);}
 
+  /* ---------- log rows ---------- */
+  .log{border-top:1px solid var(--ink);}
   .row{
     position:relative; background:var(--surface);
     border-bottom:1px solid var(--rule);
@@ -274,6 +293,18 @@
     .row-meter{grid-template-columns:1fr auto; row-gap:9px;} .meter-k{grid-column:1 / -1;}
     .fact{grid-template-columns:1fr; gap:2px;}
   }
+  .track::after{ /* quarter graduations */
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(to right,
+      transparent 0 calc(25% - 1px), var(--rule-strong) calc(25% - 1px), var(--rule-strong) 25%);
+    opacity:.8;
+  }
+  .fill{
+    height:100%; width:0; background:currentColor;
+    transition:width .8s cubic-bezier(.2,.8,.25,1);
+    transition-delay:calc(var(--i) * 45ms + 120ms);
+  }
+  .pct{min-width:4.5ch; text-align:right; color:var(--ink-soft);}
 
   .empty{background:var(--surface); border-bottom:1px solid var(--rule); padding:58px 22px; text-align:center; color:var(--ink-faint);}
   .empty b{display:block; font-family:var(--display); font-weight:400; font-size:14px; letter-spacing:-.04em; color:var(--ink-soft); margin-bottom:11px;}
@@ -291,10 +322,9 @@
   .hint code{background:var(--ground); border:1px solid var(--rule); padding:1px 5px;}
   .hint a{color:var(--accent); text-underline-offset:3px;}
   input,select,textarea{
-    font-family:var(--mono); font-size:13.5px; width:100%;
+    font-family:var(--serif); font-size:16px; width:100%;
     background:var(--ground); color:var(--ink);
     border:1px solid var(--rule-strong); border-radius:0; padding:9px 10px;
-    font-variant-numeric:tabular-nums;
     transition:border-color .15s, box-shadow .15s;
   }
   input:focus,select:focus,textarea:focus{outline:none; border-color:var(--probe); box-shadow:0 0 0 2px color-mix(in srgb, var(--probe) 24%, transparent);}
@@ -341,27 +371,26 @@
   <header class="masthead">
     <div>
       <p class="kicker">Hardware &amp; firmware bench log</p>
-      <h1>Project<span>_</span>tracker</h1>
+      <h1>Project <em>tracker</em></h1>
     </div>
     <div class="mast-right">
-      <div class="readout">
-        <span class="lbl">Date</span>
-        <span class="val" id="stamp"></span>
+      <div class="stamp">
+        <span class="lbl">Today</span>
+        <span id="stamp"></span>
       </div>
       <button type="button" class="settings-btn" id="btnSettings" aria-label="Settings">⚙</button>
       <button type="button" class="theme-btn" id="btnTheme" aria-label="Change colour theme">Auto</button>
     </div>
   </header>
 
-  <div class="syncbar ticked" id="syncbar" data-state="off">
+  <div class="syncbar" id="syncbar" data-state="off">
     <span class="led"></span>
     <span class="msg" id="syncMsg">Saved on this device only</span>
-    <span class="tick" id="syncTick"></span>
+    <button type="button" class="link" id="btnSyncNow" hidden>Sync now</button>
     <button type="button" class="link" id="btnSyncSetup">Set up sync</button>
   </div>
 
-  <section class="summary ticked" id="summary"></section>
-  <div class="dist" id="dist" hidden></div>
+  <section class="summary" id="summary"></section>
 
   <div class="toolbar">
     <button type="button" class="btn btn-primary" id="btnAdd">Add project</button>
@@ -457,12 +486,13 @@
   <form method="dialog" class="dlg-body" id="formSync">
     <p class="dlg-title">Sync across devices</p>
     <p class="hint">
-      Projects live in a private
-      <a href="https://gist.github.com" target="_blank" rel="noopener">GitHub gist</a>
-      and sync automatically every 10 seconds, plus immediately on every change.
+      Your projects are stored in a private
+      <a href="https://gist.github.com" target="_blank" rel="noopener">GitHub gist</a>,
+      so every device you enter this token on sees the same list.
       Create a <b>classic</b> token at
       <a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=Project%20Tracker" target="_blank" rel="noopener">github.com/settings/tokens</a>
-      with the <code>gist</code> scope and nothing else. It stays in this browser — never in the repository.
+      with the <code>gist</code> scope and nothing else.
+      It is kept in this browser only — never in the repository.
     </p>
     <div class="field">
       <label for="s-token">GitHub token (classic, gist scope)</label>
@@ -511,7 +541,7 @@
   var LEGACY = "projects";
   var GIST_FILE = "project-tracker.json";
   var API = "https://api.github.com";
-  var POLL_MS = 10000;
+  var POLL_MS = 90000;
 
   var doc = {v:1, projects:[], deleted:{}};
   var editId = "";
@@ -539,8 +569,7 @@
   }
   function clock(ts){
     var d = new Date(ts);
-    return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0") +
-           ":" + String(d.getSeconds()).padStart(2,"0");
+    return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
   }
   function deadlineDate(v){
     var d = new Date();
@@ -586,9 +615,6 @@
   }
 
   /* ================= local storage ================= */
-  function newId(){
-    return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-  }
   function normalize(raw){
     var d = {v:1, projects:[], deleted:{}};
     if(!raw) return d;
@@ -606,9 +632,17 @@
     });
     return d;
   }
-  function load(){ doc = normalize(ls(KEY) || ls(LEGACY)); }
+
+  function load(){
+    doc = normalize(ls(KEY) || ls(LEGACY));
+  }
   function persist(){
-    if(!lsSet(KEY, JSON.stringify(doc))) flash("Couldn't save — storage is full or blocked", true);
+    if(!lsSet(KEY, JSON.stringify(doc))){
+      flash("Couldn't save — storage is full or blocked", true);
+    }
+  }
+  function newId(){
+    return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
   }
 
   /* ================= merge ================= */
@@ -635,7 +669,7 @@
     return out;
   }
 
-  /* ================= sync ================= */
+  /* ================= sync (private gist) ================= */
   function token(){ return ls(TOKEN_KEY) || ""; }
   function gistId(){ return ls(GIST_KEY) || ""; }
   function configured(){ return !!token(); }
@@ -644,6 +678,7 @@
     lastState = state;
     $("syncbar").setAttribute("data-state", state);
     $("syncMsg").textContent = msg;
+    $("btnSyncNow").hidden = !configured();
     $("btnSyncSetup").textContent = configured() ? "Sync settings" : "Set up sync";
     paintTick();
   }
@@ -688,7 +723,9 @@
     var body = {files:{}};
     body.files[GIST_FILE] = {content: JSON.stringify(data, null, 2)};
     var id = gistId();
-    if(id) return gh("/gists/" + id, {method:"PATCH", body: JSON.stringify(body)});
+    if(id){
+      return gh("/gists/" + id, {method:"PATCH", body: JSON.stringify(body)});
+    }
     body.description = "Project Tracker data";
     body.public = false;
     return gh("/gists", {method:"POST", body: JSON.stringify(body)}).then(function(g){
@@ -700,18 +737,21 @@
   function sync(reason){
     if(!configured() || syncing) return Promise.resolve();
     syncing = true;
-    setSyncState("busy", reason === "push" ? "Pushing changes…" : "Checking GitHub…");
+    setSyncState("busy", reason === "push" ? "Saving to GitHub…" : "Checking GitHub…");
     var localSnapshot = JSON.stringify(doc);
 
     return readGist().then(function(remote){
       var merged = remote ? merge(doc, remote) : doc;
       var mergedStr = JSON.stringify(merged);
-      if(mergedStr !== localSnapshot){
+      var changedLocally = mergedStr !== localSnapshot;
+      var changedRemotely = !remote || mergedStr !== JSON.stringify(remote);
+
+      if(changedLocally){
         doc = merged;
         persist();
         render(false);
       }
-      if(remote && mergedStr === JSON.stringify(remote)) return;
+      if(!changedRemotely) return;
       return writeGist(merged);
     }).then(function(){
       setSyncState("ok", "Synced " + clock(Date.now()) + " · " + doc.projects.length +
@@ -720,15 +760,13 @@
       setSyncState("err", e.message || "Sync failed");
     }).then(function(){
       syncing = false;
-      nextSyncAt = Date.now() + POLL_MS;
-      paintTick();
     });
   }
 
   function syncSoon(){
     if(!configured()) return;
     clearTimeout(pushTimer);
-    pushTimer = setTimeout(function(){ sync("push"); }, 250);
+    pushTimer = setTimeout(function(){ sync("push"); }, 400);
   }
 
   function openSync(){
@@ -736,8 +774,8 @@
     $("s-gist").value = gistId();
     $("syncErr").textContent = "";
     $("syncHelp").textContent = gistId()
-      ? "Gist ID above + the same token on another device gives you the same board."
-      : "First device: leave the gist ID blank. A private gist is created and its ID shows up here.";
+      ? "Enter this same gist ID and token on another device to see the same projects."
+      : "On your first device leave the gist ID blank — a private gist is created for you, and its ID appears here afterwards.";
     $("dlgSync").showModal();
     $("s-token").focus();
   }
@@ -751,11 +789,11 @@
     }
     var m = g.match(/[0-9a-f]{20,}/i);
     lsSet(TOKEN_KEY, t);
-    if(m) lsSet(GIST_KEY, m[0]); else lsDel(GIST_KEY);
+    if(g) lsSet(GIST_KEY, g); else lsDel(GIST_KEY);
     $("dlgSync").close();
     setSyncState("busy", "Connecting…");
     sync("pull").then(function(){
-      if(lastState === "ok") flash("Sync connected");
+      if($("syncbar").getAttribute("data-state") === "ok") flash("Sync connected");
     });
   }
 
@@ -768,7 +806,7 @@
     flash("Disconnected");
   }
 
-  /* ================= ui helpers ================= */
+  /* ================= misc ui ================= */
   function flash(msg, bad){
     var el = $("flash");
     el.textContent = msg;
@@ -786,7 +824,7 @@
 
   function countUp(el, to){
     if(reduceMotion || to === 0){ el.textContent = to; return; }
-    var start = performance.now(), dur = 460;
+    var start = performance.now(), dur = 480;
     (function step(now){
       var t = Math.min(1, (now - start) / dur);
       el.textContent = Math.round(to * (1 - Math.pow(1 - t, 3)));
@@ -818,21 +856,13 @@
       countUp(el, Number(el.getAttribute("data-n")));
     });
 
-    var dist = $("dist");
-    dist.hidden = doc.projects.length === 0;
-    dist.innerHTML = ORDER.map(function(k){
-      return '<span class="d-' + k + '" style="flex-grow:' + counts[k] + '" ' +
-             'title="' + esc(STATES[k]) + ': ' + counts[k] + '"></span>';
-    }).join("");
-
+    var log = $("log");
     $("logLabel").textContent = doc.projects.length
       ? "Active log — " + doc.projects.length + (doc.projects.length === 1 ? " project" : " projects")
       : "Active log";
 
-    var log = $("log");
     if(doc.projects.length === 0){
-      log.innerHTML = '<div class="empty"><b>Nothing on the bench yet</b>' +
-                      '<span>Add a project to start the log</span></div>';
+      log.innerHTML = '<div class="empty">Nothing on the bench yet.<span>Add a project to start the log</span></div>';
       return;
     }
 
@@ -938,7 +968,7 @@
     render(false);
     $("dlg").close();
     flash(wasEdit ? "Updated" : "Added");
-    syncSoon();
+    queuePush();
   }
 
   function removeProject(id){
@@ -947,7 +977,7 @@
     persist();
     render(false);
     flash("Deleted");
-    syncSoon();
+    queuePush();
   }
 
   /* ================= report ================= */
@@ -985,8 +1015,11 @@
     box.textContent = out;
 
     if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(out).then(function(){ flash("Copied to clipboard"); },
-                                            function(){ flash("Report ready — select and copy it"); });
+      navigator.clipboard.writeText(out).then(function(){
+        flash("Copied to clipboard");
+      }, function(){
+        flash("Report ready — select and copy it");
+      });
     }else{
       flash("Report ready — select and copy it");
     }
@@ -1135,6 +1168,7 @@
   $("f-deadline").addEventListener("change", showCustomDate);
 
   $("btnSyncSetup").addEventListener("click", openSync);
+  $("btnSyncNow").addEventListener("click", function(){ sync("pull"); });
   $("btnSyncSave").addEventListener("click", saveSync);
   $("btnSyncCancel").addEventListener("click", function(){ $("dlgSync").close(); });
   $("btnForget").addEventListener("click", forgetSync);
@@ -1152,7 +1186,10 @@
     var btn = e.target.closest("button[data-act]");
     if(!btn) return;
     var id = btn.getAttribute("data-id");
-    if(btn.getAttribute("data-act") === "edit"){ openDialog(id); return; }
+    if(btn.getAttribute("data-act") === "edit"){
+      openDialog(id);
+      return;
+    }
     var p = doc.projects.filter(function(x){ return x.id === id; })[0];
     if(p && window.confirm('Delete "' + p.name + '"? It is removed from every synced device.')){
       removeProject(id);
@@ -1172,6 +1209,7 @@
   setInterval(paintTick, 1000);
   document.addEventListener("visibilitychange", function(){ if(!document.hidden) sync("pull"); });
   window.addEventListener("focus", function(){ sync("pull"); });
+  setInterval(function(){ if(!document.hidden) sync("pull"); }, POLL_MS);
 
   initTheme();
   initAnimations();
