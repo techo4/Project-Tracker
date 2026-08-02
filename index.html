@@ -6,7 +6,6 @@
 <title>Project Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<<<<<<< HEAD
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Martian+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <style>
@@ -33,51 +32,10 @@
     --display:"Martian Mono",ui-monospace,monospace;
     --mono:"JetBrains Mono",ui-monospace,"Cascadia Mono","Consolas",monospace;
     --anim-enabled:1;
-=======
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<style>
-  /* ============================================================
-     Type: Newsreader (editorial serif) + JetBrains Mono (data).
-     No sans anywhere — the serif carries prose, the mono carries
-     every number, label and state.
-     ============================================================ */
-  :root{
-    color-scheme: light;
-
-    /* neutrals, biased cool-green like a bare soldermask panel */
-    --ground:#eceeea;
-    --ground-2:#e3e6e0;
-    --surface:#fbfcfa;
-    --rule:#d5d9d1;
-    --rule-strong:#bcc2b6;
-    --ink:#161a15;
-    --ink-soft:#4e544a;
-    --ink-faint:#828a7e;
-    --dot:rgba(22,26,21,.10);
-
-    /* accent: hot solder copper */
-    --accent:#a94a1c;
-    --accent-lift:rgba(169,74,28,.09);
-    /* secondary: probe cyan, used only for measurement + focus */
-    --probe:#0f6d78;
-
-    /* semantic state */
-    --run:#25627f;  --run-bg:rgba(37,98,127,.11);
-    --test:#7d5c06; --test-bg:rgba(125,92,6,.13);
-    --block:#a32a20; --block-bg:rgba(163,42,32,.11);
-    --done:#356140;  --done-bg:rgba(53,97,64,.12);
-
-    --serif:"Newsreader",Georgia,"Times New Roman",serif;
-    --mono:"JetBrains Mono",ui-monospace,"Cascadia Mono","Consolas",monospace;
-
-    --shadow:0 1px 0 rgba(22,26,21,.03), 0 6px 20px -12px rgba(22,26,21,.28);
->>>>>>> parent of 37f2e90 (Update index.html)
   }
   @media (prefers-color-scheme: dark){
     :root{
       color-scheme: dark;
-<<<<<<< HEAD
       --ground:#0d100c; --ground-2:#090b08; --surface:#141810; --surface-2:#191d15;
       --rule:#252b20; --rule-strong:#39412f;
       --ink:#e8ebe1; --ink-soft:#a2a99a; --ink-faint:#6f776a;
@@ -87,24 +45,10 @@
       --test:#dab24d; --test-bg:rgba(218,178,77,.13);
       --block:#e5776a; --block-bg:rgba(229,119,106,.13);
       --done:#7cbe89; --done-bg:rgba(124,190,137,.13);
-=======
-      --ground:#101310; --ground-2:#0b0e0b; --surface:#181c17;
-      --rule:#282e26; --rule-strong:#3b4338;
-      --ink:#e9ece5; --ink-soft:#a6ad9f; --ink-faint:#767e71;
-      --dot:rgba(233,236,229,.07);
-      --accent:#e5843c; --accent-lift:rgba(229,132,60,.11);
-      --probe:#5fc2cc;
-      --run:#78b4d4;  --run-bg:rgba(120,180,212,.13);
-      --test:#dcb352; --test-bg:rgba(220,179,82,.13);
-      --block:#e5786a; --block-bg:rgba(229,120,106,.13);
-      --done:#7fbf8c; --done-bg:rgba(127,191,140,.13);
-      --shadow:0 1px 0 rgba(0,0,0,.3), 0 8px 24px -14px rgba(0,0,0,.8);
->>>>>>> parent of 37f2e90 (Update index.html)
     }
   }
   :root[data-theme="light"]{
     color-scheme: light;
-<<<<<<< HEAD
     --ground:#e8eae5; --ground-2:#dee1da; --surface:#f7f8f4; --surface-2:#eef0ea;
     --rule:#d0d5c9; --rule-strong:#b2b9a9;
     --ink:#12150f; --ink-soft:#4a5044; --ink-faint:#7e8577;
@@ -126,47 +70,15 @@
     --test:#dab24d; --test-bg:rgba(218,178,77,.13);
     --block:#e5776a; --block-bg:rgba(229,119,106,.13);
     --done:#7cbe89; --done-bg:rgba(124,190,137,.13);
-=======
-    --ground:#eceeea; --ground-2:#e3e6e0; --surface:#fbfcfa;
-    --rule:#d5d9d1; --rule-strong:#bcc2b6;
-    --ink:#161a15; --ink-soft:#4e544a; --ink-faint:#828a7e;
-    --dot:rgba(22,26,21,.10);
-    --accent:#a94a1c; --accent-lift:rgba(169,74,28,.09); --probe:#0f6d78;
-    --run:#25627f;  --run-bg:rgba(37,98,127,.11);
-    --test:#7d5c06; --test-bg:rgba(125,92,6,.13);
-    --block:#a32a20; --block-bg:rgba(163,42,32,.11);
-    --done:#356140; --done-bg:rgba(53,97,64,.12);
-    --shadow:0 1px 0 rgba(22,26,21,.03), 0 6px 20px -12px rgba(22,26,21,.28);
-  }
-  :root[data-theme="dark"]{
-    color-scheme: dark;
-    --ground:#101310; --ground-2:#0b0e0b; --surface:#181c17;
-    --rule:#282e26; --rule-strong:#3b4338;
-    --ink:#e9ece5; --ink-soft:#a6ad9f; --ink-faint:#767e71;
-    --dot:rgba(233,236,229,.07);
-    --accent:#e5843c; --accent-lift:rgba(229,132,60,.11); --probe:#5fc2cc;
-    --run:#78b4d4;  --run-bg:rgba(120,180,212,.13);
-    --test:#dcb352; --test-bg:rgba(220,179,82,.13);
-    --block:#e5786a; --block-bg:rgba(229,120,106,.13);
-    --done:#7fbf8c; --done-bg:rgba(127,191,140,.13);
-    --shadow:0 1px 0 rgba(0,0,0,.3), 0 8px 24px -14px rgba(0,0,0,.8);
->>>>>>> parent of 37f2e90 (Update index.html)
   }
 
   *{box-sizing:border-box;}
   body{
-<<<<<<< HEAD
     margin:0; color:var(--ink); font-family:var(--mono); font-size:14px; font-weight:400; line-height:1.6;
-=======
-    margin:0;
-    color:var(--ink);
-    font-family:var(--serif);
-    font-size:17px; line-height:1.55;
-    font-optical-sizing:auto;
->>>>>>> parent of 37f2e90 (Update index.html)
     -webkit-font-smoothing:antialiased;
     background:
-      radial-gradient(var(--dot) 1px, transparent 1.2px) 0 0 / 22px 22px,
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 100% 28px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 28px 100%,
       linear-gradient(var(--ground), var(--ground-2));
     background-attachment:fixed;
     min-height:100vh;
@@ -174,7 +86,6 @@
   }
   ::selection{background:var(--accent); color:var(--surface);}
 
-<<<<<<< HEAD
   .ambient{
     position:fixed; inset:-25%; z-index:0; pointer-events:none;
     background:
@@ -192,31 +103,17 @@
   }
   .ticked::before{top:-1px; left:-1px; border-top:1px solid; border-left:1px solid;}
   .ticked::after{bottom:-1px; right:-1px; border-bottom:1px solid; border-right:1px solid;}
-=======
-  .wrap{max-width:940px; margin:0 auto; padding:44px 22px 96px;}
->>>>>>> parent of 37f2e90 (Update index.html)
 
   .masthead{
     display:flex; align-items:flex-end; justify-content:space-between;
-    gap:20px; flex-wrap:wrap;
-    padding-bottom:18px;
+    gap:22px; flex-wrap:wrap; padding-bottom:16px;
     border-bottom:1px solid var(--ink);
-    position:relative;
-  }
-  .masthead::after{ /* double rule, the thin one offset — a printed-ledger cue */
-    content:""; position:absolute; left:0; right:0; bottom:-4px;
-    border-bottom:1px solid var(--rule-strong);
   }
   .kicker{
-    font-family:var(--mono); font-size:10.5px; font-weight:500;
-    letter-spacing:.22em; text-transform:uppercase;
-    color:var(--accent); margin:0 0 10px;
-    display:flex; align-items:center; gap:9px;
+    font-size:10px; font-weight:500; letter-spacing:.26em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 12px;
+    display:flex; align-items:center; gap:10px;
   }
-  .kicker::before{
-    content:""; width:22px; height:1px; background:var(--accent); flex:none;
-  }
-<<<<<<< HEAD
   .kicker::before{
     content:""; width:26px; height:1px; background:var(--accent);
     animation:sweepline calc(6s / var(--anim-enabled)) ease-in-out infinite;
@@ -240,49 +137,17 @@
   }
   .theme-btn:hover, .settings-btn:hover{color:var(--accent); border-color:var(--accent);}
   .theme-btn:focus-visible, .settings-btn:focus-visible{outline:2px solid var(--probe); outline-offset:2px;}
-=======
-  h1{
-    font-family:var(--serif); font-weight:500;
-    font-size:clamp(34px, 6vw, 52px); line-height:.98;
-    letter-spacing:-.025em; margin:0;
-    text-wrap:balance;
-  }
-  h1 em{
-    font-style:italic; font-weight:400; color:var(--accent);
-  }
-  .mast-right{
-    display:flex; align-items:center; gap:14px;
-    font-family:var(--mono); font-size:11.5px;
-    color:var(--ink-faint); font-variant-numeric:tabular-nums;
-  }
-  .stamp{display:grid; gap:2px; text-align:right; letter-spacing:.06em;}
-  .stamp .lbl{font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; opacity:.75;}
-
-  .theme-btn{
-    font-family:var(--mono); font-size:10px; letter-spacing:.14em;
-    text-transform:uppercase; padding:7px 10px;
-    background:transparent; color:var(--ink-faint);
-    border:1px solid var(--rule-strong); border-radius:0;
-    cursor:pointer; white-space:nowrap;
-    transition:color .15s, border-color .15s;
-  }
-  .theme-btn:hover{color:var(--accent); border-color:var(--accent);}
->>>>>>> parent of 37f2e90 (Update index.html)
 
   .syncbar{
-    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-    margin-top:14px; padding:9px 12px;
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    margin-top:16px; padding:10px 14px;
     border:1px solid var(--rule); background:var(--surface);
-    font-family:var(--mono); font-size:10.5px; font-weight:500;
-    letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint);
+    font-size:10.5px; font-weight:500; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--ink-faint);
   }
-  .syncbar .led{
-    width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;
-  }
-  .syncbar[data-state="off"]{color:var(--ink-faint);}
+  .syncbar .led{width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;}
   .syncbar[data-state="ok"]{color:var(--done);}
   .syncbar[data-state="busy"]{color:var(--probe);}
-<<<<<<< HEAD
   .syncbar[data-state="busy"] .led{animation:blink calc(1s / var(--anim-enabled)) ease-in-out infinite;}
   .syncbar[data-state="err"]{color:var(--block); border-color:var(--block);}
   .syncbar .msg{flex:1; min-width:190px; color:inherit;}
@@ -297,33 +162,9 @@
   .cell{
     padding:15px 15px 16px; border-right:1px solid var(--rule);
     display:grid; gap:7px; position:relative; transition:background .18s;
-=======
-  .syncbar[data-state="busy"] .led{animation:blink 1.1s ease-in-out infinite;}
-  .syncbar[data-state="err"]{color:var(--block); border-color:var(--block);}
-  .syncbar .msg{flex:1; min-width:180px;}
-  .syncbar .link{
-    font:inherit; background:none; border:0; padding:0; cursor:pointer;
-    color:var(--accent); text-decoration:underline; text-underline-offset:3px;
-    letter-spacing:.14em;
-  }
-  .syncbar .link:hover{opacity:.75;}
-
-  /* ---------- summary strip ---------- */
-  .summary{
-    display:grid; grid-template-columns:repeat(4,1fr);
-    margin-top:14px;
-    border:1px solid var(--rule);
-    background:var(--surface);
-    box-shadow:var(--shadow);
-  }
-  .cell{
-    padding:16px 16px 18px; border-right:1px solid var(--rule);
-    display:grid; gap:6px; position:relative; overflow:hidden;
->>>>>>> parent of 37f2e90 (Update index.html)
   }
   .cell:hover{background:var(--surface-2);}
   .cell:last-child{border-right:0;}
-<<<<<<< HEAD
   .cell::before{
     content:""; position:absolute; top:0; left:0; right:0; height:2px; background:currentColor;
     transform:scaleX(0); transform-origin:left;
@@ -343,89 +184,44 @@
   .dist .d-testing{background:var(--test);} .dist .d-done{background:var(--done); opacity:.55;}
 
   .toolbar{display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:22px 0 16px;}
-=======
-  .cell::before{ /* state hairline along the top edge */
-    content:""; position:absolute; top:0; left:0; right:0; height:2px;
-    background:currentColor; opacity:.85;
-  }
-  .cell[data-k="blocked"]{color:var(--block);}
-  .cell[data-k="progress"]{color:var(--run);}
-  .cell[data-k="testing"]{color:var(--test);}
-  .cell[data-k="done"]{color:var(--done);}
-  .cell .n{
-    font-family:var(--mono); font-weight:500;
-    font-size:34px; line-height:1;
-    font-variant-numeric:tabular-nums; letter-spacing:-.04em;
-  }
-  .cell .l{
-    font-family:var(--mono); font-size:9.5px; font-weight:500;
-    letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint);
-  }
-  .cell.is-zero .n{color:var(--ink-faint); opacity:.45;}
-  @media (max-width:620px){
-    .summary{grid-template-columns:repeat(2,1fr);}
-    .cell:nth-child(2){border-right:0;}
-    .cell:nth-child(-n+2){border-bottom:1px solid var(--rule);}
-  }
-
-  /* ---------- toolbar ---------- */
-  .toolbar{
-    display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-    padding:24px 0 18px;
-  }
->>>>>>> parent of 37f2e90 (Update index.html)
   .btn{
-    font-family:var(--mono); font-size:11px; font-weight:500;
-    letter-spacing:.14em; text-transform:uppercase;
-    cursor:pointer; padding:10px 16px;
+    font-family:var(--mono); font-size:10.5px; font-weight:500;
+    letter-spacing:.18em; text-transform:uppercase;
+    cursor:pointer; padding:10px 15px;
     background:var(--surface); color:var(--ink-soft);
     border:1px solid var(--rule-strong); border-radius:0;
-    transition:color .15s, border-color .15s, background .15s, transform .12s;
+    transition:color .15s, border-color .15s, background .15s, transform .1s;
   }
   .btn:hover{color:var(--accent); border-color:var(--accent); background:var(--accent-lift);}
   .btn:active{transform:translateY(1px);}
   .btn:focus-visible{outline:2px solid var(--probe); outline-offset:2px;}
-  .btn[disabled]{opacity:.5; cursor:not-allowed;}
-  .btn-primary{
-    background:var(--accent); border-color:var(--accent); color:var(--surface);
-  }
+  .btn-primary{background:var(--accent); border-color:var(--accent); color:var(--surface);}
   .btn-primary:hover{background:var(--accent); color:var(--surface); filter:brightness(1.1);}
   .flash{
-    font-family:var(--mono); font-size:10.5px; font-weight:500;
-    letter-spacing:.14em; text-transform:uppercase; color:var(--done);
-    opacity:0; transform:translateX(-4px);
-    transition:opacity .25s, transform .25s;
+    font-size:10px; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--done); opacity:0; transform:translateX(-4px);
+    transition:opacity .22s, transform .22s;
   }
   .flash.on{opacity:1; transform:none;}
 
   #reportBox{
     display:none; background:var(--surface);
     border:1px solid var(--rule); border-left:2px solid var(--accent);
-    box-shadow:var(--shadow);
-    padding:20px 22px; margin:0 0 26px;
-    font-family:var(--mono); font-size:12px; line-height:1.85;
-    white-space:pre-wrap; overflow-x:auto; color:var(--ink-soft);
+    padding:18px 20px; margin:0 0 24px;
+    font-size:12px; line-height:1.85; color:var(--ink-soft);
+    white-space:pre-wrap; overflow-x:auto;
   }
-<<<<<<< HEAD
   #reportBox.show{display:block; animation:riseIn calc(0.28s / var(--anim-enabled)) ease both;}
 
-=======
-  #reportBox.show{display:block; animation:riseIn .3s ease both;}
-
-  /* ---------- section label ---------- */
->>>>>>> parent of 37f2e90 (Update index.html)
   .log-label{
     display:flex; align-items:center; gap:12px;
-    font-family:var(--mono); font-size:9.5px; font-weight:500;
-    letter-spacing:.2em; text-transform:uppercase; color:var(--ink-faint);
-    margin-bottom:10px;
+    font-size:9px; font-weight:500; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--ink-faint); margin:0 0 9px;
   }
   .log-label::after{content:""; flex:1; height:1px; background:var(--rule);}
-
-  /* ---------- log rows ---------- */
   .log{border-top:1px solid var(--ink);}
+
   .row{
-<<<<<<< HEAD
     position:relative; background:var(--surface);
     border-bottom:1px solid var(--rule);
     animation:riseIn calc(0.4s / var(--anim-enabled)) cubic-bezier(.22,.9,.3,1) both;
@@ -477,93 +273,8 @@
   @media (max-width:560px){
     .row-meter{grid-template-columns:1fr auto; row-gap:9px;} .meter-k{grid-column:1 / -1;}
     .fact{grid-template-columns:1fr; gap:2px;}
-=======
-    background:var(--surface);
-    border-bottom:1px solid var(--rule);
-    padding:20px 22px 20px 24px;
-    display:grid; gap:13px;
-    position:relative;
-    transition:background .18s;
-    animation:riseIn .42s cubic-bezier(.22,.9,.3,1) both;
-    animation-delay:calc(var(--i) * 45ms);
   }
-  .row::before{ /* state edge, drawn on hover */
-    content:""; position:absolute; left:0; top:-1px; bottom:-1px; width:2px;
-    background:currentColor; transform:scaleY(0); transform-origin:top;
-    transition:transform .22s ease;
-  }
-  .row:hover::before{transform:scaleY(1);}
-  .row:hover{background:var(--accent-lift);}
-  .row[data-s="blocked"]{color:var(--block);}
-  .row[data-s="progress"]{color:var(--run);}
-  .row[data-s="testing"]{color:var(--test);}
-  .row[data-s="done"]{color:var(--done);}
 
-  .row-head{
-    display:flex; align-items:baseline; justify-content:space-between;
-    gap:14px; flex-wrap:wrap;
-  }
-  .name{
-    font-family:var(--serif); font-size:23px; font-weight:500;
-    letter-spacing:-.02em; line-height:1.15; color:var(--ink);
-  }
-  .row[data-s="done"] .name{color:var(--ink-soft);}
-  .cat{
-    font-family:var(--mono); font-size:9.5px; font-weight:500;
-    letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint);
-    border:1px solid var(--rule-strong);
-    padding:2px 7px; margin-left:11px; vertical-align:4px; white-space:nowrap;
-  }
-  .state{
-    font-family:var(--mono); font-size:10px; font-weight:500;
-    letter-spacing:.16em; text-transform:uppercase;
-    padding:5px 10px; white-space:nowrap;
-    display:inline-flex; align-items:center; gap:7px;
-  }
-  .state .led{
-    width:5px; height:5px; border-radius:50%; background:currentColor; flex:none;
-  }
-  .state-progress{background:var(--run-bg); color:var(--run);}
-  .state-testing{background:var(--test-bg); color:var(--test);}
-  .state-blocked{background:var(--block-bg); color:var(--block);}
-  .state-done{background:var(--done-bg); color:var(--done);}
-  .state-blocked .led{animation:blink 1.6s ease-in-out infinite;}
-  .state-testing .led{animation:blink 2.6s ease-in-out infinite;}
-
-  .facts{display:grid; gap:6px; font-size:16.5px; color:var(--ink-soft); max-width:66ch;}
-  .facts .k{
-    font-family:var(--mono); font-size:9.5px; font-weight:500;
-    letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint);
-    margin-right:10px;
-  }
-  .facts .blocked-line{color:var(--block);}
-  .facts .quiet{font-style:italic; opacity:.7;}
-
-  .meter{
-    display:flex; align-items:center; gap:14px;
-    font-family:var(--mono); font-size:11.5px; font-weight:500;
-    font-variant-numeric:tabular-nums; letter-spacing:.04em;
-    color:var(--ink-faint);
-  }
-  .track{
-    position:relative; flex:1; height:10px;
-    background:var(--ground); border:1px solid var(--rule); overflow:hidden;
->>>>>>> parent of 37f2e90 (Update index.html)
-  }
-  .track::after{ /* quarter graduations */
-    content:""; position:absolute; inset:0; pointer-events:none;
-    background:repeating-linear-gradient(to right,
-      transparent 0 calc(25% - 1px), var(--rule-strong) calc(25% - 1px), var(--rule-strong) 25%);
-    opacity:.8;
-  }
-  .fill{
-    height:100%; width:0; background:currentColor;
-    transition:width .8s cubic-bezier(.2,.8,.25,1);
-    transition-delay:calc(var(--i) * 45ms + 120ms);
-  }
-  .pct{min-width:4.5ch; text-align:right; color:var(--ink-soft);}
-
-<<<<<<< HEAD
   .empty{background:var(--surface); border-bottom:1px solid var(--rule); padding:58px 22px; text-align:center; color:var(--ink-faint);}
   .empty b{display:block; font-family:var(--display); font-weight:400; font-size:14px; letter-spacing:-.04em; color:var(--ink-soft); margin-bottom:11px;}
   .empty span{font-size:9.5px; letter-spacing:.22em; text-transform:uppercase; opacity:.75;}
@@ -578,58 +289,14 @@
   .field label{font-size:9px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint);}
   .hint{font-size:12px; line-height:1.7; color:var(--ink-faint); margin:0;}
   .hint code{background:var(--ground); border:1px solid var(--rule); padding:1px 5px;}
-=======
-  .row-actions{display:flex; gap:8px;}
-  .row-actions .btn{padding:6px 12px; font-size:10px; letter-spacing:.12em;}
-
-  .empty{
-    background:var(--surface); border-bottom:1px solid var(--rule);
-    padding:60px 24px; text-align:center; color:var(--ink-faint);
-    font-size:19px; font-style:italic;
-  }
-  .empty span{
-    display:block; font-family:var(--mono); font-style:normal;
-    font-size:10px; letter-spacing:.18em; text-transform:uppercase;
-    margin-top:12px; opacity:.7;
-  }
-
-  /* ---------- dialog ---------- */
-  dialog{
-    border:1px solid var(--rule-strong); border-top:2px solid var(--accent);
-    border-radius:0; background:var(--surface); color:var(--ink);
-    padding:0; width:470px; max-width:calc(100vw - 28px);
-    box-shadow:0 24px 60px -24px rgba(0,0,0,.5);
-  }
-  dialog[open]{animation:riseIn .26s cubic-bezier(.22,.9,.3,1) both;}
-  dialog::backdrop{background:rgba(8,11,8,.62); backdrop-filter:blur(2px);}
-  .dlg-body{padding:24px 26px 26px; display:grid; gap:16px;}
-  .dlg-title{
-    font-family:var(--mono); font-size:10.5px; font-weight:500;
-    letter-spacing:.22em; text-transform:uppercase; color:var(--accent);
-    margin:0; display:flex; align-items:center; gap:9px;
-  }
-  .dlg-title::after{content:""; flex:1; height:1px; background:var(--rule);}
-  .field{display:grid; gap:6px;}
-  .field label{
-    font-family:var(--mono); font-size:9.5px; font-weight:500;
-    letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint);
-  }
-  .hint{
-    font-size:14.5px; color:var(--ink-faint); margin:0; line-height:1.5;
-  }
-  .hint code{
-    font-family:var(--mono); font-size:12px;
-    background:var(--ground); border:1px solid var(--rule); padding:1px 5px;
-  }
->>>>>>> parent of 37f2e90 (Update index.html)
   .hint a{color:var(--accent); text-underline-offset:3px;}
   input,select,textarea{
-    font-family:var(--serif); font-size:16px; width:100%;
+    font-family:var(--mono); font-size:13.5px; width:100%;
     background:var(--ground); color:var(--ink);
     border:1px solid var(--rule-strong); border-radius:0; padding:9px 10px;
+    font-variant-numeric:tabular-nums;
     transition:border-color .15s, box-shadow .15s;
   }
-<<<<<<< HEAD
   input:focus,select:focus,textarea:focus{outline:none; border-color:var(--probe); box-shadow:0 0 0 2px color-mix(in srgb, var(--probe) 24%, transparent);}
   textarea{resize:vertical; min-height:62px; line-height:1.6;}
   .two, .three{display:grid; gap:15px;}
@@ -651,29 +318,11 @@
     border-radius:50%; top:2px; left:2px; transition:left .2s;
   }
   .toggle.on::after{left:20px;}
-=======
-  #f-pct,#s-token,#s-gist{
-    font-family:var(--mono); font-size:13.5px; font-variant-numeric:tabular-nums;
-  }
-  input:focus,select:focus,textarea:focus{
-    outline:none; border-color:var(--probe);
-    box-shadow:0 0 0 2px color-mix(in srgb, var(--probe) 22%, transparent);
-  }
-  textarea{resize:vertical; min-height:62px; line-height:1.5;}
-  .two{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
-  .dlg-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:4px; flex-wrap:wrap;}
-  .dlg-actions .spacer{flex:1;}
-  .err{
-    color:var(--block); font-size:15px; font-style:italic; margin:0;
-    min-height:0;
-  }
->>>>>>> parent of 37f2e90 (Update index.html)
 
   @media (prefers-reduced-motion: reduce){
     *{transition-duration:.001s !important; animation-duration:.001s !important; animation-iteration-count:1 !important;}
     .ambient{display:none;}
   }
-<<<<<<< HEAD
   @keyframes riseIn{ from{opacity:0; transform:translateY(9px);} to{opacity:1; transform:none;} }
   @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.25;} }
   @keyframes drawIn{ to{transform:scaleX(1);} }
@@ -682,17 +331,6 @@
   @keyframes sheen{ 0%,62%{transform:translateX(-100%);} 88%,100%{transform:translateX(100%);} }
   @keyframes sweepline{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
   @keyframes caret{ 0%,49%{opacity:1;} 50%,100%{opacity:.15;} }
-=======
-
-  @keyframes riseIn{
-    from{opacity:0; transform:translateY(10px);}
-    to{opacity:1; transform:none;}
-  }
-  @keyframes blink{
-    0%,100%{opacity:1;}
-    50%{opacity:.28;}
-  }
->>>>>>> parent of 37f2e90 (Update index.html)
 </style>
 </head>
 <body>
@@ -703,26 +341,27 @@
   <header class="masthead">
     <div>
       <p class="kicker">Hardware &amp; firmware bench log</p>
-      <h1>Project <em>tracker</em></h1>
+      <h1>Project<span>_</span>tracker</h1>
     </div>
     <div class="mast-right">
-      <div class="stamp">
-        <span class="lbl">Today</span>
-        <span id="stamp"></span>
+      <div class="readout">
+        <span class="lbl">Date</span>
+        <span class="val" id="stamp"></span>
       </div>
       <button type="button" class="settings-btn" id="btnSettings" aria-label="Settings">⚙</button>
       <button type="button" class="theme-btn" id="btnTheme" aria-label="Change colour theme">Auto</button>
     </div>
   </header>
 
-  <div class="syncbar" id="syncbar" data-state="off">
+  <div class="syncbar ticked" id="syncbar" data-state="off">
     <span class="led"></span>
     <span class="msg" id="syncMsg">Saved on this device only</span>
-    <button type="button" class="link" id="btnSyncNow" hidden>Sync now</button>
+    <span class="tick" id="syncTick"></span>
     <button type="button" class="link" id="btnSyncSetup">Set up sync</button>
   </div>
 
-  <section class="summary" id="summary"></section>
+  <section class="summary ticked" id="summary"></section>
+  <div class="dist" id="dist" hidden></div>
 
   <div class="toolbar">
     <button type="button" class="btn btn-primary" id="btnAdd">Add project</button>
@@ -818,13 +457,12 @@
   <form method="dialog" class="dlg-body" id="formSync">
     <p class="dlg-title">Sync across devices</p>
     <p class="hint">
-      Your projects are stored in a private
-      <a href="https://gist.github.com" target="_blank" rel="noopener">GitHub gist</a>,
-      so every device you enter this token on sees the same list.
+      Projects live in a private
+      <a href="https://gist.github.com" target="_blank" rel="noopener">GitHub gist</a>
+      and sync automatically every 10 seconds, plus immediately on every change.
       Create a <b>classic</b> token at
       <a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=Project%20Tracker" target="_blank" rel="noopener">github.com/settings/tokens</a>
-      with the <code>gist</code> scope and nothing else.
-      It is kept in this browser only — never in the repository.
+      with the <code>gist</code> scope and nothing else. It stays in this browser — never in the repository.
     </p>
     <div class="field">
       <label for="s-token">GitHub token (classic, gist scope)</label>
@@ -873,24 +511,18 @@
   var LEGACY = "projects";
   var GIST_FILE = "project-tracker.json";
   var API = "https://api.github.com";
-  var POLL_MS = 90000;
+  var POLL_MS = 10000;
 
   var doc = {v:1, projects:[], deleted:{}};
   var editId = "";
   var syncing = false;
   var pushTimer = null;
-<<<<<<< HEAD
   var nextSyncAt = 0;
   var lastState = "off";
 
   var CATS = {pcb:"PCB", fw:"Firmware", other:"Other"};
   var STATES = {progress:"In progress", testing:"Testing", blocked:"Blocked", done:"Done"};
   var PRIS = {low:"Low", medium:"Medium", high:"High"};
-=======
-
-  var CATS = {pcb:"PCB", fw:"Firmware", other:"Other"};
-  var STATES = {progress:"In progress", testing:"Testing", blocked:"Blocked", done:"Done"};
->>>>>>> parent of 37f2e90 (Update index.html)
   var ORDER = ["blocked","progress","testing","done"];
   var RANK = {blocked:0, progress:1, testing:2, done:3};
 
@@ -907,7 +539,8 @@
   }
   function clock(ts){
     var d = new Date(ts);
-    return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+    return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0") +
+           ":" + String(d.getSeconds()).padStart(2,"0");
   }
   function deadlineDate(v){
     var d = new Date();
@@ -953,11 +586,10 @@
   }
 
   /* ================= local storage ================= */
+  function newId(){
+    return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+  }
   function normalize(raw){
-<<<<<<< HEAD
-=======
-    // accepts either the current {projects,deleted} shape or the original bare array
->>>>>>> parent of 37f2e90 (Update index.html)
     var d = {v:1, projects:[], deleted:{}};
     if(!raw) return d;
     var parsed;
@@ -974,17 +606,9 @@
     });
     return d;
   }
-
-  function load(){
-    doc = normalize(ls(KEY) || ls(LEGACY));
-  }
+  function load(){ doc = normalize(ls(KEY) || ls(LEGACY)); }
   function persist(){
-    if(!lsSet(KEY, JSON.stringify(doc))){
-      flash("Couldn't save — storage is full or blocked", true);
-    }
-  }
-  function newId(){
-    return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+    if(!lsSet(KEY, JSON.stringify(doc))) flash("Couldn't save — storage is full or blocked", true);
   }
 
   /* ================= merge ================= */
@@ -1011,23 +635,16 @@
     return out;
   }
 
-  /* ================= sync (private gist) ================= */
+  /* ================= sync ================= */
   function token(){ return ls(TOKEN_KEY) || ""; }
   function gistId(){ return ls(GIST_KEY) || ""; }
   function configured(){ return !!token(); }
 
   function setSyncState(state, msg){
-<<<<<<< HEAD
     lastState = state;
     $("syncbar").setAttribute("data-state", state);
-=======
-    var bar = $("syncbar");
-    bar.setAttribute("data-state", state);
->>>>>>> parent of 37f2e90 (Update index.html)
     $("syncMsg").textContent = msg;
-    $("btnSyncNow").hidden = !configured();
     $("btnSyncSetup").textContent = configured() ? "Sync settings" : "Set up sync";
-<<<<<<< HEAD
     paintTick();
   }
   function paintTick(){
@@ -1035,8 +652,6 @@
     if(!configured() || lastState === "busy"){ el.textContent = ""; return; }
     var left = Math.max(0, Math.ceil((nextSyncAt - Date.now()) / 1000));
     el.textContent = "next " + String(left).padStart(2,"0") + "s";
-=======
->>>>>>> parent of 37f2e90 (Update index.html)
   }
 
   function gh(path, options){
@@ -1073,9 +688,7 @@
     var body = {files:{}};
     body.files[GIST_FILE] = {content: JSON.stringify(data, null, 2)};
     var id = gistId();
-    if(id){
-      return gh("/gists/" + id, {method:"PATCH", body: JSON.stringify(body)});
-    }
+    if(id) return gh("/gists/" + id, {method:"PATCH", body: JSON.stringify(body)});
     body.description = "Project Tracker data";
     body.public = false;
     return gh("/gists", {method:"POST", body: JSON.stringify(body)}).then(function(g){
@@ -1087,21 +700,18 @@
   function sync(reason){
     if(!configured() || syncing) return Promise.resolve();
     syncing = true;
-    setSyncState("busy", reason === "push" ? "Saving to GitHub…" : "Checking GitHub…");
+    setSyncState("busy", reason === "push" ? "Pushing changes…" : "Checking GitHub…");
     var localSnapshot = JSON.stringify(doc);
 
     return readGist().then(function(remote){
       var merged = remote ? merge(doc, remote) : doc;
       var mergedStr = JSON.stringify(merged);
-      var changedLocally = mergedStr !== localSnapshot;
-      var changedRemotely = !remote || mergedStr !== JSON.stringify(remote);
-
-      if(changedLocally){
+      if(mergedStr !== localSnapshot){
         doc = merged;
         persist();
         render(false);
       }
-      if(!changedRemotely) return;
+      if(remote && mergedStr === JSON.stringify(remote)) return;
       return writeGist(merged);
     }).then(function(){
       setSyncState("ok", "Synced " + clock(Date.now()) + " · " + doc.projects.length +
@@ -1110,30 +720,24 @@
       setSyncState("err", e.message || "Sync failed");
     }).then(function(){
       syncing = false;
+      nextSyncAt = Date.now() + POLL_MS;
+      paintTick();
     });
   }
 
-<<<<<<< HEAD
   function syncSoon(){
-=======
-  function queuePush(){
->>>>>>> parent of 37f2e90 (Update index.html)
     if(!configured()) return;
     clearTimeout(pushTimer);
-    pushTimer = setTimeout(function(){ sync("push"); }, 400);
+    pushTimer = setTimeout(function(){ sync("push"); }, 250);
   }
 
-<<<<<<< HEAD
-=======
-  /* ---- sync settings dialog ---- */
->>>>>>> parent of 37f2e90 (Update index.html)
   function openSync(){
     $("s-token").value = token();
     $("s-gist").value = gistId();
     $("syncErr").textContent = "";
     $("syncHelp").textContent = gistId()
-      ? "Enter this same gist ID and token on another device to see the same projects."
-      : "On your first device leave the gist ID blank — a private gist is created for you, and its ID appears here afterwards.";
+      ? "Gist ID above + the same token on another device gives you the same board."
+      : "First device: leave the gist ID blank. A private gist is created and its ID shows up here.";
     $("dlgSync").showModal();
     $("s-token").focus();
   }
@@ -1145,19 +749,13 @@
       $("syncErr").textContent = "Paste a token to connect, or choose Disconnect to stay local.";
       return;
     }
-<<<<<<< HEAD
     var m = g.match(/[0-9a-f]{20,}/i);
-=======
-    // accept a full gist URL as well as a bare ID
-    var m = g.match(/[0-9a-f]{20,}/i);
-    g = m ? m[0] : "";
->>>>>>> parent of 37f2e90 (Update index.html)
     lsSet(TOKEN_KEY, t);
-    if(g) lsSet(GIST_KEY, g); else lsDel(GIST_KEY);
+    if(m) lsSet(GIST_KEY, m[0]); else lsDel(GIST_KEY);
     $("dlgSync").close();
     setSyncState("busy", "Connecting…");
     sync("pull").then(function(){
-      if($("syncbar").getAttribute("data-state") === "ok") flash("Sync connected");
+      if(lastState === "ok") flash("Sync connected");
     });
   }
 
@@ -1170,7 +768,7 @@
     flash("Disconnected");
   }
 
-  /* ================= misc ui ================= */
+  /* ================= ui helpers ================= */
   function flash(msg, bad){
     var el = $("flash");
     el.textContent = msg;
@@ -1188,7 +786,7 @@
 
   function countUp(el, to){
     if(reduceMotion || to === 0){ el.textContent = to; return; }
-    var start = performance.now(), dur = 480;
+    var start = performance.now(), dur = 460;
     (function step(now){
       var t = Math.min(1, (now - start) / dur);
       el.textContent = Math.round(to * (1 - Math.pow(1 - t, 3)));
@@ -1220,18 +818,25 @@
       countUp(el, Number(el.getAttribute("data-n")));
     });
 
-    var log = $("log");
+    var dist = $("dist");
+    dist.hidden = doc.projects.length === 0;
+    dist.innerHTML = ORDER.map(function(k){
+      return '<span class="d-' + k + '" style="flex-grow:' + counts[k] + '" ' +
+             'title="' + esc(STATES[k]) + ': ' + counts[k] + '"></span>';
+    }).join("");
+
     $("logLabel").textContent = doc.projects.length
       ? "Active log — " + doc.projects.length + (doc.projects.length === 1 ? " project" : " projects")
       : "Active log";
 
+    var log = $("log");
     if(doc.projects.length === 0){
-      log.innerHTML = '<div class="empty">Nothing on the bench yet.<span>Add a project to start the log</span></div>';
+      log.innerHTML = '<div class="empty"><b>Nothing on the bench yet</b>' +
+                      '<span>Add a project to start the log</span></div>';
       return;
     }
 
     log.innerHTML = sortedProjects().map(function(p, i){
-<<<<<<< HEAD
       var pct = clampPct(p.pct);
       var d = animate ? i : 0;
       var deadlineText = p.deadline ? (p.deadline === "custom" ? p.deadlineCustom : p.deadline) : "—";
@@ -1257,27 +862,6 @@
           '<div class="fact"><span class="k">Deadline</span><span class="v">' + esc(deadlineText) + '</span></div>' +
           '<div class="fact"><span class="k">Next</span><span class="v">' + (p.next ? esc(p.next) : '<span class="quiet">not set</span>') + '</span></div>' +
           (p.blocker ? '<div class="fact blocked-line"><span class="k">Blocked by</span><span class="v">' + esc(p.blocker) + '</span></div>' : "") +
-=======
-      var pct = Math.max(0, Math.min(100, Number(p.pct) || 0));
-      var delay = animate ? i : 0;
-      return '' +
-      '<article class="row" data-s="' + esc(p.status) + '" style="--i:' + delay + '">' +
-        '<div class="row-head">' +
-          '<div><span class="name">' + esc(p.name) + '</span>' +
-            '<span class="cat">' + esc(CATS[p.cat] || "Other") + '</span></div>' +
-          '<span class="state state-' + esc(p.status) + '"><span class="led"></span>' +
-            esc(STATES[p.status] || p.status) + '</span>' +
-        '</div>' +
-        '<div class="facts">' +
-          '<div><span class="k">Next</span>' +
-            (p.next ? esc(p.next) : '<span class="quiet">not set</span>') + '</div>' +
-          (p.blocker ? '<div class="blocked-line"><span class="k">Blocked by</span>' + esc(p.blocker) + '</div>' : "") +
-          '<div><span class="k">Updated</span>' + esc(p.updated || "—") + '</div>' +
-        '</div>' +
-        '<div class="meter">' +
-          '<div class="track"><div class="fill" data-w="' + pct + '" style="--i:' + delay + '"></div></div>' +
-          '<span class="pct">' + pct + '%</span>' +
->>>>>>> parent of 37f2e90 (Update index.html)
         '</div>' +
         '<div class="row-actions">' +
           '<button type="button" class="btn" data-act="edit" data-id="' + esc(p.id) + '">Edit</button>' +
@@ -1286,11 +870,7 @@
       '</article>';
     }).join("");
 
-<<<<<<< HEAD
     // paint width:0 first, then animate to the actual width
-=======
-    // paint width:0 first so the meters animate outward
->>>>>>> parent of 37f2e90 (Update index.html)
     requestAnimationFrame(function(){
       Array.prototype.forEach.call(log.querySelectorAll(".fill"), function(el){
         el.style.width = el.getAttribute("data-w") + "%";
@@ -1358,7 +938,7 @@
     render(false);
     $("dlg").close();
     flash(wasEdit ? "Updated" : "Added");
-    queuePush();
+    syncSoon();
   }
 
   function removeProject(id){
@@ -1367,7 +947,7 @@
     persist();
     render(false);
     flash("Deleted");
-    queuePush();
+    syncSoon();
   }
 
   /* ================= report ================= */
@@ -1405,11 +985,8 @@
     box.textContent = out;
 
     if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(out).then(function(){
-        flash("Copied to clipboard");
-      }, function(){
-        flash("Report ready — select and copy it");
-      });
+      navigator.clipboard.writeText(out).then(function(){ flash("Copied to clipboard"); },
+                                            function(){ flash("Report ready — select and copy it"); });
     }else{
       flash("Report ready — select and copy it");
     }
@@ -1452,7 +1029,6 @@
       return;
     }
 
-<<<<<<< HEAD
     var list = sortedProjects();
     var counts = {progress:0, testing:0, blocked:0, done:0};
     doc.projects.forEach(function(p){ if(counts[p.status] != null) counts[p.status]++; });
@@ -1475,11 +1051,6 @@
       var filled = Math.round(pct / 10);
       var deadlineText = p.deadline ? (p.deadline === "custom" ? p.deadlineCustom : deadlineDate(p.deadline)) : "";
       aoa.push([
-=======
-    var head = ["Project","Category","Status","Complete","Next action","Blocker","Updated"];
-    var rows = sortedProjects().map(function(p){
-      return [
->>>>>>> parent of 37f2e90 (Update index.html)
         p.name,
         CATS[p.cat] || "Other",
         STATES[p.status] || p.status,
@@ -1494,7 +1065,6 @@
       ]);
     });
 
-<<<<<<< HEAD
     var ws = XLSX.utils.aoa_to_sheet(aoa);
     var at = function(r, c){ return ws[XLSX.utils.encode_cell({r:r, c:c})]; };
     var style = function(r, c, s){ var cell = at(r, c); if(cell) cell.s = s; };
@@ -1516,18 +1086,6 @@
         alignment:{vertical:"center", horizontal:(c === 4 || c === 5 || c === 7) ? "center" : "left"},
         border:xBorder("b", XC.accent)
       });
-=======
-    var ws = XLSX.utils.aoa_to_sheet([head].concat(rows));
-    ws["!cols"] = [{wch:34},{wch:11},{wch:13},{wch:10},{wch:46},{wch:40},{wch:12}];
-    ws["!autofilter"] = {ref: XLSX.utils.encode_range({s:{r:0,c:0}, e:{r:rows.length, c:head.length-1}})};
-    ws["!freeze"] = {xSplit:"0", ySplit:"1", topLeftCell:"A2"};
-
-    // header styling isn't available in the community build, but number
-    // formats are — show the completion column as a real percentage
-    for(var r = 1; r <= rows.length; r++){
-      var cell = ws[XLSX.utils.encode_cell({r:r, c:3})];
-      if(cell) cell.z = "0%";
->>>>>>> parent of 37f2e90 (Update index.html)
     }
 
     list.forEach(function(p, i){
@@ -1577,7 +1135,6 @@
   $("f-deadline").addEventListener("change", showCustomDate);
 
   $("btnSyncSetup").addEventListener("click", openSync);
-  $("btnSyncNow").addEventListener("click", function(){ sync("pull"); });
   $("btnSyncSave").addEventListener("click", saveSync);
   $("btnSyncCancel").addEventListener("click", function(){ $("dlgSync").close(); });
   $("btnForget").addEventListener("click", forgetSync);
@@ -1595,10 +1152,7 @@
     var btn = e.target.closest("button[data-act]");
     if(!btn) return;
     var id = btn.getAttribute("data-id");
-    if(btn.getAttribute("data-act") === "edit"){
-      openDialog(id);
-      return;
-    }
+    if(btn.getAttribute("data-act") === "edit"){ openDialog(id); return; }
     var p = doc.projects.filter(function(x){ return x.id === id; })[0];
     if(p && window.confirm('Delete "' + p.name + '"? It is removed from every synced device.')){
       removeProject(id);
@@ -1611,18 +1165,13 @@
     if(e.key === ANIM_KEY){ initAnimations(); }
   });
 
-<<<<<<< HEAD
   setInterval(function(){
     if(document.hidden) return;
     if(Date.now() >= nextSyncAt) sync("poll");
   }, 1000);
   setInterval(paintTick, 1000);
   document.addEventListener("visibilitychange", function(){ if(!document.hidden) sync("pull"); });
-=======
-  // other devices
->>>>>>> parent of 37f2e90 (Update index.html)
   window.addEventListener("focus", function(){ sync("pull"); });
-  setInterval(function(){ if(!document.hidden) sync("pull"); }, POLL_MS);
 
   initTheme();
   initAnimations();
