@@ -1751,31 +1751,6 @@
   }
 
   var screenshotBusy = false;
-  var SHOT_W = 1920, SHOT_H = 1080;   // always 16:9
-
-  function pickShotColumns(n){
-    if(n <= 2) return n || 1;
-    if(n <= 6) return 3;
-    if(n <= 12) return 4;
-    if(n <= 20) return 5;
-    return 6;
-  }
-
-  // pad/scale the rendered board onto a fixed 16:9 canvas — "contain",
-  // never crop — so the output size never depends on project count
-  function composeToAspect(source, targetW, targetH, bg){
-    var out = document.createElement("canvas");
-    out.width = targetW;
-    out.height = targetH;
-    var ctx = out.getContext("2d");
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, targetW, targetH);
-    var scale = Math.min(targetW / source.width, targetH / source.height);
-    var w = source.width * scale, h = source.height * scale;
-    ctx.drawImage(source, (targetW - w) / 2, (targetH - h) / 2, w, h);
-    return out;
-  }
-
   function screenshotBoard(){
     if(typeof html2canvas === "undefined"){
       flash("Screenshot library didn't load — check your connection", true);
@@ -1810,17 +1785,14 @@
 
     var logClone = $("log").cloneNode(true);
     logClone.classList.add("shot-grid");
-    logClone.style.gridTemplateColumns = "repeat(" + pickShotColumns(doc.projects.length) + ", 1fr)";
     Array.prototype.forEach.call(logClone.querySelectorAll(".row-actions, .sm-actions"), function(el){ el.remove(); });
     stage.appendChild(logClone);
 
     document.body.appendChild(stage);
-    var bg = getComputedStyle(stage).backgroundColor;
 
     html2canvas(stage, {backgroundColor: null, scale: 2, useCORS: true}).then(function(canvas){
       document.body.removeChild(stage);
-      var framed = composeToAspect(canvas, SHOT_W, SHOT_H, bg);
-      framed.toBlob(function(blob){
+      canvas.toBlob(function(blob){
         screenshotBusy = false;
         if(!blob){ flash("Couldn't render the image", true); return; }
         var filename = "project-tracker-" + today() + ".png";
