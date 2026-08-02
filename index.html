@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Martian+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
 <!-- styled-cell fork of SheetJS: the community build drops fills/fonts/borders -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   /* ============================================================
      All monospace. Martian Mono — wide, mechanical — carries the
@@ -560,6 +561,11 @@
   }
   :root[data-anim="off"] .ambient{display:none;}
 
+  /* the offscreen screenshot stage: entrance/idle animations must not
+     run here — a clone re-triggers them on insertion, and html2canvas
+     can sample mid-animation (rows still at opacity:0) */
+  .shot-stage, .shot-stage *{ animation:none !important; }
+
   @keyframes riseIn{ from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:none;} }
   @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.12;} }
   @keyframes drawIn{ to{transform:scaleX(1);} }
@@ -605,6 +611,7 @@
     <button type="button" class="btn btn-primary" id="btnAdd">Add project</button>
     <button type="button" class="btn" id="btnReport">Daily update</button>
     <button type="button" class="btn" id="btnExport">Export Excel</button>
+    <button type="button" class="btn" id="btnScreenshot">Screenshot</button>
     <span class="flash" id="flash"></span>
   </div>
 
@@ -1724,6 +1731,92 @@
     flash("Exported");
   }
 
+  /* ================= screenshot ================= */
+  function downloadBlob(blob, filename){
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+
+  var screenshotBusy = false;
+  function screenshotBoard(){
+    if(typeof html2canvas === "undefined"){
+      flash("Screenshot library didn't load — check your connection", true);
+      return;
+    }
+    if(doc.projects.length === 0){
+      flash("Nothing to screenshot yet", true);
+      return;
+    }
+    if(screenshotBusy) return;
+    screenshotBusy = true;
+    flash("Rendering screenshot…");
+
+    // build a clean, offscreen copy of the board — same theme, same rows,
+    // minus the interactive edit/delete controls — rather than literally
+    // grabbing the live page (which would bake in buttons that mean
+    // nothing in a static image)
+    var stage = document.createElement("div");
+    stage.className = "wrap shot-stage";
+    stage.style.position = "fixed";
+    stage.style.left = "-99999px";
+    stage.style.top = "0";
+    stage.style.background = "var(--ground)";
+    stage.style.paddingBottom = "38px";
+
+    var head = document.createElement("div");
+    head.innerHTML =
+      '<p class="kicker">Hardware &amp; firmware bench log</p>' +
+      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px;">' +
+        '<h1 style="margin:0;">PROJECT<span style="color:var(--accent);">_</span>TRACKER</h1>' +
+        '<span style="font-family:var(--mono);font-size:11px;color:var(--ink-faint);letter-spacing:.08em;">' + esc(today()) + '</span>' +
+      '</div>';
+    stage.appendChild(head);
+    stage.appendChild($("summary").cloneNode(true));
+    stage.appendChild($("dist").cloneNode(true));
+
+    var label = document.createElement("p");
+    label.className = "log-label";
+    label.style.marginTop = "22px";
+    label.textContent = "Active log — " + doc.projects.length + (doc.projects.length === 1 ? " project" : " projects");
+    stage.appendChild(label);
+
+    var logClone = $("log").cloneNode(true);
+    Array.prototype.forEach.call(logClone.querySelectorAll(".row-actions, .sm-actions"), function(el){ el.remove(); });
+    stage.appendChild(logClone);
+
+    document.body.appendChild(stage);
+
+    html2canvas(stage, {backgroundColor: null, scale: 2, useCORS: true}).then(function(canvas){
+      document.body.removeChild(stage);
+      canvas.toBlob(function(blob){
+        screenshotBusy = false;
+        if(!blob){ flash("Couldn't render the image", true); return; }
+        var filename = "project-tracker-" + today() + ".png";
+        if(navigator.clipboard && window.ClipboardItem){
+          navigator.clipboard.write([new ClipboardItem({"image/png": blob})]).then(function(){
+            flash("Screenshot copied to clipboard");
+          }, function(){
+            downloadBlob(blob, filename);
+            flash("Clipboard blocked — downloaded instead");
+          });
+        }else{
+          downloadBlob(blob, filename);
+          flash("Downloaded screenshot");
+        }
+      }, "image/png");
+    }).catch(function(){
+      if(stage.parentNode) document.body.removeChild(stage);
+      screenshotBusy = false;
+      flash("Screenshot failed", true);
+    });
+  }
+
   /* ================= wiring ================= */
   $("btnTheme").addEventListener("click", cycleTheme);
   $("btnUiStyle").addEventListener("click", cycleUiStyle);
@@ -1735,6 +1828,7 @@
   $("btnAdd").addEventListener("click", function(){ openDialog(); });
   $("btnReport").addEventListener("click", report);
   $("btnExport").addEventListener("click", exportExcel);
+  $("btnScreenshot").addEventListener("click", screenshotBoard);
   $("btnSave").addEventListener("click", save);
   $("btnCancel").addEventListener("click", function(){ $("dlg").close(); });
 
