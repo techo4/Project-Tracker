@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Project Tracker</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#8b93a3; --accent:#4f8ef7;
+    --ok:#3ecf8e; --warn:#f5a623; --block:#e8544c; --done:#6c7683;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg); color:var(--text); padding:20px;
+  }
+  h1{font-size:18px; font-weight:600; margin:0 0 4px;}
+  .sub{color:var(--muted); font-size:13px; margin-bottom:20px;}
+  .toolbar{display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;}
+  button{
+    background:var(--panel2); color:var(--text); border:1px solid var(--border);
+    padding:8px 14px; border-radius:6px; font-size:13px; cursor:pointer;
+  }
+  button:hover{border-color:var(--accent);}
+  button.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .card{
+    background:var(--panel); border:1px solid var(--border); border-radius:8px;
+    padding:14px 16px; margin-bottom:10px;
+  }
+  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .card-title{font-size:14px; font-weight:600;}
+  .tag{
+    display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px;
+    margin-left:6px; vertical-align:middle;
+  }
+  .tag-pcb{background:#2a3a5c; color:#8fb3ff;}
+  .tag-fw{background:#3a2a5c; color:#c39bff;}
+  .tag-other{background:#2a3a3a; color:#8fd6c9;}
+  .status{
+    font-size:12px; padding:3px 10px; border-radius:12px; white-space:nowrap;
+  }
+  .status-progress{background:rgba(79,142,247,.15); color:var(--accent);}
+  .status-blocked{background:rgba(232,84,76,.15); color:var(--block);}
+  .status-testing{background:rgba(245,166,35,.15); color:var(--warn);}
+  .status-done{background:rgba(62,207,142,.15); color:var(--ok);}
+  .meta{color:var(--muted); font-size:12px; margin-top:6px; line-height:1.5;}
+  .meta b{color:var(--text); font-weight:500;}
+  .bar-wrap{background:var(--panel2); border-radius:4px; height:6px; margin-top:10px; overflow:hidden;}
+  .bar{height:100%; background:var(--accent);}
+  .card-actions{display:flex; gap:6px; margin-top:10px;}
+  .card-actions button{padding:4px 10px; font-size:12px;}
+  .empty{color:var(--muted); text-align:center; padding:30px 0; font-size:13px;}
+  .modal-bg{
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,.6);
+    align-items:center; justify-content:center; z-index:10;
+  }
+  .modal{
+    background:var(--panel); border:1px solid var(--border); border-radius:10px;
+    padding:20px; width:420px; max-width:90vw;
+  }
+  .modal h2{font-size:15px; margin:0 0 14px;}
+  .field{margin-bottom:10px;}
+  .field label{display:block; font-size:12px; color:var(--muted); margin-bottom:4px;}
+  .field input, .field select, .field textarea{
+    width:100%; background:var(--panel2); border:1px solid var(--border); color:var(--text);
+    padding:8px; border-radius:6px; font-size:13px; font-family:inherit;
+  }
+  .field textarea{resize:vertical; min-height:50px;}
+  .modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:16px;}
+  #reportBox{
+    background:var(--panel2); border:1px solid var(--border); border-radius:8px;
+    padding:14px; font-size:13px; white-space:pre-wrap; line-height:1.6; margin-top:10px;
+    display:none;
+  }
+  .copied{color:var(--ok); font-size:12px; margin-left:8px;}
+</style>
+</head>
+<body>
+
+<h1>Project tracker</h1>
+<div class="sub">PCB design, firmware debugging and other in-progress work — updates daily to build your manager report.</div>
+
+<div class="toolbar">
+  <button class="primary" onclick="openModal()">+ Add project</button>
+  <button onclick="generateReport()">Generate daily update</button>
+  <span id="copyMsg" class="copied"></span>
+</div>
+
+<div id="reportBox"></div>
+
+<div id="list"></div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h2 id="modalTitle">Add project</h2>
+    <input type="hidden" id="editId">
+    <div class="field">
+      <label>Project name</label>
+      <input id="f-name" placeholder="e.g. OVP circuit rev2 PCB">
+    </div>
+    <div class="field">
+      <label>Category</label>
+      <select id="f-cat">
+        <option value="pcb">PCB design</option>
+        <option value="fw">Firmware</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Status</label>
+      <select id="f-status">
+        <option value="progress">In progress</option>
+        <option value="testing">Testing</option>
+        <option value="blocked">Blocked</option>
+        <option value="done">Done</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Percent complete</label>
+      <input id="f-pct" type="number" min="0" max="100" value="0">
+    </div>
+    <div class="field">
+      <label>Next action</label>
+      <textarea id="f-next" placeholder="What you'll do next on this"></textarea>
+    </div>
+    <div class="field">
+      <label>Blocker (optional)</label>
+      <textarea id="f-blocker" placeholder="Leave blank if nothing is blocking it"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button onclick="closeModal()">Cancel</button>
+      <button class="primary" onclick="saveProject()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let projects = [];
+const STORAGE_KEY = 'projects';
+
+async function load(){
+  try{
+    const res = await window.storage.get(STORAGE_KEY);
+    projects = res ? JSON.parse(res.value) : [];
+  }catch(e){
+    projects = [];
+  }
+  render();
+}
+
+async function persist(){
+  try{
+    await window.storage.set(STORAGE_KEY, JSON.stringify(projects));
+  }catch(e){
+    console.error('Save failed', e);
+  }
+}
+
+function openModal(id){
+  document.getElementById('editId').value = id || '';
+  document.getElementById('modalTitle').textContent = id ? 'Edit project' : 'Add project';
+  if(id){
+    const p = projects.find(x => x.id === id);
+    document.getElementById('f-name').value = p.name;
+    document.getElementById('f-cat').value = p.cat;
+    document.getElementById('f-status').value = p.status;
+    document.getElementById('f-pct').value = p.pct;
+    document.getElementById('f-next').value = p.next;
+    document.getElementById('f-blocker').value = p.blocker || '';
+  } else {
+    ['f-name','f-next','f-blocker'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-pct').value = 0;
+    document.getElementById('f-cat').value = 'pcb';
+    document.getElementById('f-status').value = 'progress';
+  }
+  document.getElementById('modalBg').style.display = 'flex';
+}
+
+function closeModal(){
+  document.getElementById('modalBg').style.display = 'none';
+}
+
+async function saveProject(){
+  const id = document.getElementById('editId').value;
+  const name = document.getElementById('f-name').value.trim();
+  if(!name) return;
+  const data = {
+    name,
+    cat: document.getElementById('f-cat').value,
+    status: document.getElementById('f-status').value,
+    pct: Number(document.getElementById('f-pct').value) || 0,
+    next: document.getElementById('f-next').value.trim(),
+    blocker: document.getElementById('f-blocker').value.trim(),
+    updated: new Date().toISOString().slice(0,10)
+  };
+  if(id){
+    const idx = projects.findIndex(x => x.id === id);
+    projects[idx] = {...projects[idx], ...data};
+  } else {
+    projects.push({id: 'p' + Date.now(), ...data});
+  }
+  await persist();
+  closeModal();
+  render();
+}
+
+async function removeProject(id){
+  projects = projects.filter(x => x.id !== id);
+  await persist();
+  render();
+}
+
+function catLabel(c){
+  return c === 'pcb' ? 'PCB' : c === 'fw' ? 'Firmware' : 'Other';
+}
+function statusLabel(s){
+  return {progress:'In progress', testing:'Testing', blocked:'Blocked', done:'Done'}[s];
+}
+
+function render(){
+  const list = document.getElementById('list');
+  if(projects.length === 0){
+    list.innerHTML = '<div class="empty">No projects yet. Add one to start tracking.</div>';
+    return;
+  }
+  const order = {blocked:0, progress:1, testing:2, done:3};
+  const sorted = [...projects].sort((a,b) => order[a.status]-order[b.status]);
+  list.innerHTML = sorted.map(p => `
+    <div class="card">
+      <div class="card-top">
+        <div>
+          <span class="card-title">${escapeHtml(p.name)}</span>
+          <span class="tag tag-${p.cat}">${catLabel(p.cat)}</span>
+        </div>
+        <span class="status status-${p.status}">${statusLabel(p.status)}</span>
+      </div>
+      <div class="meta">
+        <b>Next:</b> ${escapeHtml(p.next) || '—'}<br>
+        ${p.blocker ? '<b>Blocked by:</b> ' + escapeHtml(p.blocker) + '<br>' : ''}
+        Updated ${p.updated}
+      </div>
+      <div class="bar-wrap"><div class="bar" style="width:${p.pct}%"></div></div>
+      <div class="card-actions">
+        <button onclick="openModal('${p.id}')">Edit</button>
+        <button onclick="removeProject('${p.id}')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+function generateReport(){
+  const box = document.getElementById('reportBox');
+  if(projects.length === 0){
+    box.style.display = 'block';
+    box.textContent = 'No projects tracked yet.';
+    return;
+  }
+  const groups = {progress:[], testing:[], blocked:[], done:[]};
+  projects.forEach(p => groups[p.status].push(p));
+  const today = new Date().toISOString().slice(0,10);
+  let out = `Daily update — ${today}\n\n`;
+
+  if(groups.progress.length){
+    out += 'In progress:\n';
+    groups.progress.forEach(p => out += `- ${p.name} (${p.pct}%) — ${p.next || 'next step tbd'}\n`);
+    out += '\n';
+  }
+  if(groups.testing.length){
+    out += 'In testing:\n';
+    groups.testing.forEach(p => out += `- ${p.name} — ${p.next || 'validating results'}\n`);
+    out += '\n';
+  }
+  if(groups.blocked.length){
+    out += 'Blocked — need input:\n';
+    groups.blocked.forEach(p => out += `- ${p.name} — ${p.blocker || 'blocker not specified'}\n`);
+    out += '\n';
+  }
+  if(groups.done.length){
+    out += 'Completed:\n';
+    groups.done.forEach(p => out += `- ${p.name}\n`);
+    out += '\n';
+  }
+
+  box.style.display = 'block';
+  box.textContent = out.trim();
+
+  navigator.clipboard.writeText(out.trim()).then(() => {
+    const msg = document.getElementById('copyMsg');
+    msg.textContent = 'Copied to clipboard';
+    setTimeout(() => msg.textContent = '', 2500);
+  }).catch(() => {});
+}
+
+load();
+</script>
+
+</body>
+</html>
