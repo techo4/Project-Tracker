@@ -6,7 +6,7 @@
 <title>PROJECT TRACKER</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Martian+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Kalam:wght@300;400;700&family=Martian+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
 <!-- styled-cell fork of SheetJS: the community build drops fills/fonts/borders -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -246,72 +246,180 @@
     text-shadow:0 0 8px color-mix(in srgb, currentColor 40%, transparent);
   }
 
-  /* ---------------- PAPER — typewritten dossier on ruled stock ---------------- */
+  /* ---------------- PAPER — a hand-drawn page: pen fonts, wobbly boxes,
+     ruled stock, nothing quite square ---------------- */
   :root[data-skin="paper"]{
     color-scheme:light;
-    --ground:#efe9dd; --ground-2:#e5ddcc;
-    --surface:#faf6ec; --surface-2:#f1ebd9;
-    --rule:#d5c9af; --rule-strong:#a99b7d;
-    --ink:#241d12; --ink-soft:#4f4636; --ink-faint:#847963;
-    --grid:rgba(36,29,18,.03);
-    --paper-rule:rgba(43,74,133,.09);
+    --ground:#efe7d6; --ground-2:#e6dcc4;
+    --surface:#fbf7ec; --surface-2:#f3ecd9;
+    --rule:#cdbf9f; --rule-strong:#8f7f5c;
+    --ink:#2b2213; --ink-soft:#544938; --ink-faint:#8a7d64;
+    --grid:rgba(43,34,19,.03);
+    --paper-rule:rgba(46,78,138,.12);
     --ambient-glow:transparent;
-    --accent:#a83e2b; --accent-lift:rgba(168,62,43,.07); --probe:#4b6b8a;
-    --run:#3b5f88;  --run-bg:rgba(59,95,136,.10);
-    --test:#8a6d1f; --test-bg:rgba(138,109,31,.13);
+    --accent:#a83a26; --accent-lift:rgba(168,58,38,.07); --probe:#4b6b8a;
+    --run:#365a86;  --run-bg:rgba(54,90,134,.10);
+    --test:#8a6a1c; --test-bg:rgba(138,106,28,.13);
     --block:#a5372a; --block-bg:rgba(165,55,42,.10);
-    --done:#3f6b45; --done-bg:rgba(63,107,69,.12);
-    --lift:0 1px 0 var(--rule-strong), 0 12px 24px -18px rgba(40,30,15,.55);
-    --lift-hi:0 2px 0 var(--rule-strong), 0 16px 30px -18px rgba(40,30,15,.6);
+    --done:#3c6a43; --done-bg:rgba(60,106,67,.12);
+    /* barely-there uneven radii — corners look slightly overshot, not square;
+       the real waver comes from the pen filter on the outline */
+    --sk1:9px 3px 11px 4px / 4px 10px 3px 12px;
+    --sk2:3px 10px 4px 8px / 11px 3px 9px 4px;
+    --sk3:5px 2px 7px 3px / 3px 6px 2px 7px;
+    --display:"Architects Daughter","Bradley Hand","Comic Sans MS",cursive;
+    --mono:"Kalam","Comic Sans MS",ui-monospace,monospace;
+    --frame:1.5px;
+    --lift:1.5px 2px 0 -0.5px var(--ink-soft), 0 10px 20px -16px rgba(40,30,15,.5);
+    --lift-hi:2px 3px 0 -0.5px var(--ink-soft), 0 16px 26px -16px rgba(40,30,15,.55);
   }
   @media (prefers-color-scheme: dark){
     :root[data-skin="paper"]:not([data-theme="light"]){
       color-scheme:dark;
-      --ground:#14130f; --ground-2:#0d0c0a;
-      --surface:#1b1a15; --surface-2:#22201a;
-      --rule:#38352b; --rule-strong:#524d3f;
-      --ink:#ece5d3; --ink-soft:#b3ab96; --ink-faint:#817a67;
-      --grid:rgba(236,229,211,.035);
-      --paper-rule:rgba(255,255,255,.045);
+      --ground:#151310; --ground-2:#0d0c0a;
+      --surface:#1c1a15; --surface-2:#23211a;
+      --rule:#3a362b; --rule-strong:#6a6350;
+      --ink:#ede6d3; --ink-soft:#b4ac96; --ink-faint:#847c67;
+      --grid:rgba(237,230,211,.035);
+      --paper-rule:rgba(200,214,255,.06);
       --ambient-glow:transparent;
-      --accent:#d98b5c; --accent-lift:rgba(217,139,92,.10); --probe:#7fa8c8;
-      --run:#7fa4cf;  --run-bg:rgba(127,164,207,.12);
+      --accent:#dd8c58; --accent-lift:rgba(221,140,88,.10); --probe:#7fa8c8;
+      --run:#84a8d2;  --run-bg:rgba(132,168,210,.12);
       --test:#d8b45e; --test-bg:rgba(216,180,94,.13);
       --block:#e07a5f; --block-bg:rgba(224,122,95,.14);
       --done:#82b98c; --done-bg:rgba(130,185,140,.13);
-      --lift:0 1px 0 rgba(0,0,0,.5), 0 12px 24px -18px rgba(0,0,0,.7);
-      --lift-hi:0 2px 0 rgba(0,0,0,.5), 0 16px 30px -18px rgba(0,0,0,.75);
+      --lift:1.5px 2px 0 -0.5px rgba(0,0,0,.55), 0 12px 22px -16px rgba(0,0,0,.7);
+      --lift-hi:2px 3px 0 -0.5px rgba(0,0,0,.55), 0 18px 28px -16px rgba(0,0,0,.75);
     }
   }
   :root[data-skin="paper"][data-theme="dark"]{
     color-scheme:dark;
-    --ground:#14130f; --ground-2:#0d0c0a;
-    --surface:#1b1a15; --surface-2:#22201a;
-    --rule:#38352b; --rule-strong:#524d3f;
-    --ink:#ece5d3; --ink-soft:#b3ab96; --ink-faint:#817a67;
-    --grid:rgba(236,229,211,.035);
-    --paper-rule:rgba(255,255,255,.045);
+    --ground:#151310; --ground-2:#0d0c0a;
+    --surface:#1c1a15; --surface-2:#23211a;
+    --rule:#3a362b; --rule-strong:#6a6350;
+    --ink:#ede6d3; --ink-soft:#b4ac96; --ink-faint:#847c67;
+    --grid:rgba(237,230,211,.035);
+    --paper-rule:rgba(200,214,255,.06);
     --ambient-glow:transparent;
-    --accent:#d98b5c; --accent-lift:rgba(217,139,92,.10); --probe:#7fa8c8;
-    --run:#7fa4cf;  --run-bg:rgba(127,164,207,.12);
+    --accent:#dd8c58; --accent-lift:rgba(221,140,88,.10); --probe:#7fa8c8;
+    --run:#84a8d2;  --run-bg:rgba(132,168,210,.12);
     --test:#d8b45e; --test-bg:rgba(216,180,94,.13);
     --block:#e07a5f; --block-bg:rgba(224,122,95,.14);
     --done:#82b98c; --done-bg:rgba(130,185,140,.13);
-    --lift:0 1px 0 rgba(0,0,0,.5), 0 12px 24px -18px rgba(0,0,0,.7);
-    --lift-hi:0 2px 0 rgba(0,0,0,.5), 0 16px 30px -18px rgba(0,0,0,.75);
+    --lift:1.5px 2px 0 -0.5px rgba(0,0,0,.55), 0 12px 22px -16px rgba(0,0,0,.7);
+    --lift-hi:2px 3px 0 -0.5px rgba(0,0,0,.55), 0 18px 28px -16px rgba(0,0,0,.75);
   }
   :root[data-skin="paper"] body{
-    background:
-      repeating-linear-gradient(180deg, transparent 0 27px, var(--paper-rule) 27px 28px),
-      linear-gradient(var(--ground), var(--ground-2));
+    background:linear-gradient(var(--ground), var(--ground-2));
     background-attachment:fixed;
     animation:none;
+    overflow-x:clip;   /* soak up the sub-pixel the page tilt adds */
   }
+  :root[data-skin="paper"]{ overflow-x:clip; }
   :root[data-skin="paper"] .ambient{ display:none; }
-  :root[data-skin="paper"] .log:not(.shot-grid){
-    border-top:0; display:flex; flex-direction:column; gap:10px; padding-top:6px;
+  /* the ruled lines — an overlay, tilted a hair and run through the pen filter */
+  :root[data-skin="paper"] body::before{
+    content:""; position:fixed; inset:-12px; z-index:0; pointer-events:none;
+    background:repeating-linear-gradient(179.5deg, transparent 0 25px, var(--paper-rule) 25px 26.4px);
+    filter:url(#paper-rough); opacity:.85;
   }
-  :root[data-skin="paper"] .log:not(.shot-grid) .row{ border:1px solid var(--rule); }
+  /* paper tooth — a faint grain over the whole sheet, content included */
+  :root[data-skin="paper"] body::after{
+    content:""; position:fixed; inset:0; z-index:9998; pointer-events:none;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E") 0 0 / 160px 160px;
+    opacity:.09; mix-blend-mode:multiply;
+  }
+  @media (prefers-color-scheme: dark){
+    :root[data-skin="paper"]:not([data-theme="light"]) body::after{ opacity:.13; mix-blend-mode:screen; }
+  }
+  :root[data-skin="paper"][data-theme="dark"] body::after{ opacity:.13; mix-blend-mode:screen; }
+  /* a wandering margin rule down the page */
+  :root[data-skin="paper"] .wrap::before{
+    content:""; position:absolute; top:-20px; bottom:-40px; left:9px; width:2px;
+    background:var(--block); opacity:.5; filter:url(#paper-rough-strong);
+    pointer-events:none;
+  }
+  :root[data-skin="paper"] .wrap{ rotate:-0.15deg; }
+
+  /* a hand-drawn doc has no crisp registration marks */
+  :root[data-skin="paper"] .ticked::before,
+  :root[data-skin="paper"] .ticked::after{ display:none; }
+
+  /* every box gets a slightly-off silhouette; nothing lands square */
+  :root[data-skin="paper"] .row,
+  :root[data-skin="paper"] dialog,
+  :root[data-skin="paper"] #reportBox{ border-radius:var(--sk1); }
+  :root[data-skin="paper"] .summary,
+  :root[data-skin="paper"] .dist,
+  :root[data-skin="paper"] .syncbar,
+  :root[data-skin="paper"] .readout,
+  :root[data-skin="paper"] .btn,
+  :root[data-skin="paper"] .bar-btn,
+  :root[data-skin="paper"] input,
+  :root[data-skin="paper"] textarea,
+  :root[data-skin="paper"] .ddown-btn,
+  :root[data-skin="paper"] .ddown-menu,
+  :root[data-skin="paper"] .pri,
+  :root[data-skin="paper"] .cat,
+  :root[data-skin="paper"] .track,
+  :root[data-skin="paper"] .sm-track,
+  :root[data-skin="paper"] .toggle{ border-radius:var(--sk3); }
+
+  /* card outline: a light pen retrace just outside the real edge — the
+     wobble comes from the filter, so it reads as drawn, not rounded */
+  :root[data-skin="paper"] .row{ position:relative; }
+  :root[data-skin="paper"] .row::after{
+    content:""; position:absolute; inset:-3px; pointer-events:none;
+    border:1.5px solid var(--ink-soft); border-radius:inherit;
+    filter:url(#paper-rough); opacity:.5;
+  }
+  :root[data-skin="paper"] .name{ font-size:17px; letter-spacing:0; }
+  /* the coloured status spine wavers too */
+  :root[data-skin="paper"] .row::before{ filter:url(#paper-rough); }
+
+  /* a hand can't keep a stack straight — tilt each card, straighten on touch */
+  :root[data-skin="paper"] .log:not(.shot-grid){
+    border-top:0; position:relative;
+    display:flex; flex-direction:column; gap:14px; padding-top:12px;
+  }
+  :root[data-skin="paper"] .log:not(.shot-grid) .row{ border:var(--frame) solid var(--rule); }
+  :root[data-skin="paper"] .log:not(.shot-grid) .row:nth-child(3n+1){ rotate:-0.55deg; }
+  :root[data-skin="paper"] .log:not(.shot-grid) .row:nth-child(3n+2){ rotate: 0.4deg; border-radius:var(--sk2); }
+  :root[data-skin="paper"] .log:not(.shot-grid) .row:nth-child(3n+3){ rotate:-0.2deg; }
+  :root[data-skin="paper"] .row{ transition:background .16s, box-shadow .16s, rotate .18s; }
+  :root[data-skin="paper"] .row:hover{ rotate:0deg; }
+
+  /* buttons: pen-drawn, each leaning its own way, pressing into the page */
+  :root[data-skin="paper"] .btn:nth-of-type(odd){ rotate:-0.7deg; }
+  :root[data-skin="paper"] .btn:nth-of-type(even){ rotate:0.6deg; }
+  :root[data-skin="paper"] .btn:active{ transform:translate(1px,2px); box-shadow:none; }
+  :root[data-skin="paper"] .summary{ rotate:-0.3deg; }
+
+  /* horizontal rules become pen strokes; kill the crisp CSS borders */
+  :root[data-skin="paper"] .masthead{ border-bottom:0; position:relative; }
+  :root[data-skin="paper"] .masthead::after{
+    content:""; position:absolute; left:-4px; right:-4px; bottom:-3px; height:2px;
+    background:var(--ink); opacity:.7; filter:url(#paper-rough-strong);
+  }
+  :root[data-skin="paper"] .log:not(.shot-grid)::before{
+    content:""; position:absolute; left:-4px; right:-4px; top:-3px; height:2px;
+    background:var(--ink); opacity:.7; filter:url(#paper-rough-strong);
+  }
+  :root[data-skin="paper"] .log-label::after,
+  :root[data-skin="paper"] .dlg-title::after,
+  :root[data-skin="paper"] .dlg-section::after{
+    height:1.5px; filter:url(#paper-rough); opacity:.8;
+  }
+  /* inner card dividers: dashed pencil ticks, not machined lines */
+  :root[data-skin="paper"] .row-name,
+  :root[data-skin="paper"] .row-status,
+  :root[data-skin="paper"] .row-meter,
+  :root[data-skin="paper"] .row-specs{
+    border-bottom-style:dashed; border-bottom-color:var(--rule-strong);
+  }
+  :root[data-skin="paper"] .track,
+  :root[data-skin="paper"] .sm-track,
+  :root[data-skin="paper"] .dist{ filter:url(#paper-rough); }
 
   *{box-sizing:border-box;}
 
@@ -815,6 +923,20 @@
 </style>
 </head>
 <body>
+
+<!-- Paper theme: a turbulence + displacement filter that makes any straight
+     edge it touches wander like a pen line. Only applied to text-free bits
+     (rules, borders, the ruled-line overlay) so copy stays crisp. -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <filter id="paper-rough" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.014 0.02" numOctaves="2" seed="7" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="5.5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="paper-rough-strong" x="-30%" y="-30%" width="160%" height="160%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.02 0.03" numOctaves="3" seed="11" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 
 <div class="ambient" aria-hidden="true"></div>
 
