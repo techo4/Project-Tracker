@@ -43,6 +43,12 @@
 
     --display:"Martian Mono",ui-monospace,monospace;
     --mono:"JetBrains Mono",ui-monospace,"Cascadia Mono","Consolas",monospace;
+
+    /* structural knobs the themes (skins) retune — Bench keeps these */
+    --frame:1px;                               /* border width on framed panels/buttons */
+    --lift:none;                               /* resting shadow on cards/panels */
+    --lift-hi:0 3px 12px -8px rgba(0,0,0,.3);  /* row hover shadow */
+    --btn-lift:none;                           /* resting shadow on buttons */
   }
   /* dark mode goes to true black — every pixel off, OLED-friendly */
   @media (prefers-color-scheme: dark){
@@ -85,6 +91,227 @@
     --block:#e5776a; --block-bg:rgba(229,119,106,.13);
     --done:#7cbe89; --done-bg:rgba(124,190,137,.13);
   }
+
+  /* ============================================================
+     THEMES  ·  a second axis, independent of the light/dark Mode
+     above. "Bench" is the original look and carries no data-skin.
+     Every skin below restates the whole token set; retro /
+     blueprint / paper also ship a dark variant so Mode still
+     works underneath them. These blocks sit AFTER the [data-theme]
+     rules on purpose — equal specificity, so last one wins.
+     ============================================================ */
+
+  /* ---------------- RETRO — hard shadows, fat rules, pop colour ---------------- */
+  :root[data-skin="retro"]{
+    color-scheme:light;
+    --ground:#f3e8d2; --ground-2:#e9d7b6;
+    --surface:#fffdf4; --surface-2:#f6eeda;
+    --rule:#c7bca3; --rule-strong:#201e18;
+    --ink:#181610; --ink-soft:#463f34; --ink-faint:#7c7160;
+    --grid:rgba(24,22,16,.055);
+    --ambient-glow:rgba(216,30,91,.16);
+    --accent:#d81e5b; --accent-lift:rgba(216,30,91,.10); --probe:#1a54d8;
+    --run:#1a54d8;  --run-bg:rgba(26,84,216,.12);
+    --test:#c07d00; --test-bg:rgba(192,125,0,.16);
+    --block:#d8331e; --block-bg:rgba(216,51,30,.12);
+    --done:#1f9e57; --done-bg:rgba(31,158,87,.14);
+    --frame:2.5px;
+    --lift:4px 4px 0 var(--ink);
+    --lift-hi:8px 8px 0 var(--ink);
+    --btn-lift:3px 3px 0 var(--ink);
+  }
+  @media (prefers-color-scheme: dark){
+    :root[data-skin="retro"]:not([data-theme="light"]){
+      color-scheme:dark;
+      --ground:#141220; --ground-2:#0c0b13;
+      --surface:#1c1929; --surface-2:#241f34;
+      --rule:#4a4460; --rule-strong:#f3ead9;
+      --ink:#f6efe2; --ink-soft:#c3b8a8; --ink-faint:#8b8296;
+      --grid:rgba(246,239,226,.05);
+      --ambient-glow:rgba(255,77,151,.22);
+      --accent:#ff4d97; --accent-lift:rgba(255,77,151,.16); --probe:#5b8bff;
+      --run:#5b8bff;  --run-bg:rgba(91,139,255,.18);
+      --test:#ffc233; --test-bg:rgba(255,194,51,.16);
+      --block:#ff6250; --block-bg:rgba(255,98,80,.18);
+      --done:#46d98a; --done-bg:rgba(70,217,138,.16);
+    }
+  }
+  :root[data-skin="retro"][data-theme="dark"]{
+    color-scheme:dark;
+    --ground:#141220; --ground-2:#0c0b13;
+    --surface:#1c1929; --surface-2:#241f34;
+    --rule:#4a4460; --rule-strong:#f3ead9;
+    --ink:#f6efe2; --ink-soft:#c3b8a8; --ink-faint:#8b8296;
+    --grid:rgba(246,239,226,.05);
+    --ambient-glow:rgba(255,77,151,.22);
+    --accent:#ff4d97; --accent-lift:rgba(255,77,151,.16); --probe:#5b8bff;
+    --run:#5b8bff;  --run-bg:rgba(91,139,255,.18);
+    --test:#ffc233; --test-bg:rgba(255,194,51,.16);
+    --block:#ff6250; --block-bg:rgba(255,98,80,.18);
+    --done:#46d98a; --done-bg:rgba(70,217,138,.16);
+  }
+  :root[data-skin="retro"] .btn:active{ transform:translate(3px,3px); box-shadow:none; }
+  :root[data-skin="retro"] dialog{ box-shadow:10px 10px 0 var(--ink); }
+  :root[data-skin="retro"] .log:not(.shot-grid){
+    border-top:0; display:flex; flex-direction:column; gap:16px; padding-top:4px;
+  }
+  :root[data-skin="retro"] .log:not(.shot-grid) .row{ border:var(--frame) solid var(--rule-strong); }
+  :root[data-skin="retro"] .row:hover{ transform:translate(-3px,-3px); }
+
+  /* ---------------- BLUEPRINT — drafting sheet, ruled grid ---------------- */
+  :root[data-skin="blueprint"]{
+    color-scheme:light;
+    --ground:#eef2f8; --ground-2:#e2e8f1;
+    --surface:#f8fafd; --surface-2:#eef3fa;
+    --rule:#bccbe4; --rule-strong:#8ea6cc;
+    --ink:#12305e; --ink-soft:#3a5a8c; --ink-faint:#7c94bd;
+    --grid:rgba(30,86,160,.14); --grid-major:rgba(30,86,160,.24);
+    --ambient-glow:rgba(28,111,214,.13);
+    --accent:#1c6fd6; --accent-lift:rgba(28,111,214,.09); --probe:#0a97ab;
+    --run:#1c6fd6;  --run-bg:rgba(28,111,214,.11);
+    --test:#a2771a; --test-bg:rgba(162,119,26,.13);
+    --block:#c2372a; --block-bg:rgba(194,55,42,.10);
+    --done:#1f7a52; --done-bg:rgba(31,122,82,.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root[data-skin="blueprint"]:not([data-theme="light"]){
+      color-scheme:dark;
+      --ground:#0b2a63; --ground-2:#082250;
+      --surface:#123a7a; --surface-2:#16468f;
+      --rule:rgba(255,255,255,.26); --rule-strong:rgba(255,255,255,.5);
+      --ink:#eaf1ff; --ink-soft:#bacdf1; --ink-faint:#84a1d1;
+      --grid:rgba(255,255,255,.10); --grid-major:rgba(255,255,255,.19);
+      --ambient-glow:rgba(127,223,255,.16);
+      --accent:#7fdfff; --accent-lift:rgba(127,223,255,.12); --probe:#7fdfff;
+      --run:#8fc4ff;  --run-bg:rgba(143,196,255,.14);
+      --test:#ffd98a; --test-bg:rgba(255,217,138,.14);
+      --block:#ff9a86; --block-bg:rgba(255,154,134,.16);
+      --done:#86e6b6; --done-bg:rgba(134,230,182,.14);
+    }
+  }
+  :root[data-skin="blueprint"][data-theme="dark"]{
+    color-scheme:dark;
+    --ground:#0b2a63; --ground-2:#082250;
+    --surface:#123a7a; --surface-2:#16468f;
+    --rule:rgba(255,255,255,.26); --rule-strong:rgba(255,255,255,.5);
+    --ink:#eaf1ff; --ink-soft:#bacdf1; --ink-faint:#84a1d1;
+    --grid:rgba(255,255,255,.10); --grid-major:rgba(255,255,255,.19);
+    --ambient-glow:rgba(127,223,255,.16);
+    --accent:#7fdfff; --accent-lift:rgba(127,223,255,.12); --probe:#7fdfff;
+    --run:#8fc4ff;  --run-bg:rgba(143,196,255,.14);
+    --test:#ffd98a; --test-bg:rgba(255,217,138,.14);
+    --block:#ff9a86; --block-bg:rgba(255,154,134,.16);
+    --done:#86e6b6; --done-bg:rgba(134,230,182,.14);
+  }
+  :root[data-skin="blueprint"] body{
+    background:
+      linear-gradient(var(--grid-major) 1px, transparent 1px) 0 0 / 100% 112px,
+      linear-gradient(90deg, var(--grid-major) 1px, transparent 1px) 0 0 / 112px 100%,
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 100% 28px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 28px 100%,
+      linear-gradient(var(--ground), var(--ground-2));
+    background-attachment:fixed;
+    animation:none;
+  }
+
+  /* ---------------- TERMINAL — CRT phosphor, scanlines (dark only) ---------------- */
+  :root[data-skin="terminal"]{
+    color-scheme:dark;
+    --ground:#05080a; --ground-2:#020304;
+    --surface:#07130d; --surface-2:#0a1c13;
+    --rule:#143d24; --rule-strong:#1f6b39;
+    --ink:#45f08a; --ink-soft:#2aa860; --ink-faint:#1c7a45;
+    --grid:rgba(69,240,138,.05);
+    --ambient-glow:rgba(69,240,138,.12);
+    --accent:#7dffb0; --accent-lift:rgba(125,255,176,.10); --probe:#7dffb0;
+    --run:#45f08a;  --run-bg:rgba(69,240,138,.12);
+    --test:#ffd24a; --test-bg:rgba(255,210,74,.13);
+    --block:#ff5a52; --block-bg:rgba(255,90,82,.15);
+    --done:#2aa860; --done-bg:rgba(42,168,96,.12);
+    --display:"JetBrains Mono",ui-monospace,"Cascadia Mono","Consolas",monospace;
+  }
+  :root[data-skin="terminal"] body{
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px),
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 100% 28px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 28px 100%,
+      linear-gradient(var(--ground), var(--ground-2));
+    background-attachment:fixed;
+    animation:none;
+  }
+  :root[data-skin="terminal"] h1,
+  :root[data-skin="terminal"] .cell .n,
+  :root[data-skin="terminal"] .pct,
+  :root[data-skin="terminal"] .name{
+    text-shadow:0 0 8px color-mix(in srgb, currentColor 40%, transparent);
+  }
+
+  /* ---------------- PAPER — typewritten dossier on ruled stock ---------------- */
+  :root[data-skin="paper"]{
+    color-scheme:light;
+    --ground:#efe9dd; --ground-2:#e5ddcc;
+    --surface:#faf6ec; --surface-2:#f1ebd9;
+    --rule:#d5c9af; --rule-strong:#a99b7d;
+    --ink:#241d12; --ink-soft:#4f4636; --ink-faint:#847963;
+    --grid:rgba(36,29,18,.03);
+    --paper-rule:rgba(43,74,133,.09);
+    --ambient-glow:transparent;
+    --accent:#a83e2b; --accent-lift:rgba(168,62,43,.07); --probe:#4b6b8a;
+    --run:#3b5f88;  --run-bg:rgba(59,95,136,.10);
+    --test:#8a6d1f; --test-bg:rgba(138,109,31,.13);
+    --block:#a5372a; --block-bg:rgba(165,55,42,.10);
+    --done:#3f6b45; --done-bg:rgba(63,107,69,.12);
+    --lift:0 1px 0 var(--rule-strong), 0 12px 24px -18px rgba(40,30,15,.55);
+    --lift-hi:0 2px 0 var(--rule-strong), 0 16px 30px -18px rgba(40,30,15,.6);
+  }
+  @media (prefers-color-scheme: dark){
+    :root[data-skin="paper"]:not([data-theme="light"]){
+      color-scheme:dark;
+      --ground:#14130f; --ground-2:#0d0c0a;
+      --surface:#1b1a15; --surface-2:#22201a;
+      --rule:#38352b; --rule-strong:#524d3f;
+      --ink:#ece5d3; --ink-soft:#b3ab96; --ink-faint:#817a67;
+      --grid:rgba(236,229,211,.035);
+      --paper-rule:rgba(255,255,255,.045);
+      --ambient-glow:transparent;
+      --accent:#d98b5c; --accent-lift:rgba(217,139,92,.10); --probe:#7fa8c8;
+      --run:#7fa4cf;  --run-bg:rgba(127,164,207,.12);
+      --test:#d8b45e; --test-bg:rgba(216,180,94,.13);
+      --block:#e07a5f; --block-bg:rgba(224,122,95,.14);
+      --done:#82b98c; --done-bg:rgba(130,185,140,.13);
+      --lift:0 1px 0 rgba(0,0,0,.5), 0 12px 24px -18px rgba(0,0,0,.7);
+      --lift-hi:0 2px 0 rgba(0,0,0,.5), 0 16px 30px -18px rgba(0,0,0,.75);
+    }
+  }
+  :root[data-skin="paper"][data-theme="dark"]{
+    color-scheme:dark;
+    --ground:#14130f; --ground-2:#0d0c0a;
+    --surface:#1b1a15; --surface-2:#22201a;
+    --rule:#38352b; --rule-strong:#524d3f;
+    --ink:#ece5d3; --ink-soft:#b3ab96; --ink-faint:#817a67;
+    --grid:rgba(236,229,211,.035);
+    --paper-rule:rgba(255,255,255,.045);
+    --ambient-glow:transparent;
+    --accent:#d98b5c; --accent-lift:rgba(217,139,92,.10); --probe:#7fa8c8;
+    --run:#7fa4cf;  --run-bg:rgba(127,164,207,.12);
+    --test:#d8b45e; --test-bg:rgba(216,180,94,.13);
+    --block:#e07a5f; --block-bg:rgba(224,122,95,.14);
+    --done:#82b98c; --done-bg:rgba(130,185,140,.13);
+    --lift:0 1px 0 rgba(0,0,0,.5), 0 12px 24px -18px rgba(0,0,0,.7);
+    --lift-hi:0 2px 0 rgba(0,0,0,.5), 0 16px 30px -18px rgba(0,0,0,.75);
+  }
+  :root[data-skin="paper"] body{
+    background:
+      repeating-linear-gradient(180deg, transparent 0 27px, var(--paper-rule) 27px 28px),
+      linear-gradient(var(--ground), var(--ground-2));
+    background-attachment:fixed;
+    animation:none;
+  }
+  :root[data-skin="paper"] .ambient{ display:none; }
+  :root[data-skin="paper"] .log:not(.shot-grid){
+    border-top:0; display:flex; flex-direction:column; gap:10px; padding-top:6px;
+  }
+  :root[data-skin="paper"] .log:not(.shot-grid) .row{ border:1px solid var(--rule); }
 
   *{box-sizing:border-box;}
 
@@ -140,7 +367,7 @@
   .masthead{
     display:flex; align-items:flex-end; justify-content:space-between;
     gap:22px; flex-wrap:wrap; padding-bottom:16px;
-    border-bottom:1px solid var(--ink);
+    border-bottom:var(--frame) solid var(--ink);
   }
   .kicker{
     font-size:10px; font-weight:500; letter-spacing:.26em; text-transform:uppercase;
@@ -149,7 +376,7 @@
   }
   .kicker::before{
     content:""; width:26px; height:1px; background:var(--accent);
-    transform-origin:left; animation:sweepline 3.2s ease-in-out infinite;
+    flex:none; opacity:.85;
   }
   h1{
     font-family:var(--display); font-weight:600;
@@ -202,7 +429,8 @@
   /* ---------- summary ---------- */
   .summary{
     display:grid; grid-template-columns:repeat(4,1fr);
-    margin-top:12px; border:1px solid var(--rule); background:var(--surface);
+    margin-top:12px; border:var(--frame) solid var(--rule); background:var(--surface);
+    box-shadow:var(--lift);
   }
   .cell{
     padding:15px 15px 16px; border-right:1px solid var(--rule);
@@ -248,8 +476,9 @@
     letter-spacing:.18em; text-transform:uppercase;
     cursor:pointer; padding:10px 15px;
     background:var(--surface); color:var(--ink-soft);
-    border:1px solid var(--rule-strong); border-radius:0;
-    transition:color .15s, border-color .15s, background .15s, transform .1s;
+    border:var(--frame) solid var(--rule-strong); border-radius:0;
+    box-shadow:var(--btn-lift);
+    transition:color .15s, border-color .15s, background .15s, transform .1s, box-shadow .1s;
   }
   .btn:hover{color:var(--accent); border-color:var(--accent); background:var(--accent-lift);}
   .btn:active{transform:translateY(1px);}
@@ -280,16 +509,17 @@
     color:var(--ink-faint); margin:0 0 9px;
   }
   .log-label::after{content:""; flex:1; height:1px; background:var(--rule);}
-  .log{border-top:1px solid var(--ink);}
+  .log{border-top:var(--frame) solid var(--ink);}
 
   .row{
     position:relative; background:var(--surface);
     border-bottom:1px solid var(--rule);
+    box-shadow:var(--lift);
     animation:riseIn .4s cubic-bezier(.22,.9,.3,1) both;
     animation-delay:calc(var(--i) * 42ms);
-    transition:background .16s, box-shadow .16s;
+    transition:background .16s, box-shadow .16s, transform .12s;
   }
-  .row:hover{background:var(--surface-2); box-shadow:0 3px 12px -8px rgba(0,0,0,.3); z-index:1;}
+  .row:hover{background:var(--surface-2); box-shadow:var(--lift-hi); z-index:1;}
   .row::before{
     content:""; position:absolute; left:0; top:0; bottom:0; width:3px;
     background:currentColor;
@@ -393,7 +623,7 @@
   /* ---------- dialogs ---------- */
   dialog{
     position:relative;
-    border:1px solid var(--rule-strong); border-top:2px solid var(--accent);
+    border:var(--frame) solid var(--rule-strong); border-top:2px solid var(--accent);
     border-radius:0; background:var(--surface); color:var(--ink);
     padding:0; width:540px; max-width:calc(100vw - 26px);
     max-height:calc(100vh - 48px); overflow-y:auto;
@@ -581,7 +811,6 @@
     0%{transform:translate3d(0,0,0) scale(1);}
     100%{transform:translate3d(20%,-22%,0) scale(1.55);}
   }
-  @keyframes sweepline{ 0%,100%{opacity:.6; transform:scaleX(1);} 50%{opacity:1; transform:scaleX(2.1);} }
   @keyframes caret{ 0%,49%{opacity:1;} 50%,100%{opacity:.1;} }
 </style>
 </head>
@@ -798,6 +1027,10 @@
     <p class="dlg-title">Settings</p>
     <div class="settings-row">
       <span class="settings-label">Theme</span>
+      <button type="button" class="btn" id="btnSkin">Bench</button>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label">Mode</span>
       <button type="button" class="btn" id="btnTheme">Auto</button>
     </div>
     <div class="settings-row">
@@ -820,6 +1053,7 @@
 
   var KEY = "project-tracker.v1";
   var THEME_KEY = "project-tracker.theme";
+  var SKIN_KEY = "project-tracker.skin";
   var TOKEN_KEY = "project-tracker.gh-token";
   var GIST_KEY = "project-tracker.gist-id";
   var ANIM_KEY = "project-tracker.anim";
@@ -915,6 +1149,25 @@
     var next = THEMES[(THEMES.indexOf(cur) + 1) % THEMES.length];
     applyTheme(next);
     lsSet(THEME_KEY, next);
+  }
+
+  /* ================= theme skin (Bench / Retro / Blueprint / …) =================
+     A second axis on top of Mode above. Bench is the original look and
+     carries no data-skin attribute; the others swap the CSS token set. */
+  var SKINS = ["bench","retro","blueprint","terminal","paper"];
+  var SKIN_LABELS = {bench:"Bench", retro:"Retro", blueprint:"Blueprint", terminal:"Terminal", paper:"Paper"};
+  function applySkin(s){
+    if(SKINS.indexOf(s) === -1) s = "bench";
+    if(s === "bench"){ document.documentElement.removeAttribute("data-skin"); }
+    else{ document.documentElement.setAttribute("data-skin", s); }
+    $("btnSkin").textContent = SKIN_LABELS[s];
+  }
+  function initSkin(){ applySkin(ls(SKIN_KEY) || "bench"); }
+  function cycleSkin(){
+    var cur = document.documentElement.getAttribute("data-skin") || "bench";
+    var next = SKINS[(SKINS.indexOf(cur) + 1) % SKINS.length];
+    applySkin(next);
+    lsSet(SKIN_KEY, next);
   }
 
   /* ================= UI style (Normal / Smart) ================= */
@@ -1817,6 +2070,7 @@
 
   /* ================= wiring ================= */
   $("btnTheme").addEventListener("click", cycleTheme);
+  $("btnSkin").addEventListener("click", cycleSkin);
   $("btnUiStyle").addEventListener("click", cycleUiStyle);
   $("btnSettings").addEventListener("click", function(){ $("dlgSettings").showModal(); });
   $("btnSettingsClose").addEventListener("click", function(){ $("dlgSettings").close(); });
@@ -1867,6 +2121,7 @@
   window.addEventListener("storage", function(e){
     if(e.key === KEY){ load(); render(false); }
     if(e.key === THEME_KEY){ initTheme(); }
+    if(e.key === SKIN_KEY){ initSkin(); }
     if(e.key === ANIM_KEY){ initAnimations(); }
     if(e.key === UI_KEY){ initUiStyle(); render(false); }
   });
@@ -1881,6 +2136,7 @@
   window.addEventListener("focus", function(){ sync("pull"); });
 
   initTheme();
+  initSkin();
   initAnimations();
   initUiStyle();
   load();
