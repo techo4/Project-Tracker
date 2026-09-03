@@ -96,9 +96,10 @@
      THEMES  ·  a second axis, independent of the light/dark Mode
      above. "Bench" is the original look and carries no data-skin.
      Every skin below restates the whole token set; retro /
-     blueprint / paper also ship a dark variant so Mode still
-     works underneath them. These blocks sit AFTER the [data-theme]
-     rules on purpose — equal specificity, so last one wins.
+     blueprint / paper / frosted also ship a dark variant so Mode
+     still works underneath them. These blocks sit AFTER the
+     [data-theme] rules on purpose — equal specificity, so last
+     one wins.
      ============================================================ */
 
   /* ---------------- RETRO — hard shadows, fat rules, pop colour ---------------- */
@@ -426,6 +427,190 @@
   :root[data-skin="paper"] .track,
   :root[data-skin="paper"] .sm-track,
   :root[data-skin="paper"] .dist{ filter:url(#paper-rough); }
+
+  /* ---------------- FROSTED — ice panes over soft aurora ---------------- */
+  :root[data-skin="frosted"]{
+    color-scheme:light;
+    --ground:#c8dce8; --ground-2:#d6e4dc;
+    --surface:rgba(255,255,255,.48); --surface-2:rgba(255,255,255,.68);
+    --rule:rgba(255,255,255,.55); --rule-strong:rgba(36,64,82,.22);
+    --ink:#1a2e3a; --ink-soft:#3d5a6a; --ink-faint:#6a8494;
+    --grid:rgba(26,46,58,.04);
+    --ambient-glow:rgba(56,168,176,.28);
+    --accent:#0e7c86; --accent-lift:rgba(14,124,134,.10); --probe:#2a6f9e;
+    --run:#1a6f9a;  --run-bg:rgba(26,111,154,.12);
+    --test:#9a6e12; --test-bg:rgba(154,110,18,.13);
+    --block:#b33a2e; --block-bg:rgba(179,58,46,.11);
+    --done:#2a7a4e;  --done-bg:rgba(42,122,78,.12);
+    --frame:1px;
+    --lift:0 8px 28px -12px rgba(30,55,70,.28);
+    --lift-hi:0 14px 36px -12px rgba(30,55,70,.36);
+    --btn-lift:0 2px 10px -4px rgba(30,55,70,.22);
+    --glass-blur:blur(18px) saturate(1.35);
+    --glass-r:14px;
+    --glass-r-sm:9px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root[data-skin="frosted"]:not([data-theme="light"]){
+      color-scheme:dark;
+      --ground:#0c1520; --ground-2:#101a22;
+      --surface:rgba(18,32,44,.52); --surface-2:rgba(28,48,64,.68);
+      --rule:rgba(180,210,230,.14); --rule-strong:rgba(180,210,230,.28);
+      --ink:#e4eef4; --ink-soft:#a8bcc8; --ink-faint:#6e8796;
+      --grid:rgba(228,238,244,.035);
+      --ambient-glow:rgba(64,196,188,.22);
+      --accent:#5ec8c4; --accent-lift:rgba(94,200,196,.12); --probe:#6eb0d8;
+      --run:#6eb8e0;  --run-bg:rgba(110,184,224,.14);
+      --test:#e0b85a; --test-bg:rgba(224,184,90,.14);
+      --block:#e87868; --block-bg:rgba(232,120,104,.15);
+      --done:#6ec898; --done-bg:rgba(110,200,152,.14);
+      --lift:0 10px 32px -10px rgba(0,0,0,.55);
+      --lift-hi:0 16px 40px -10px rgba(0,0,0,.65);
+      --btn-lift:0 2px 12px -4px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-skin="frosted"][data-theme="dark"]{
+    color-scheme:dark;
+    --ground:#0c1520; --ground-2:#101a22;
+    --surface:rgba(18,32,44,.52); --surface-2:rgba(28,48,64,.68);
+    --rule:rgba(180,210,230,.14); --rule-strong:rgba(180,210,230,.28);
+    --ink:#e4eef4; --ink-soft:#a8bcc8; --ink-faint:#6e8796;
+    --grid:rgba(228,238,244,.035);
+    --ambient-glow:rgba(64,196,188,.22);
+    --accent:#5ec8c4; --accent-lift:rgba(94,200,196,.12); --probe:#6eb0d8;
+    --run:#6eb8e0;  --run-bg:rgba(110,184,224,.14);
+    --test:#e0b85a; --test-bg:rgba(224,184,90,.14);
+    --block:#e87868; --block-bg:rgba(232,120,104,.15);
+    --done:#6ec898; --done-bg:rgba(110,200,152,.14);
+    --lift:0 10px 32px -10px rgba(0,0,0,.55);
+    --lift-hi:0 16px 40px -10px rgba(0,0,0,.65);
+    --btn-lift:0 2px 12px -4px rgba(0,0,0,.4);
+  }
+  /* soft aurora so the frost has colour to catch */
+  :root[data-skin="frosted"] body{
+    background:
+      radial-gradient(70% 55% at 12% 18%, rgba(56,176,168,.45), transparent 60%),
+      radial-gradient(55% 50% at 88% 22%, rgba(74,140,196,.38), transparent 58%),
+      radial-gradient(60% 55% at 72% 82%, rgba(196,140,96,.28), transparent 62%),
+      radial-gradient(50% 45% at 18% 78%, rgba(120,168,140,.32), transparent 55%),
+      linear-gradient(155deg, var(--ground), var(--ground-2));
+    background-attachment:fixed;
+    animation:none;
+  }
+  @media (prefers-color-scheme: dark){
+    :root[data-skin="frosted"]:not([data-theme="light"]) body{
+      background:
+        radial-gradient(65% 50% at 14% 16%, rgba(40,140,136,.38), transparent 58%),
+        radial-gradient(50% 45% at 86% 20%, rgba(48,100,160,.34), transparent 55%),
+        radial-gradient(55% 50% at 70% 84%, rgba(140,90,60,.22), transparent 60%),
+        radial-gradient(45% 40% at 20% 80%, rgba(60,120,100,.26), transparent 52%),
+        linear-gradient(155deg, var(--ground), var(--ground-2));
+      background-attachment:fixed;
+      animation:none;
+    }
+  }
+  :root[data-skin="frosted"][data-theme="dark"] body{
+    background:
+      radial-gradient(65% 50% at 14% 16%, rgba(40,140,136,.38), transparent 58%),
+      radial-gradient(50% 45% at 86% 20%, rgba(48,100,160,.34), transparent 55%),
+      radial-gradient(55% 50% at 70% 84%, rgba(140,90,60,.22), transparent 60%),
+      radial-gradient(45% 40% at 20% 80%, rgba(60,120,100,.26), transparent 52%),
+      linear-gradient(155deg, var(--ground), var(--ground-2));
+    background-attachment:fixed;
+    animation:none;
+  }
+  :root[data-skin="frosted"] .ambient{
+    background:
+      radial-gradient(52% 48% at 28% 22%, var(--ambient-glow), transparent 70%),
+      radial-gradient(48% 44% at 78% 72%, rgba(74,140,196,.22), transparent 72%);
+  }
+  /* ice panes */
+  :root[data-skin="frosted"] .row,
+  :root[data-skin="frosted"] .summary,
+  :root[data-skin="frosted"] .syncbar,
+  :root[data-skin="frosted"] .readout,
+  :root[data-skin="frosted"] .bar-btn,
+  :root[data-skin="frosted"] .btn,
+  :root[data-skin="frosted"] dialog,
+  :root[data-skin="frosted"] #reportBox,
+  :root[data-skin="frosted"] .ddown-btn,
+  :root[data-skin="frosted"] .ddown-menu,
+  :root[data-skin="frosted"] input,
+  :root[data-skin="frosted"] textarea,
+  :root[data-skin="frosted"] .row-smart .sm-act{
+    -webkit-backdrop-filter:var(--glass-blur);
+    backdrop-filter:var(--glass-blur);
+  }
+  :root[data-skin="frosted"] .row,
+  :root[data-skin="frosted"] dialog,
+  :root[data-skin="frosted"] #reportBox{ border-radius:var(--glass-r); }
+  :root[data-skin="frosted"] .summary,
+  :root[data-skin="frosted"] .dist,
+  :root[data-skin="frosted"] .syncbar,
+  :root[data-skin="frosted"] .readout,
+  :root[data-skin="frosted"] .btn,
+  :root[data-skin="frosted"] .bar-btn,
+  :root[data-skin="frosted"] input,
+  :root[data-skin="frosted"] textarea,
+  :root[data-skin="frosted"] .ddown-btn,
+  :root[data-skin="frosted"] .ddown-menu,
+  :root[data-skin="frosted"] .pri,
+  :root[data-skin="frosted"] .cat,
+  :root[data-skin="frosted"] .track,
+  :root[data-skin="frosted"] .sm-track,
+  :root[data-skin="frosted"] .toggle,
+  :root[data-skin="frosted"] .row-smart .sm-act{ border-radius:var(--glass-r-sm); }
+  :root[data-skin="frosted"] .btn{ box-shadow:var(--btn-lift); }
+  :root[data-skin="frosted"] .btn:active{ transform:translateY(1px); box-shadow:none; }
+  :root[data-skin="frosted"] dialog{
+    border:var(--frame) solid var(--rule);
+    box-shadow:var(--lift-hi);
+  }
+  :root[data-skin="frosted"] dialog::backdrop{
+    background:rgba(18,36,48,.42);
+    backdrop-filter:blur(8px);
+  }
+  /* separate cards so each pane frosts on its own */
+  :root[data-skin="frosted"] .log:not(.shot-grid){
+    border-top:0; display:flex; flex-direction:column; gap:14px; padding-top:8px;
+  }
+  :root[data-skin="frosted"] .log:not(.shot-grid) .row{
+    border:var(--frame) solid var(--rule);
+  }
+  :root[data-skin="frosted"] .shot-grid .row{ border-radius:var(--glass-r); }
+  /* hairline highlight on the top edge of panes */
+  :root[data-skin="frosted"] .row,
+  :root[data-skin="frosted"] .summary,
+  :root[data-skin="frosted"] .syncbar{
+    box-shadow:var(--lift), inset 0 1px 0 rgba(255,255,255,.45);
+  }
+  :root[data-skin="frosted"] .row:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--lift-hi), inset 0 1px 0 rgba(255,255,255,.55);
+  }
+  @media (prefers-color-scheme: dark){
+    :root[data-skin="frosted"]:not([data-theme="light"]) .row,
+    :root[data-skin="frosted"]:not([data-theme="light"]) .summary,
+    :root[data-skin="frosted"]:not([data-theme="light"]) .syncbar{
+      box-shadow:var(--lift), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    :root[data-skin="frosted"]:not([data-theme="light"]) .row:hover{
+      transform:translateY(-2px);
+      box-shadow:var(--lift-hi), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+  }
+  :root[data-skin="frosted"][data-theme="dark"] .row,
+  :root[data-skin="frosted"][data-theme="dark"] .summary,
+  :root[data-skin="frosted"][data-theme="dark"] .syncbar{
+    box-shadow:var(--lift), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  :root[data-skin="frosted"][data-theme="dark"] .row:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--lift-hi), inset 0 1px 0 rgba(255,255,255,.12);
+  }
+  :root[data-skin="frosted"] .ticked::before,
+  :root[data-skin="frosted"] .ticked::after{ opacity:.55; }
+  :root[data-skin="frosted"] .masthead{ border-bottom-color:var(--rule-strong); }
 
   *{box-sizing:border-box;}
 
@@ -1282,8 +1467,8 @@
   /* ================= theme skin (Bench / Retro / Blueprint / …) =================
      A second axis on top of Mode above. Bench is the original look and
      carries no data-skin attribute; the others swap the CSS token set. */
-  var SKINS = ["bench","retro","blueprint","terminal","paper"];
-  var SKIN_LABELS = {bench:"Bench", retro:"Retro", blueprint:"Blueprint", terminal:"Terminal", paper:"Paper"};
+  var SKINS = ["bench","retro","blueprint","terminal","paper","frosted"];
+  var SKIN_LABELS = {bench:"Bench", retro:"Retro", blueprint:"Blueprint", terminal:"Terminal", paper:"Paper", frosted:"Frosted"};
   function applySkin(s){
     if(SKINS.indexOf(s) === -1) s = "bench";
     if(s === "bench"){ document.documentElement.removeAttribute("data-skin"); }
