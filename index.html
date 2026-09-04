@@ -399,6 +399,7 @@
   /* buttons: pen-drawn, each leaning its own way, pressing into the page */
   :root[data-skin="paper"] .btn:nth-of-type(odd){ rotate:-0.7deg; }
   :root[data-skin="paper"] .btn:nth-of-type(even){ rotate:0.6deg; }
+  :root[data-skin="paper"] dialog .btn{ rotate:none; }
   :root[data-skin="paper"] .btn:active{ transform:translate(1px,2px); box-shadow:none; }
   :root[data-skin="paper"] .summary{ rotate:-0.3deg; }
 
@@ -920,17 +921,23 @@
   .empty span{font-size:9.5px; letter-spacing:.22em; text-transform:uppercase; opacity:.75;}
 
   /* ---------- dialogs ---------- */
+  /* clip X so 1px ticks / subpixels never spawn a horizontal bar.
+     Y stays auto so the tall project form can still scroll. */
   dialog{
     position:relative;
     border:var(--frame) solid var(--rule-strong); border-top:2px solid var(--accent);
     border-radius:0; background:var(--surface); color:var(--ink);
     padding:0; width:540px; max-width:calc(100vw - 26px);
-    max-height:calc(100vh - 48px); overflow-y:auto;
+    max-height:calc(100vh - 48px);
+    overflow-x:clip; overflow-y:auto;
     box-shadow:0 26px 60px -26px rgba(0,0,0,.55);
   }
+  #dlgSettings, #dlgAddHandler{ overflow:clip; }
   dialog[open]{animation:riseIn .24s cubic-bezier(.22,.9,.3,1) both;}
   dialog::backdrop{background:rgba(6,9,5,.66); backdrop-filter:blur(2px);}
-  .dlg-body{padding:22px 24px 24px; display:grid; gap:14px;}
+  dialog.ticked::before{top:0; left:0;}
+  dialog.ticked::after{bottom:0; right:0;}
+  .dlg-body{padding:22px 24px 24px; display:grid; gap:14px; min-width:0;}
   .dlg-title{
     font-family:var(--display); font-size:11px; font-weight:600;
     letter-spacing:-.02em; text-transform:uppercase; color:var(--accent);
