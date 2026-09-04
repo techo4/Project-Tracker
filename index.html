@@ -921,16 +921,20 @@
   .empty span{font-size:9.5px; letter-spacing:.22em; text-transform:uppercase; opacity:.75;}
 
   /* ---------- dialogs ---------- */
-  /* clip X so 1px ticks / subpixels never spawn a horizontal bar.
-     Y stays auto so the tall project form can still scroll. */
-  dialog{
-    position:relative;
+  /* fixed + inset 0 + margin auto keeps the box on the viewport, not the
+     page. .ticked is position:relative, so dialog.ticked has to restate
+     fixed or the ticks rule wins and the dialog scrolls away. */
+  dialog, dialog.ticked{
+    position:fixed; inset:0; margin:auto; height:fit-content;
     border:var(--frame) solid var(--rule-strong); border-top:2px solid var(--accent);
     border-radius:0; background:var(--surface); color:var(--ink);
     padding:0; width:540px; max-width:calc(100vw - 26px);
     max-height:calc(100vh - 48px);
     overflow-x:clip; overflow-y:auto;
     box-shadow:0 26px 60px -26px rgba(0,0,0,.55);
+  }
+  html:has(dialog[open]), html:has(dialog[open]) body{
+    overflow:hidden; overscroll-behavior:none;
   }
   #dlgSettings, #dlgAddHandler{ overflow:clip; }
   dialog[open]{animation:riseIn .24s cubic-bezier(.22,.9,.3,1) both;}
