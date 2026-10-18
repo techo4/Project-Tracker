@@ -749,11 +749,12 @@
   .cell[data-k="progress"]{color:var(--run);}
   .cell[data-k="testing"]{color:var(--test);}
   .cell[data-k="done"]{color:var(--done);}
+  .cell[data-k="progress"]:not(.is-zero) .n{color:#f97316;}
   .cell .n{
     font-family:var(--display); font-weight:600; font-size:29px; line-height:1;
     letter-spacing:-.08em; font-variant-numeric:tabular-nums;
   }
-  .cell .l{font-size:9px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-faint);}
+  .cell .l{font-size:13px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint);}
   .cell.is-zero .n{color:var(--ink-faint); opacity:.4;}
   @media (max-width:640px){
     .summary{grid-template-columns:repeat(2,1fr);}
@@ -860,7 +861,7 @@
     background:var(--surface-2); border-bottom:1px solid var(--rule);
   }
   .row-status .led{width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;}
-  .status-text{font-size:10.5px; font-weight:700; letter-spacing:.2em; text-transform:uppercase;}
+  .status-text{font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;}
   .row-status .when{
     margin-left:auto; font-size:9.5px; font-weight:500; letter-spacing:.14em;
     text-transform:uppercase; color:var(--ink-faint); font-variant-numeric:tabular-nums;
